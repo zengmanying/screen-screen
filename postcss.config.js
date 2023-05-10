@@ -11,7 +11,7 @@ export default {
       viewportUnit: 'vw',
       fontViewportUnit: 'vw',
       selectorBlackList: [],
-      minPixelValue: 8,
+      minPixelValue: 2,
       mediaQuery: false,
       replace: true,
       exclude: undefined,
