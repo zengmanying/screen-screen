@@ -150,3 +150,17 @@ h1 {
     background:rgba(126, 137, 164, 0.3);
   }
 }
+
+// https://qa.1r1g.com/sf/ask/2876734311/
+// 有一种标准模式可以在一个范围内生成随机值：Min + (int)(Math.random() * ((Max - Min) + 1))
+// @function randomNum($min, $max) {
+//   $rand: random();
+//   $randomNum: $min + floor($rand * (($max - $min) + 1));
+//   @return $randomNum;
+// }
+
+// @for $i from 1 through 20 {
+//  .u-skeleton__wrapper__content__rows:nth-child(#{$i}) { 
+//   width: percentage(randomNum(30, 100) / 100) !important; 
+//  }
+// }

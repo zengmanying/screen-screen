@@ -1,10 +1,12 @@
 <script setup>
 import { CountTo } from 'vue3-count-to'
 import Line from '@/components/echart/Line.vue'
-import WordCloud from '../components/echart/WordCloud.vue'
+// import WordCloud from '../components/echart/WordCloud.vue'
 import Gauge from '../components/echart/Gauge.vue'
 import Map from '../components/echart/Map.vue'
 import Bar from '../components/echart/Bar.vue'
+import scrollTagsClond from '@/assets/js/fesucai.js'
+import { onMounted } from 'vue'
 const saleTopData = [
   {
     name: 'EU3009(BEV)',
@@ -27,6 +29,30 @@ const saleTopData = [
     value: 1087,
   },
 ]
+
+const tagscloudData = [
+  '容量衰减预警',
+  '40℃过温时长预警',
+  '绝缘离散预警',
+  '遗传算法SOH预警',
+  '内阻一致性预',
+  '动态自放电预警',
+  '容量衰减预警',
+  '40℃过温时长预警',
+  '绝缘离散预警',
+  '遗传算法SOH预警',
+  '内阻一致性预',
+  '动态自放电预警',
+]
+
+onMounted(() => {
+  const tagsCloudWeekObj = new scrollTagsClond('tagsCloudWeek')
+  const tagsCloudMonthObj = new scrollTagsClond('tagsCloudMonth')
+  setInterval(() => {
+    tagsCloudWeekObj.update()
+    tagsCloudMonthObj.update()
+  }, 40)
+})
 </script>
 
 <template>
@@ -191,14 +217,20 @@ const saleTopData = [
         <div class="card-body">
           <section>
             <div class="word-cloud-title"><span>按周更新</span></div>
-            <div class="word-cloud-chart">
-              <WordCloud></WordCloud>
+            <div id="tagsCloudWeek" class="tagscloud">
+              <a v-for="item in tagscloudData" :key="item" class="tagcloud-item"
+                ><span :style="{ color: $randomColor }">{{ item }}</span></a
+              >
             </div>
           </section>
           <section>
-            <div class="word-cloud-title"><span>按半月及月更新</span></div>
-            <div class="word-cloud-chart">
-              <WordCloud></WordCloud>
+            <div class="word-cloud-title">
+              <span>按半月及月更新</span>
+            </div>
+            <div id="tagsCloudMonth" class="tagscloud">
+              <a v-for="item in tagscloudData" :key="item" class="tagcloud-item"
+                ><span :style="{ color: $randomColor }">{{ item }}</span></a
+              >
             </div>
           </section>
         </div>
@@ -460,5 +492,31 @@ const saleTopData = [
   bottom: 0;
   left: 0;
   right: 0;
+}
+
+.tagscloud {
+  position: relative;
+  height: 121px;
+  padding: 12px 0;
+  text-align: center;
+  .tagcloud-item {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    display: inline-block;
+    color: #fff;
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 100px;
+    &:nth-child(n) {
+      background-color: rgba(155, 81, 224, 1);
+    }
+    &:nth-child(2n) {
+      background-color: rgba(86, 204, 242, 1);
+    }
+    &:nth-child(3n) {
+      background-color: rgba(93, 95, 239, 1);
+    }
+  }
 }
 </style>
