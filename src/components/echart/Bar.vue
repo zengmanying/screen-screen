@@ -74,8 +74,10 @@ const lineOptions = {
   series: [
     {
       type: 'bar',
+      stack: '总量',
       smooth: true,
       barWidth: 16,
+      barCategoryGap: '50%',
       label: {
         show: true,
         fontSize: 14,
@@ -113,84 +115,100 @@ const lineOptions = {
           colorStops: [
             {
               offset: 0,
-              color: '#1ee7e7', // 100% 处的颜色
-            },
-            {
-              offset: 0.09,
-              color: '#1ee7e7', // 100% 处的颜色
-            },
-            {
-              offset: 0.1,
               color: 'rgba(24, 144, 255, 0.35)', // 0% 处的颜色
             },
             {
-              offset: 0.9,
+              offset: 1,
               color: 'rgba(24, 130, 255, 1)', // 100% 处的颜色
             },
           ],
           global: false, // 缺省为 false
         },
-        shadowColor: '#1EE7E7',
+      },
+    },
+    {
+      type: 'bar',
+      smooth: true,
+      stack: '总量',
+      barGap: '-100%',
+      barWidth: 16,
+      itemStyle: {
+        color: '#1ee7e7',
       },
     },
   ],
 }
 
+const data = [
+  {
+    name: '1月',
+    value: 521,
+  },
+  {
+    name: '2月',
+    value: 895,
+  },
+  {
+    name: '3月',
+    value: 623,
+  },
+  {
+    name: '4月',
+    value: 1435,
+    symbol: 100,
+  },
+  {
+    name: '5月',
+    value: 1386,
+  },
+  {
+    name: '6月',
+    value: 712,
+  },
+  {
+    name: '7月',
+    value: 521,
+  },
+  {
+    name: '8月',
+    value: 895,
+  },
+  {
+    name: '9月',
+    value: 623,
+  },
+  {
+    name: '10月',
+    value: 1435,
+  },
+  {
+    name: '11月',
+    value: 1386,
+  },
+  {
+    name: '12月',
+    value: 712,
+  },
+]
+
+const hasSymbolData = computed(() => {
+  let arr = []
+  data.forEach((item) => {
+    arr.push({
+      name: item.name,
+      value: item.value,
+      symbol: 100,
+    })
+  })
+  return arr
+})
+
 const openOptions = computed(() => {
   return {
     ...lineOptions,
     dataset: {
-      dimensions: ['name', 'value'],
-      source: [
-        {
-          name: '1月',
-          value: 521,
-        },
-        {
-          name: '2月',
-          value: 895,
-        },
-        {
-          name: '3月',
-          value: 623,
-        },
-        {
-          name: '4月',
-          value: 1435,
-        },
-        {
-          name: '5月',
-          value: 1386,
-        },
-        {
-          name: '6月',
-          value: 712,
-        },
-        {
-          name: '7月',
-          value: 521,
-        },
-        {
-          name: '8月',
-          value: 895,
-        },
-        {
-          name: '9月',
-          value: 623,
-        },
-        {
-          name: '10月',
-          value: 1435,
-        },
-        {
-          name: '11月',
-          value: 1386,
-        },
-        {
-          name: '12月',
-          value: 712,
-        },
-      ],
+      dimensions: ['name', 'value', 'symbol'],
+      source: hasSymbolData.value,
     },
   }
 })

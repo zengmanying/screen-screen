@@ -6,7 +6,9 @@ import Gauge from '../components/echart/Gauge.vue'
 import Map from '../components/echart/Map.vue'
 import Bar from '../components/echart/Bar.vue'
 import scrollTagsClond from '@/assets/js/fesucai.js'
-import { onMounted } from 'vue'
+import { onMounted, onUnmounted } from 'vue'
+let tagsCloudWeekTimer = null
+let tagsCloudWeekMonth = null
 const saleTopData = [
   {
     name: 'EU3009(BEV)',
@@ -48,10 +50,19 @@ const tagscloudData = [
 onMounted(() => {
   const tagsCloudWeekObj = new scrollTagsClond('tagsCloudWeek')
   const tagsCloudMonthObj = new scrollTagsClond('tagsCloudMonth')
-  setInterval(() => {
+  tagsCloudWeekTimer = setInterval(() => {
     tagsCloudWeekObj.update()
-    tagsCloudMonthObj.update()
   }, 40)
+  tagsCloudWeekMonth = setInterval(() => {
+    tagsCloudMonthObj.update()
+  }, 80)
+})
+
+onUnmounted(() => {
+  clearInterval(tagsCloudWeekTimer)
+  tagsCloudWeekMonth = null
+  clearInterval(tagsCloudWeekMonth)
+  tagsCloudWeekMonth = null
 })
 </script>
 
@@ -75,7 +86,7 @@ onMounted(() => {
               <count-to
                 class="count"
                 :start-val="0"
-                :end-val="88341"
+                :end-val="883451"
                 :duration="3000"
                 separator=""
               ></count-to>
@@ -102,7 +113,7 @@ onMounted(() => {
               <count-to
                 class="count"
                 :start-val="0"
-                :end-val="88341"
+                :end-val="883419"
                 :duration="3000"
                 separator=""
               ></count-to>
@@ -227,7 +238,7 @@ onMounted(() => {
             <div class="word-cloud-title">
               <span>按半月及月更新</span>
             </div>
-            <div id="tagsCloudMonth" class="tagscloud">
+            <div id="tagsCloudMonth" class="tagscloud tagsCloudMonth">
               <a v-for="item in tagscloudData" :key="item" class="tagcloud-item"
                 ><span :style="{ color: $randomColor }">{{ item }}</span></a
               >
@@ -324,8 +335,8 @@ onMounted(() => {
       background-clip: text;
       text-fill-color: transparent;
       font-weight: bold;
-      letter-spacing: 21px;
-      margin-left: 16px;
+      letter-spacing: 19px;
+      margin-left: 12px;
     }
   }
   &-classify {
@@ -347,30 +358,30 @@ onMounted(() => {
       }
       &:nth-child(2) {
         position: relative;
-        &::before,
-        &::after {
-          position: absolute;
-          top: 50%;
-          transform: translateY(-50%);
-          display: inline-block;
-          width: 1px;
-          height: 44px;
-          content: '';
-          background: linear-gradient(
-            180deg,
-            rgba(24, 127, 233, 0) 0%,
-            rgba(163, 204, 240, 0.6) 48.91%,
-            rgba(24, 127, 233, 0) 100%
-          );
-          border-radius: 1px;
-        }
+        // &::before,
+        // &::after {
+        //   position: absolute;
+        //   top: 50%;
+        //   transform: translateY(-50%);
+        //   display: inline-block;
+        //   width: 1px;
+        //   height: 44px;
+        //   content: '';
+        //   background: linear-gradient(
+        //     180deg,
+        //     rgba(24, 127, 233, 0) 0%,
+        //     rgba(163, 204, 240, 0.6) 48.91%,
+        //     rgba(24, 127, 233, 0) 100%
+        //   );
+        //   border-radius: 1px;
+        // }
       }
-      &::before {
-        left: 0;
-      }
-      &::after {
-        right: 0;
-      }
+      // &::before {
+      //   left: 0;
+      // }
+      // &::after {
+      //   right: 0;
+      // }
     }
   }
 }
@@ -466,6 +477,7 @@ onMounted(() => {
   position: absolute;
   left: 50%;
   top: 0;
+  z-index: 2;
   transform: translateX(-50%);
 }
 .gauge-chart {
@@ -478,6 +490,7 @@ onMounted(() => {
   width: 100%;
   height: 100%;
   margin-top: -40px;
+  z-index: 1;
 }
 
 .card-mileage {
@@ -516,6 +529,19 @@ onMounted(() => {
     }
     &:nth-child(3n) {
       background-color: rgba(93, 95, 239, 1);
+    }
+  }
+  &.tagsCloudMonth {
+    .tagcloud-item {
+      &:nth-child(n) {
+        background-color: rgba(47, 128, 237, 1);
+      }
+      &:nth-child(2n) {
+        background-color: rgba(39, 174, 96, 1);
+      }
+      &:nth-child(3n) {
+        background-color: rgba(130, 130, 130, 1);
+      }
     }
   }
 }
