@@ -3,10 +3,10 @@ import { computed, ref } from 'vue'
 import VChart from 'vue-echarts'
 import { use } from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
-import { BarChart } from 'echarts/charts'
+import { BarChart, ScatterChart } from 'echarts/charts'
 import { GridComponent, DatasetComponent } from 'echarts/components'
 
-use([CanvasRenderer, BarChart, GridComponent, DatasetComponent])
+use([CanvasRenderer, BarChart, ScatterChart, GridComponent, DatasetComponent])
 
 const initOptions = ref({
   renderer: 'canvas',
@@ -74,10 +74,8 @@ const lineOptions = {
   series: [
     {
       type: 'bar',
-      stack: '总量',
       smooth: true,
       barWidth: 16,
-      barCategoryGap: '50%',
       label: {
         show: true,
         fontSize: 14,
@@ -127,14 +125,18 @@ const lineOptions = {
       },
     },
     {
-      type: 'bar',
-      smooth: true,
-      stack: '总量',
-      barGap: '-100%',
-      barWidth: 16,
+      name: 'Object',
+      type: 'scatter',
+      symbol: 'rect',
+      silent: true,
       itemStyle: {
-        color: '#1ee7e7',
+        normal: {
+          color: '#1ee7e7',
+        },
       },
+      symbolSize: [16, 5],
+      symbolOffset: [0, 0],
+      z: 20,
     },
   ],
 }
@@ -197,7 +199,7 @@ const hasSymbolData = computed(() => {
     arr.push({
       name: item.name,
       value: item.value,
-      symbol: 100,
+      symbol: item.value,
     })
   })
   return arr
