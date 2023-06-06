@@ -1,11 +1,20 @@
 <script setup>
 import Header from './components/Header.vue'
+import { useRoute } from 'vue-router'
+const route = useRoute()
 </script>
 
 <template>
-  <Header></Header>
-  <div class="container">
-    <router-view></router-view>
+  <div
+    :class="[
+      'app-container',
+      { 'app-container--battery': route.name === 'Battery' },
+    ]"
+  >
+    <Header></Header>
+    <div class="container">
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 

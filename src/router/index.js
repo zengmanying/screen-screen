@@ -6,11 +6,11 @@ const routes = [
     name: 'Home',
     component: () => import('@/views/Home.vue'),
   },
-  // {
-  //   path: '/about',
-  //   name: 'About',
-  //   component: () => import('@/views/About.vue'),
-  // },
+  {
+    path: '/battery',
+    name: 'Battery',
+    component: () => import('@/views/Battery.vue'),
+  },
 ]
 
 const router = createRouter({
