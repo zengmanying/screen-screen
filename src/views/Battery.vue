@@ -677,11 +677,13 @@ const carMileageDataset = ref({
               <span class="card-title">预警车辆里程分布</span>
             </div>
             <div class="card-body">
-              <HChart
-                :options="roseOptions"
-                :dataset="carMileageDataset"
-                class="roseChart"
-              ></HChart>
+              <div style="width: 74%; height: 100%">
+                <HChart
+                  :options="roseOptions"
+                  :dataset="carMileageDataset"
+                  class="roseChart"
+                ></HChart>
+              </div>
             </div>
           </div>
         </div>
@@ -784,9 +786,10 @@ const carMileageDataset = ref({
   margin-left: 24px;
 }
 .car-mileage-spread {
-  .roseChart {
-    background-size: 52% auto;
-    background-position: 50% 24.5%;
+  .card-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 </style>
