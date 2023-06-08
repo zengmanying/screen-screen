@@ -67,11 +67,11 @@ const handleFullScreen = () => {
   align-items: center;
   margin-right: auto;
   margin-left: auto;
-  padding: 0;
+  padding: 0 0 0 150px;
   li {
     position: relative;
     margin-right: 35px;
-    padding: 4px 0 4px 40px;
+    padding: 10px 0 10px 40px;
     font-size: 24px;
     letter-spacing: 1px;
     color: rgba(234, 248, 255, 0.85);

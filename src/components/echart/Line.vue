@@ -8,6 +8,12 @@ import { GridComponent, DatasetComponent } from 'echarts/components'
 
 use([CanvasRenderer, LineChart, GridComponent, DatasetComponent])
 
+const props = defineProps({
+  data: {
+    type: Array,
+    default: () => [],
+  },
+})
 const initOptions = ref({
   renderer: 'canvas',
 })
@@ -120,32 +126,7 @@ const openOptions = computed(() => {
     ...lineOptions,
     dataset: {
       dimensions: ['name', 'value'],
-      source: [
-        {
-          name: '1月',
-          value: 521,
-        },
-        {
-          name: '2月',
-          value: 895,
-        },
-        {
-          name: '3月',
-          value: 623,
-        },
-        {
-          name: '4月',
-          value: 1435,
-        },
-        {
-          name: '5月',
-          value: 1386,
-        },
-        {
-          name: '6月',
-          value: 712,
-        },
-      ],
+      source: props.data,
     },
   }
 })

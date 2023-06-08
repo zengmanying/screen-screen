@@ -688,6 +688,55 @@ const carMileageDataset = ref({
           </div>
         </div>
       </div>
+      <div class="right-bottom-container">
+        <div class="right-bottom-left-container">
+          <div class="right-bottom-left-title">
+            <img src="../assets/battery/working-condition-title.svg" alt="" />
+          </div>
+          <div class="right-bottom-left-content">
+            <div class="card car-temp-rate">
+              <div class="card-header">
+                <span class="card-title">过温时长及占比</span>
+              </div>
+              <div class="card-body">
+                <dl>
+                  <dt>超40℃时长预警车辆数量分布</dt>
+                  <dd>
+                    <HChart
+                      :options="roseOptions"
+                      :dataset="carMileageDataset"
+                    ></HChart>
+                  </dd>
+                </dl>
+                <dl>
+                  <dt>超40℃时长占比预警车辆数量分布</dt>
+                  <dd></dd>
+                </dl>
+                <dl>
+                  <dt>超45℃时长预警车辆数量分布</dt>
+                  <dd></dd>
+                </dl>
+                <dl>
+                  <dt>超45℃时长占比预警车辆数量分布</dt>
+                  <dd></dd>
+                </dl>
+              </div>
+            </div>
+            <div class="card car-working-show">
+              <div class="card-header">
+                <span class="card-title">工况预警展示</span>
+              </div>
+              <div class="card-body"></div>
+            </div>
+          </div>
+        </div>
+        <div class="right-bottom-right-container">
+          <div class="right-bottom-right-title">
+            <img src="../assets/battery/soh-title.svg" alt="" />
+          </div>
+          <div class="right-bottom-right-content"></div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -705,6 +754,8 @@ const carMileageDataset = ref({
   }
 }
 .left-sidelayer {
+  display: flex;
+  flex-direction: column;
   width: 400px;
   flex-shrink: 0;
   &::before,
@@ -718,7 +769,7 @@ const carMileageDataset = ref({
     width: 42px;
     background-image: url('../assets/battery/left-side-bg.svg');
     background-repeat: no-repeat;
-    background-size: contain;
+    background-size: cover;
   }
   &::after {
     left: 0;
@@ -762,11 +813,21 @@ const carMileageDataset = ref({
 }
 
 .right-layer {
-  padding: 0 40px;
+  padding: 0 0 0 40px;
+  overflow: hidden;
+  img {
+    width: 100%;
+  }
 }
 .right-top-content {
   display: flex;
   align-items: center;
+  .card {
+    flex: auto;
+  }
+  .card-body {
+    padding: 0;
+  }
 }
 .car-risk-level {
   width: 270px;
@@ -775,7 +836,7 @@ const carMileageDataset = ref({
 .roseChart {
   background: url('../assets/battery/rose-chart-bg.png') no-repeat;
   background-size: 60% auto;
-  background-position: 50% 29.5%;
+  background-position: 50.5% 30%;
 }
 
 .car-num-spread,
@@ -791,5 +852,50 @@ const carMileageDataset = ref({
     align-items: center;
     justify-content: center;
   }
+}
+
+.right-bottom-container {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  margin-top: 40px;
+}
+.right-bottom-left-container {
+  margin-right: 24px;
+  width: 1048px;
+}
+.right-bottom-left-content {
+  display: flex;
+  align-items: center;
+}
+.car-temp-rate {
+  width: 659px;
+  flex: auto;
+  margin-right: 24px;
+  .card-header {
+    background-image: url('@/assets/card-title-long-bg.png');
+  }
+  .card-body {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    dl {
+      width: 50%;
+      padding: 0 15px;
+      dt {
+        background-image: url('@/assets/battery/icon-arrow.svg');
+        background-position: left center;
+        background-repeat: no-repeat;
+        padding-left: 32px;
+      }
+    }
+  }
+}
+.car-working-show {
+  width: 365px;
+  flex: auto;
+}
+.right-bottom-right-container {
+  width: 365px;
 }
 </style>

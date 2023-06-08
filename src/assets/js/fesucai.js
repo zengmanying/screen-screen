@@ -1,4 +1,5 @@
 ﻿var radius = 40
+var radiusX = 65
 var d = 200
 var dtr = Math.PI / 180
 var distr = true
@@ -58,7 +59,7 @@ class scrollTagsClond {
       b,
       c = 0
     a = (Math.min(Math.max(-mouseY, -size), size) / radius) * tspeed
-    b = (-Math.min(Math.max(-mouseX, -size), size) / radius) * tspeed
+    b = (-Math.min(Math.max(-mouseX, -size), size) / radiusX) * tspeed
     if (Math.abs(a) <= 0.01 && Math.abs(b) <= 0.01) {
       return
     }
@@ -108,7 +109,7 @@ class scrollTagsClond {
         theta = Math.random() * (2 * Math.PI)
       }
       //坐标变换
-      this.mcList[i].cx = radius * Math.cos(theta) * Math.sin(phi) * 2
+      this.mcList[i].cx = radiusX * Math.cos(theta) * Math.sin(phi) * 2
       this.mcList[i].cy = radius * Math.sin(theta) * Math.sin(phi)
       this.mcList[i].cz = radius * Math.cos(phi)
       console.log(this.mcList[i].cy)

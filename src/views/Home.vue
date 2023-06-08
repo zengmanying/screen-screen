@@ -6,7 +6,8 @@ import Gauge from '../components/echart/Gauge.vue'
 import Map from '../components/echart/Map.vue'
 import Bar from '../components/echart/Bar.vue'
 import scrollTagsClond from '@/assets/js/fesucai.js'
-import { onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
+import { getSaleStatistics } from '@/api/api'
 let tagsCloudWeekTimer = null
 let tagsCloudWeekMonth = null
 const saleTopData = [
@@ -56,6 +57,7 @@ onMounted(() => {
   tagsCloudWeekMonth = setInterval(() => {
     tagsCloudMonthObj.update()
   }, 80)
+  getSaleStatisticsData()
 })
 
 onUnmounted(() => {
@@ -64,6 +66,13 @@ onUnmounted(() => {
   clearInterval(tagsCloudWeekMonth)
   tagsCloudWeekMonth = null
 })
+let lineData = ref([])
+const getSaleStatisticsData = async () => {
+  const resp = await getSaleStatistics()
+  if (resp.resultCode === '200') {
+    lineData.value = resp.data
+  }
+}
 </script>
 
 <template>
@@ -142,7 +151,7 @@ onUnmounted(() => {
           <span class="card-title">近6个月实销车辆统计</span>
         </div>
         <div class="card-body">
-          <Line></Line>
+          <Line :data="lineData"></Line>
         </div>
       </div>
       <!-- 销售Top5车型 -->
@@ -277,6 +286,9 @@ onUnmounted(() => {
   height: 100%;
   .left-sidelayer,
   .right-sidelayer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     width: 400px;
   }
   .center-content {
@@ -390,14 +402,17 @@ onUnmounted(() => {
 }
 
 .card-line-statistics {
+  flex: 1;
   .card-body {
     padding: 20px;
-    height: 180px;
   }
 }
 
 .card-sale-top {
+  flex: 1;
   .card-body {
+    display: flex;
+    align-items: center;
     padding: 0 20px 8px;
   }
   .sale-top-rank {
@@ -412,6 +427,9 @@ onUnmounted(() => {
 
 .card-warning {
   margin-top: 0;
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: 25%;
   .card-body {
     display: flex;
     align-items: center;
@@ -494,12 +512,12 @@ onUnmounted(() => {
 }
 
 .card-mileage {
+  height: 24%;
   .card-header {
     background-image: url('@/assets/card-title-long-bg.png');
   }
   .card-body {
     padding: 20px 20px 16px;
-    height: 190px;
   }
   position: absolute;
   bottom: 0;
@@ -509,7 +527,7 @@ onUnmounted(() => {
 
 .tagscloud {
   position: relative;
-  height: 121px;
+  height: 131px;
   padding: 12px 0;
   text-align: center;
   .tagcloud-item {
@@ -521,6 +539,7 @@ onUnmounted(() => {
     font-size: 12px;
     padding: 4px 8px;
     border-radius: 100px;
+    white-space: nowrap;
     &:nth-child(n) {
       background-color: rgba(155, 81, 224, 1);
     }
