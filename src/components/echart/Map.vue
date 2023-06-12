@@ -44,7 +44,7 @@ const linesData = {
         name: '北京',
       },
       {
-        name: '武汉',
+        name: '青岛',
         value: 200,
       },
     ],
@@ -53,7 +53,7 @@ const linesData = {
         name: '北京',
       },
       {
-        name: '长沙',
+        name: '广州',
         value: 90,
       },
     ],
@@ -63,6 +63,51 @@ const linesData = {
       },
       {
         name: '昆明',
+        value: 90,
+      },
+    ],
+    [
+      {
+        name: '北京',
+      },
+      {
+        name: '南京',
+        value: 90,
+      },
+    ],
+    [
+      {
+        name: '北京',
+      },
+      {
+        name: '石家庄',
+        value: 90,
+      },
+    ],
+    [
+      {
+        name: '北京',
+      },
+      {
+        name: '成都',
+        value: 90,
+      },
+    ],
+    [
+      {
+        name: '北京',
+      },
+      {
+        name: '合肥',
+        value: 90,
+      },
+    ],
+    [
+      {
+        name: '北京',
+      },
+      {
+        name: '西安',
         value: 90,
       },
     ],
@@ -83,21 +128,21 @@ const chartData = [
   { name: '重庆', value: 576 },
   { name: '海南', value: 168 },
   { name: '广西', value: 5252 },
-  { name: '广东', value: 1352 },
+  { name: '广东', value: 5352 },
   { name: '湖南', value: 4018 },
-  { name: '湖北', value: 7743 },
+  { name: '湖北', value: 743 },
   { name: '河南', value: 1272 },
   { name: '山东', value: 758 },
-  { name: '江西', value: 935 },
-  { name: '福建', value: 296 },
+  { name: '江西', value: 2935 },
+  { name: '福建', value: 5296 },
   { name: '安徽', value: 990 },
-  { name: '浙江', value: 1215 },
+  { name: '浙江', value: 5215 },
   { name: '江苏', value: 631 },
   { name: '上海', value: 342 },
-  { name: '黑龙江', value: 4481 },
+  { name: '黑龙江', value: 481 },
   { name: '吉林', value: 93 },
   { name: '辽宁', value: 125 },
-  { name: '内蒙古', value: 5675 },
+  { name: '内蒙古', value: 675 },
   { name: '山西', value: 133 },
   { name: '河北', value: 318 },
   { name: '天津', value: 136 },
@@ -155,13 +200,11 @@ const options = computed(() => {
         emphasis: {
           disabled: true,
         },
-        zoom: 1.1,
       },
       {
         type: 'map',
         map: 'chinaPartJson',
         zlevel: -1,
-        zoom: 1.1,
         aspectScale: 0.75,
         layoutCenter: ['50%', '40%'],
         layoutSize: '80%',
@@ -189,7 +232,6 @@ const options = computed(() => {
         type: 'map',
         map: 'chinaPartJson',
         zlevel: -2,
-        zoom: 1.1,
         aspectScale: 0.75,
         layoutCenter: ['50%', '42%'],
         layoutSize: '80%',
@@ -218,7 +260,6 @@ const options = computed(() => {
         type: 'map',
         map: 'chinaPartJson',
         zlevel: -3,
-        zoom: 1.1,
         aspectScale: 0.75,
         layoutCenter: ['50%', '43%'],
         layoutSize: '80%',
