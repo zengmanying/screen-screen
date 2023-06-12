@@ -183,7 +183,8 @@ const options = computed(() => {
       {
         map: 'china',
         roam: false,
-        aspectScale: 0.75,
+        aspectScale: 0.85,
+        zoom: 1.1,
         layoutCenter: ['50%', '40%'],
         layoutSize: '80%',
         label: {
@@ -205,7 +206,8 @@ const options = computed(() => {
         type: 'map',
         map: 'chinaPartJson',
         zlevel: -1,
-        aspectScale: 0.75,
+        aspectScale: 0.85,
+        zoom: 1.1,
         layoutCenter: ['50%', '40%'],
         layoutSize: '80%',
         roam: false,
@@ -219,7 +221,7 @@ const options = computed(() => {
         ],
         itemStyle: {
           normal: {
-            borderColor: 'rgba(255,255,255,1)',
+            borderColor: 'rgba(255,255,255,.8)',
             borderWidth: 5,
             shadowColor: 'rgba(0, 169, 253, 0.4)',
             shadowBlur: 20,
@@ -232,7 +234,8 @@ const options = computed(() => {
         type: 'map',
         map: 'chinaPartJson',
         zlevel: -2,
-        aspectScale: 0.75,
+        aspectScale: 0.85,
+        zoom: 1.1,
         layoutCenter: ['50%', '42%'],
         layoutSize: '80%',
         roam: false,
@@ -246,7 +249,7 @@ const options = computed(() => {
         ],
         itemStyle: {
           normal: {
-            borderColor: 'rgba(255,255,255,.4)',
+            borderColor: 'rgba(255,255,255,.3)',
             borderWidth: 2,
             shadowColor: 'rgba(0, 169, 253, 0.4)',
             shadowBlur: 20,
@@ -260,7 +263,8 @@ const options = computed(() => {
         type: 'map',
         map: 'chinaPartJson',
         zlevel: -3,
-        aspectScale: 0.75,
+        aspectScale: 0.85,
+        zoom: 1.1,
         layoutCenter: ['50%', '43%'],
         layoutSize: '80%',
         roam: false,
@@ -274,7 +278,7 @@ const options = computed(() => {
         ],
         itemStyle: {
           normal: {
-            borderColor: 'rgba(255,255,255,.3)',
+            borderColor: 'rgba(255,255,255,.2)',
             shadowColor: 'rgba(0, 169, 253, 0.4)',
             shadowBlur: 20,
             shadowOffsetX: 0,
