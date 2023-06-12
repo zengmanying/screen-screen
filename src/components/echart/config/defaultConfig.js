@@ -38,7 +38,6 @@ const xAxis = {
     show: true,
     color: textColors.light,
     fontSize: 12,
-    fontWeight: 'bolder',
   },
   inverse: false,
 }
@@ -68,7 +67,6 @@ const yAxis = {
     show: true,
     color: textColors.light,
     fontSize: 12,
-    fontWeight: 'bolder',
   },
   axisTick: { show: false, inside: true },
   position: 'left',
