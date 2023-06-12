@@ -143,52 +143,56 @@ const lineOptions = {
 
 const data = [
   {
-    name: '1月',
+    name: '0-5',
     value: 521,
   },
   {
-    name: '2月',
+    name: '5-10',
     value: 895,
   },
   {
-    name: '3月',
+    name: '10-15',
     value: 623,
   },
   {
-    name: '4月',
+    name: '15-20',
     value: 1435,
     symbol: 100,
   },
   {
-    name: '5月',
+    name: '20-25',
     value: 1386,
   },
   {
-    name: '6月',
+    name: '25-30',
     value: 712,
   },
   {
-    name: '7月',
+    name: '30-35',
     value: 521,
   },
   {
-    name: '8月',
+    name: '35-40',
     value: 895,
   },
   {
-    name: '9月',
+    name: '40-45',
     value: 623,
   },
   {
-    name: '10月',
+    name: '45-50',
     value: 1435,
   },
   {
-    name: '11月',
+    name: '50-55',
     value: 1386,
   },
   {
-    name: '12月',
+    name: '55-60',
+    value: 712,
+  },
+  {
+    name: '60~∞',
     value: 712,
   },
 ]

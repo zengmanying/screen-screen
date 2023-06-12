@@ -23,7 +23,7 @@ const barAndLineOptions = {
   },
   yAxis: [
     {
-      name: '',
+      name: '2023',
       type: 'value',
       show: true,
       gridIndex: 0,
@@ -107,6 +107,7 @@ const recognitionRateSeries = [
     name: '累计市场车辆识别率',
     serieType: 'lineNoArea',
     yAxisIndex: 1,
+    smooth: true,
     itemStyle: {
       color: 'rgba(31, 69, 99, 1)',
       borderWidth: 2,
@@ -120,6 +121,7 @@ const recognitionRateSeries = [
     name: '新增市场车辆识别率',
     serieType: 'lineNoArea',
     yAxisIndex: 1,
+    smooth: true,
     itemStyle: {
       color: 'rgba(31, 69, 99, 1)',
       borderWidth: 2,
@@ -136,35 +138,35 @@ const recognitionRateOpt = computed(() => {
 const recognitionRateDataset = ref({
   source: [
     {
-      name: '2023W01',
+      name: '1月',
       newCar: 823,
       historyCar: 1000,
       totalRadio: 0.5,
       newRadio: 0.8,
     },
     {
-      name: '2023W02',
+      name: '2月',
       newCar: 823,
       historyCar: 1200,
-      totalRadio: 0.4,
-      newRadio: 0.9,
+      totalRadio: 0.6,
+      newRadio: 0.8,
     },
     {
-      name: '2023W03',
+      name: '3月',
       newCar: 2200,
       historyCar: 1800,
       totalRadio: 0.7,
       newRadio: 0.8,
     },
     {
-      name: '2023W04',
+      name: '4月',
       newCar: 823,
       historyCar: 1400,
       totalRadio: 0.9,
       newRadio: 0.5,
     },
     {
-      name: '2023W05',
+      name: '5月',
       newCar: 1500,
       historyCar: 1600,
       totalRadio: 0.8,
@@ -256,7 +258,7 @@ const accuracyRateSeries = [
     name: '检出率',
     serieType: 'lineNoArea',
     yAxisIndex: 1,
-    barWidth: 6,
+    smooth: true,
     itemStyle: {
       color: 'rgba(31, 69, 99, 1)',
       borderWidth: 2,
@@ -270,7 +272,7 @@ const accuracyRateSeries = [
     name: '准确率',
     serieType: 'lineNoArea',
     yAxisIndex: 1,
-    barWidth: 6,
+    smooth: true,
     itemStyle: {
       color: 'rgba(31, 69, 99, 1)',
       borderWidth: 2,
@@ -285,7 +287,7 @@ const accuracyRateSeries = [
 const accuracyRateDataset = ref({
   source: [
     {
-      name: '2023W01',
+      name: '1月',
       newCar: 823,
       historyCar: 1000,
       underRepair: 400,
@@ -293,15 +295,15 @@ const accuracyRateDataset = ref({
       newRadio: 0.8,
     },
     {
-      name: '2023W02',
+      name: '2月',
       newCar: 823,
       historyCar: 1200,
       underRepair: 800,
-      totalRadio: 0.4,
-      newRadio: 0.9,
+      totalRadio: 0.6,
+      newRadio: 0.8,
     },
     {
-      name: '2023W03',
+      name: '3月',
       newCar: 2200,
       historyCar: 1800,
       underRepair: 900,
@@ -309,7 +311,7 @@ const accuracyRateDataset = ref({
       newRadio: 0.8,
     },
     {
-      name: '2023W04',
+      name: '4月',
       newCar: 823,
       historyCar: 1400,
       underRepair: 1000,
@@ -317,7 +319,7 @@ const accuracyRateDataset = ref({
       newRadio: 0.5,
     },
     {
-      name: '2023W05',
+      name: '5月',
       newCar: 1500,
       historyCar: 1600,
       underRepair: 1200,
@@ -531,12 +533,12 @@ const carAlgorithmDataset = ref({
       symbol: 823,
     },
     {
-      name: '温度跳变预警',
+      name: '温度跳变',
       value: 723,
       symbol: 723,
     },
     {
-      name: '温差离散预警',
+      name: '温差离散',
       value: 523,
       symbol: 523,
     },
@@ -556,7 +558,7 @@ const carAlgorithmDataset = ref({
       symbol: 523,
     },
     {
-      name: '压差一致性预',
+      name: '压差一致性',
       value: 523,
       symbol: 523,
     },

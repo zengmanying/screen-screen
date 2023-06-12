@@ -107,11 +107,11 @@ const lineOptions = {
           colorStops: [
             {
               offset: 0,
-              color: 'rgba(24, 130, 255, 0.36)', // 0% 处的颜色
+              color: 'rgba(24, 130, 255, 0.6)', // 0% 处的颜色
             },
             {
               offset: 1,
-              color: 'rgba(24, 144, 255, 0)', // 100% 处的颜色
+              color: 'rgba(24, 144, 255, 0.2)', // 100% 处的颜色
             },
           ],
           globalCoord: false, // 缺省为 false

@@ -184,9 +184,8 @@ const options = computed(() => {
         map: 'china',
         roam: false,
         aspectScale: 0.85,
-        zoom: 1.1,
         layoutCenter: ['50%', '40%'],
-        layoutSize: '80%',
+        layoutSize: '90%',
         label: {
           show: true,
           color: '#fff',
@@ -207,9 +206,8 @@ const options = computed(() => {
         map: 'chinaPartJson',
         zlevel: -1,
         aspectScale: 0.85,
-        zoom: 1.1,
         layoutCenter: ['50%', '40%'],
-        layoutSize: '80%',
+        layoutSize: '90%',
         roam: false,
         silent: true,
         regions: [
@@ -235,9 +233,8 @@ const options = computed(() => {
         map: 'chinaPartJson',
         zlevel: -2,
         aspectScale: 0.85,
-        zoom: 1.1,
         layoutCenter: ['50%', '42%'],
-        layoutSize: '80%',
+        layoutSize: '90%',
         roam: false,
         silent: true,
         regions: [
@@ -264,9 +261,8 @@ const options = computed(() => {
         map: 'chinaPartJson',
         zlevel: -3,
         aspectScale: 0.85,
-        zoom: 1.1,
         layoutCenter: ['50%', '43%'],
-        layoutSize: '80%',
+        layoutSize: '90%',
         roam: false,
         silent: true,
         regions: [

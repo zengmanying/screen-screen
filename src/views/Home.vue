@@ -12,23 +12,23 @@ let tagsCloudWeekTimer = null
 let tagsCloudWeekMonth = null
 const saleTopData = [
   {
-    name: 'EU3009(BEV)',
+    name: 'EU3009',
     value: 5529,
   },
   {
-    name: 'EC180(BEV)',
+    name: 'EC180',
     value: 5154,
   },
   {
-    name: 'EX3(BEV)',
+    name: 'EX3',
     value: 3864,
   },
   {
-    name: 'EU5(BEV)',
+    name: 'EU5',
     value: 2169,
   },
   {
-    name: 'LITE(BEV)',
+    name: 'LITE',
     value: 1087,
   },
 ]
@@ -53,10 +53,10 @@ onMounted(() => {
   const tagsCloudMonthObj = new scrollTagsClond('tagsCloudMonth')
   tagsCloudWeekTimer = setInterval(() => {
     tagsCloudWeekObj.update()
-  }, 40)
+  }, 120)
   tagsCloudWeekMonth = setInterval(() => {
     tagsCloudMonthObj.update()
-  }, 80)
+  }, 160)
   getSaleStatisticsData()
 })
 
@@ -232,7 +232,7 @@ const getSaleStatisticsData = async () => {
       <!-- 算法应用总数 -->
       <div class="card card-word-cloud">
         <div class="card-header">
-          <span class="card-title">算法应用总数 23</span>
+          <span class="card-title">算法应用总数 <b>23</b></span>
         </div>
         <div class="card-body">
           <section>
