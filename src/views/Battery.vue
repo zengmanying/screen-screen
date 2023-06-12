@@ -1,9 +1,12 @@
 <script setup>
-import { computed, onBeforeMount, ref } from 'vue'
+import { computed, onBeforeMount, onMounted, ref } from 'vue'
 import HChart from '../components/echart/HChart.vue'
 import CreateChartThemeColor from '../components/echart/config/color'
 onBeforeMount(() => {
   CreateChartThemeColor()
+})
+onMounted(() => {
+  getSeries(effectDTOList)
 })
 const barAndLineOptions = {
   legend: {
@@ -589,6 +592,221 @@ const carMileageDataset = ref({
     },
   ],
 })
+
+// 过温时长及占比
+var effectDTOList = [
+  {
+    date: '[0,20)',
+    salesCnt: 100,
+    status: 0,
+  },
+  {
+    date: '[20,40)',
+    salesCnt: 50,
+    status: 0,
+  },
+  {
+    date: '[40,60)',
+    salesCnt: 100,
+    status: 0,
+  },
+  {
+    date: '[60,80)',
+    salesCnt: 140,
+    status: 0,
+  },
+  {
+    date: '[80,100)',
+    salesCnt: 105,
+    status: 0,
+  },
+  {
+    date: '[100,120)',
+    salesCnt: 150,
+    status: 1,
+  },
+  {
+    date: '[120,140)',
+    salesCnt: 220,
+    status: 1,
+  },
+  {
+    date: '[140,160)',
+    salesCnt: 150,
+    status: 1,
+  },
+  {
+    date: '[160,180)',
+    salesCnt: 80,
+    status: 1,
+  },
+  {
+    date: '[180,200)',
+    salesCnt: 100,
+    status: 2,
+  },
+  {
+    date: '[200,220)',
+    salesCnt: 160,
+    status: 2,
+  },
+  {
+    date: '[220,240)',
+    salesCnt: 180,
+    status: 2,
+  },
+  {
+    date: '[240,260)',
+    salesCnt: 120,
+    status: 3,
+  },
+  {
+    date: '[260,280)',
+    salesCnt: 100,
+    status: 3,
+  },
+  {
+    date: '[280,∞)',
+    salesCnt: 100,
+    status: 3,
+  },
+]
+let series = ref([])
+let xAxis = ref([])
+
+const lineAreaOptions = computed(() => {
+  return {
+    grid: {
+      top: 10,
+      bottom: 50,
+      left: 50,
+      right: 0,
+    },
+    xAxis: {
+      axisLabel: {
+        rotate: 35,
+      },
+      position: 'bottom',
+      data: xAxis.value,
+    },
+    series: series.value,
+  }
+})
+const getSeries = (httpData) => {
+  let data = []
+  let seriesItem
+  var st = httpData[0].status
+  for (var i = 0; i < httpData.length; i++) {
+    var date = httpData[i].date
+    xAxis.value.push(date)
+    data.push([date, httpData[i].salesCnt])
+    if (st != httpData[i].status || i == httpData.length - 1) {
+      let areaColor = ''
+      let lineColor = ''
+      switch (st) {
+        case 0:
+          areaColor = {
+            type: 'linear',
+            x: 0,
+            y: 0,
+            x2: 0,
+            y2: 1,
+            colorStops: [
+              {
+                offset: 0,
+                color: 'rgba(30, 231, 231, .36)', // 0% 处的颜色
+              },
+              {
+                offset: 1,
+                color: 'rgba(30, 231, 231, 0)', // 100% 处的颜色
+              },
+            ],
+            global: false, // 缺省为 false
+          }
+          lineColor = 'rgba(30, 231, 231, 1)'
+          break
+        case 1:
+          areaColor = {
+            type: 'linear',
+            x: 0,
+            y: 0,
+            x2: 0,
+            y2: 1,
+            colorStops: [
+              {
+                offset: 0,
+                color: 'rgba(220, 209, 151, .36)', // 0% 处的颜色
+              },
+              {
+                offset: 1,
+                color: 'rgba(220, 209, 151, 0)', // 100% 处的颜色
+              },
+            ],
+            global: false, // 缺省为 false
+          }
+          lineColor = 'rgba(220, 209, 151, 1)'
+          break
+        case 2:
+          areaColor = {
+            type: 'linear',
+            x: 0,
+            y: 0,
+            x2: 0,
+            y2: 1,
+            colorStops: [
+              {
+                offset: 0,
+                color: 'rgba(245, 163, 88, .36)', // 0% 处的颜色
+              },
+              {
+                offset: 1,
+                color: 'rgba(245, 163, 88, 0)', // 100% 处的颜色
+              },
+            ],
+            global: false, // 缺省为 false
+          }
+          lineColor = 'rgba(245, 163, 88, 1)'
+          break
+        case 3:
+          areaColor = {
+            type: 'linear',
+            x: 0,
+            y: 0,
+            x2: 0,
+            y2: 1,
+            colorStops: [
+              {
+                offset: 0,
+                color: 'rgba(241, 98, 88, .36)', // 0% 处的颜色
+              },
+              {
+                offset: 1,
+                color: 'rgba(241, 98, 88, 0)', // 100% 处的颜色
+              },
+            ],
+            global: false, // 缺省为 false
+          }
+          lineColor = 'rgba(241, 98, 88, 1)'
+      }
+      seriesItem = {
+        name: '',
+        serieType: 'line',
+        data: data,
+        areaStyle: {
+          color: areaColor,
+          opacity: 1,
+        },
+        lineStyle: {
+          width: 2,
+          color: lineColor,
+        },
+      }
+      series.value.push(seriesItem)
+      data = [[date, httpData[i].salesCnt]]
+      st = httpData[i].status
+    }
+  }
+}
 </script>
 <template>
   <div class="battery-content">
@@ -599,7 +817,7 @@ const carMileageDataset = ref({
         </div>
         <section class="car-num">
           <div class="car-num-content">
-            车型数量<span class="car-num-count">51</span>个
+            预警算法应用总数<span class="car-num-count">51</span>个
           </div>
         </section>
       </div>
@@ -703,22 +921,37 @@ const carMileageDataset = ref({
                   <dt>超40℃时长预警车辆数量分布</dt>
                   <dd>
                     <HChart
-                      :options="roseOptions"
+                      :options="lineAreaOptions"
                       :dataset="carMileageDataset"
                     ></HChart>
                   </dd>
                 </dl>
                 <dl>
                   <dt>超40℃时长占比预警车辆数量分布</dt>
-                  <dd></dd>
+                  <dd>
+                    <HChart
+                      :options="lineAreaOptions"
+                      :dataset="carMileageDataset"
+                    ></HChart>
+                  </dd>
                 </dl>
                 <dl>
                   <dt>超45℃时长预警车辆数量分布</dt>
-                  <dd></dd>
+                  <dd>
+                    <HChart
+                      :options="lineAreaOptions"
+                      :dataset="carMileageDataset"
+                    ></HChart>
+                  </dd>
                 </dl>
                 <dl>
                   <dt>超45℃时长占比预警车辆数量分布</dt>
-                  <dd></dd>
+                  <dd>
+                    <HChart
+                      :options="lineAreaOptions"
+                      :dataset="carMileageDataset"
+                    ></HChart>
+                  </dd>
                 </dl>
               </div>
             </div>
@@ -872,6 +1105,7 @@ const carMileageDataset = ref({
   width: 659px;
   flex: auto;
   margin-right: 24px;
+  height: 550px;
   .card-header {
     background-image: url('@/assets/card-title-long-bg.png');
   }
@@ -880,13 +1114,22 @@ const carMileageDataset = ref({
     align-items: center;
     flex-wrap: wrap;
     dl {
+      display: flex;
+      flex-direction: column;
       width: 50%;
+      height: 50%;
       padding: 0 15px;
+      margin: 0;
       dt {
         background-image: url('@/assets/battery/icon-arrow.svg');
         background-position: left center;
         background-repeat: no-repeat;
         padding-left: 32px;
+      }
+      dd {
+        flex: 1;
+        margin: 0;
+        padding: 4px 0 16px;
       }
     }
   }
