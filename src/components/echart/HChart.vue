@@ -13,6 +13,7 @@ import {
 import VChart, { THEME_KEY } from 'vue-echarts'
 import { ChartThemeColor } from './config/color'
 import { legend, seriesOpt, xAxis, yAxis, grid } from './config/defaultConfig'
+import { deepAssign } from '@/utils'
 
 use([
   CanvasRenderer,
@@ -69,10 +70,6 @@ const chartOptions = computed(() => {
     },
     {
       legend,
-      xAxis: {
-        ...xAxis,
-        ...{ show: isShowAxis.value },
-      },
       yAxis: {
         ...yAxis,
         ...{ show: isShowAxis.value },
@@ -83,13 +80,20 @@ const chartOptions = computed(() => {
     },
     props.options,
     {
+      xAxis: deepAssign(
+        {},
+        xAxis,
+        { show: isShowAxis.value },
+        props.options.xAxis
+      ),
+    },
+    {
       series:
         props.options &&
         props.options.series &&
         Array.isArray(props.options.series) &&
         props.options.series.map((series) => {
-          console.log(seriesOpt[series.serieType])
-          return { ...seriesOpt[series.serieType], ...series }
+          return deepAssign({}, seriesOpt[series.serieType], series)
         }),
     },
     {
