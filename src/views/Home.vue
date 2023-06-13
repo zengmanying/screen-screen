@@ -286,9 +286,6 @@ const getSaleStatisticsData = async () => {
   height: 100%;
   .left-sidelayer,
   .right-sidelayer {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
     width: 400px;
   }
   .center-content {
@@ -402,7 +399,7 @@ const getSaleStatisticsData = async () => {
 }
 
 .card-line-statistics {
-  flex: 1;
+  height: 195px;
   .card-body {
     padding: 20px;
   }
@@ -427,9 +424,7 @@ const getSaleStatisticsData = async () => {
 
 .card-warning {
   margin-top: 0;
-  flex-grow: 0;
-  flex-shrink: 0;
-  flex-basis: 25%;
+  height: 209px;
   .card-body {
     display: flex;
     align-items: center;
@@ -459,8 +454,15 @@ const getSaleStatisticsData = async () => {
 }
 
 .card-word-cloud {
+  height: 350px;
   .card-body {
-    padding: 20px 28px 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  section {
+    padding-top: 16px;
+    flex: 1;
   }
   .word-cloud-title {
     height: 28px;
@@ -476,17 +478,19 @@ const getSaleStatisticsData = async () => {
     }
   }
   .word-cloud-chart {
-    height: 121px;
-    padding: 12px 0;
+    flex: 1;
+    padding: 0;
   }
 }
 
 .card-gauge {
+  height: 350px;
   .card-body {
     display: flex;
     align-items: center;
     justify-content: space-around;
     flex-wrap: wrap;
+    padding-top: 0;
     padding-bottom: 8px;
   }
 }
@@ -512,7 +516,7 @@ const getSaleStatisticsData = async () => {
 }
 
 .card-mileage {
-  height: 24%;
+  height: 244px;
   .card-header {
     background-image: url('@/assets/card-title-long-bg.png');
   }
@@ -527,8 +531,7 @@ const getSaleStatisticsData = async () => {
 
 .tagscloud {
   position: relative;
-  height: 131px;
-  padding: 12px 0;
+  height: calc(100% - 28px);
   text-align: center;
   .tagcloud-item {
     position: absolute;
