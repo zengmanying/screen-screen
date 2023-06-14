@@ -3,12 +3,15 @@ import { ref, computed, provide } from 'vue'
 import { use } from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
 import { BarChart, LineChart, PieChart, ScatterChart } from 'echarts/charts'
+import { Scatter3DChart } from 'echarts-gl/charts'
+import { Grid3DComponent } from 'echarts-gl/components'
 import {
   TitleComponent,
   TooltipComponent,
   LegendComponent,
   GridComponent,
   DatasetComponent,
+  VisualMapComponent,
 } from 'echarts/components'
 import VChart, { THEME_KEY } from 'vue-echarts'
 import { ChartThemeColor } from './config/color'
@@ -26,6 +29,9 @@ use([
   LegendComponent,
   GridComponent,
   DatasetComponent,
+  VisualMapComponent,
+  Scatter3DChart,
+  Grid3DComponent,
 ])
 
 provide(THEME_KEY, 'dark')
@@ -47,7 +53,7 @@ const isShowAxis = computed(
     props.options.series &&
     Array.isArray(props.options.series) &&
     props.options.series[0] &&
-    ['bar', 'line'].includes(props.options.series[0].serieType)
+    ['bar', 'line', 'scatter'].includes(props.options.series[0].serieType)
 )
 
 const isPureColor = computed(
@@ -69,16 +75,31 @@ const chartOptions = computed(() => {
         : ChartThemeColor.colors,
     },
     {
-      legend,
-      yAxis: {
-        ...yAxis,
-        ...{ show: isShowAxis.value },
-      },
-      grid: {
-        ...grid,
-      },
+      legend: deepAssign({}, legend, props.options.legend),
     },
-    props.options,
+    {
+      grid: deepAssign({}, grid, props.options.grid),
+    },
+    {
+      yAxis:
+        props.options &&
+        props.options.yAxis &&
+        Array.isArray(props.options.yAxis)
+          ? props.options.yAxis.map((yAxisItem) => {
+              return deepAssign(
+                {},
+                yAxis,
+                { show: isShowAxis.value },
+                yAxisItem
+              )
+            })
+          : deepAssign(
+              {},
+              yAxis,
+              { show: isShowAxis.value },
+              props.options.yAxis
+            ),
+    },
     {
       xAxis: deepAssign(
         {},

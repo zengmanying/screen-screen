@@ -81,8 +81,8 @@ const legend = {
   },
   itemWidth: 10,
   itemHeight: 10,
-  right: '0%',
-  top: '0%',
+  right: 0,
+  top: 0,
 }
 
 const tooltip = {
@@ -236,6 +236,7 @@ const pieSeries = {
     width: 120,
     color: 'rgba(255, 255, 255, 0.85)',
     fontSize: 12,
+    distanceToLabelLine: 2,
     formatter: (params) => {
       return params.percent + '%'
     },
@@ -243,10 +244,18 @@ const pieSeries = {
   labelLine: {
     show: true,
     length: 4,
+    length2: 5,
     lineStyle: {
       color: 'rgba(255, 255, 255, 0.4)',
     },
   },
+}
+
+const scatterSeries = {
+  type: 'scatter',
+  showSymbol: true,
+  symbol: 'circle',
+  symbolSize: 12,
 }
 
 const backgroundColor = pure
@@ -259,6 +268,7 @@ const seriesOpt = {
   pie: pieSeries,
   gauge: gaugeSeries,
   lineNoArea: lineNoAreaSeries,
+  scatter: scatterSeries,
 }
 export {
   xAxis,

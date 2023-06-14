@@ -287,6 +287,7 @@ const getSaleStatisticsData = async () => {
   .left-sidelayer,
   .right-sidelayer {
     width: 400px;
+    flex-shrink: 0;
   }
   .center-content {
     position: relative;
@@ -437,6 +438,9 @@ const getSaleStatisticsData = async () => {
   }
   dt {
     margin-bottom: -32px;
+    img {
+      width: 110px;
+    }
   }
   dd {
     margin: 0;
@@ -456,12 +460,11 @@ const getSaleStatisticsData = async () => {
 .card-word-cloud {
   height: 350px;
   .card-body {
-    padding: 0;
+    padding: 20px 0 0;
     display: flex;
     flex-direction: column;
   }
   section {
-    padding-top: 16px;
     flex: 1;
   }
   .word-cloud-title {
@@ -484,14 +487,14 @@ const getSaleStatisticsData = async () => {
 }
 
 .card-gauge {
-  height: 350px;
+  height: 357px;
   .card-body {
     display: flex;
     align-items: center;
     justify-content: space-around;
     flex-wrap: wrap;
     padding-top: 0;
-    padding-bottom: 8px;
+    padding-bottom: 16px;
   }
 }
 
@@ -531,7 +534,8 @@ const getSaleStatisticsData = async () => {
 
 .tagscloud {
   position: relative;
-  height: calc(100% - 28px);
+  height: calc(100% - 60px);
+  margin: 16px 0;
   text-align: center;
   .tagcloud-item {
     position: absolute;

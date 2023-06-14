@@ -23,8 +23,8 @@ const lineOptions = {
   grid: {
     containLabel: true,
     x: 0,
-    y: 25,
-    x2: 15,
+    y: 28,
+    x2: 20,
     y2: 0,
   },
   yAxis: [

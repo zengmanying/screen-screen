@@ -1,5 +1,5 @@
-﻿var radius = 40
-var radiusX = 65
+﻿var radius = 30
+var radiusX = 60
 var d = 200
 var dtr = Math.PI / 180
 var distr = true

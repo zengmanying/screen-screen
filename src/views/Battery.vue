@@ -1,7 +1,11 @@
 <script setup>
 import { computed, onBeforeMount, onMounted, ref } from 'vue'
+import { xAxis, yAxis, legend } from '../components/echart/config/defaultConfig'
 import HChart from '../components/echart/HChart.vue'
 import CreateChartThemeColor from '../components/echart/config/color'
+import VChart from 'vue-echarts'
+import { Carousel } from 'ant-design-vue'
+import '../assets/ant-carousel.css'
 onBeforeMount(() => {
   CreateChartThemeColor()
 })
@@ -10,82 +14,33 @@ onMounted(() => {
 })
 const barAndLineOptions = {
   legend: {
-    bottom: '10%',
-    itemWidth: 10,
-    itemHeight: 10,
-    padding: [0, 20, 0, 0],
+    top: 'auto',
+    bottom: 6,
+    left: 'center',
   },
   grid: {
     top: 30,
     right: 60,
-    bottom: 100,
+    bottom: 80,
     left: 60,
   },
   yAxis: [
     {
       name: '2023',
       type: 'value',
-      show: true,
       gridIndex: 0,
-      splitLine: {
-        show: true,
-        lineStyle: {
-          color: 'rgba(126, 137, 164, 0.3)',
-          type: 'dashed',
-          width: 1,
-        },
-      },
-      inverse: false,
-      axisLine: {
-        show: true,
-        lineStyle: {
-          color: 'rgba(126, 137, 164, .5)',
-          width: 1,
-          type: 'solid',
-        },
-      },
-      axisLabel: {
-        show: true,
-        color: 'rgba(126, 137, 164, 1)',
-        fontSize: 12,
-        fontWeight: 'bolder',
-      },
-      axisTick: { show: false, inside: true },
       position: 'left',
       offset: 0,
     },
     {
       name: '',
       type: 'value',
-      show: true,
       gridIndex: 0,
-      splitLine: {
-        show: true,
-        lineStyle: {
-          color: 'rgba(126, 137, 164, 0.3)',
-          type: 'dashed',
-          width: 1,
-        },
-      },
-      inverse: false,
-      axisLine: {
-        show: true,
-        lineStyle: {
-          color: 'rgba(126, 137, 164, .5)',
-          width: 1,
-          type: 'solid',
-        },
-      },
       axisLabel: {
-        show: true,
-        color: 'rgba(126, 137, 164, 1)',
-        fontSize: 12,
-        fontWeight: 'bolder',
         formatter: function (value) {
           return value * 100 + '%'
         },
       },
-      axisTick: { show: false, inside: true },
       position: 'right',
       offset: 0,
     },
@@ -141,36 +96,36 @@ const recognitionRateDataset = ref({
       name: '1月',
       newCar: 823,
       historyCar: 1000,
-      totalRadio: 0.5,
-      newRadio: 0.8,
+      totalRate: 0.5,
+      newRate: 0.8,
     },
     {
       name: '2月',
       newCar: 823,
       historyCar: 1200,
-      totalRadio: 0.6,
-      newRadio: 0.8,
+      totalRate: 0.6,
+      newRate: 0.8,
     },
     {
       name: '3月',
       newCar: 2200,
       historyCar: 1800,
-      totalRadio: 0.7,
-      newRadio: 0.8,
+      totalRate: 0.7,
+      newRate: 0.8,
     },
     {
       name: '4月',
       newCar: 823,
       historyCar: 1400,
-      totalRadio: 0.9,
-      newRadio: 0.5,
+      totalRate: 0.9,
+      newRate: 0.5,
     },
     {
       name: '5月',
       newCar: 1500,
       historyCar: 1600,
-      totalRadio: 0.8,
-      newRadio: 0.6,
+      totalRate: 0.8,
+      newRate: 0.6,
     },
   ],
 })
@@ -288,43 +243,43 @@ const accuracyRateDataset = ref({
   source: [
     {
       name: '1月',
-      newCar: 823,
-      historyCar: 1000,
-      underRepair: 400,
-      totalRadio: 0.5,
-      newRadio: 0.8,
+      waringRepairCar: 823,
+      totalCar: 1000,
+      underRepairCar: 400,
+      detectionRate: 0.5,
+      accuracyRate: 0.8,
     },
     {
       name: '2月',
-      newCar: 823,
-      historyCar: 1200,
-      underRepair: 800,
-      totalRadio: 0.6,
-      newRadio: 0.8,
+      waringRepairCar: 823,
+      totalCar: 1200,
+      underRepairCar: 800,
+      detectionRate: 0.6,
+      accuracyRate: 0.8,
     },
     {
       name: '3月',
-      newCar: 2200,
-      historyCar: 1800,
-      underRepair: 900,
-      totalRadio: 0.7,
-      newRadio: 0.8,
+      waringRepairCar: 2200,
+      totalCar: 1800,
+      underRepairCar: 900,
+      detectionRate: 0.7,
+      accuracyRate: 0.8,
     },
     {
       name: '4月',
-      newCar: 823,
-      historyCar: 1400,
-      underRepair: 1000,
-      totalRadio: 0.9,
-      newRadio: 0.5,
+      waringRepairCar: 823,
+      totalCar: 1400,
+      underRepairCar: 1000,
+      detectionRate: 0.9,
+      accuracyRate: 0.5,
     },
     {
       name: '5月',
-      newCar: 1500,
-      historyCar: 1600,
-      underRepair: 1200,
-      totalRadio: 0.8,
-      newRadio: 0.6,
+      waringRepairCar: 1500,
+      totalCar: 1600,
+      underRepairCar: 1200,
+      detectionRate: 0.8,
+      accuracyRate: 0.6,
     },
   ],
 })
@@ -337,17 +292,16 @@ const accuracyRateOpt = computed(() => {
 const roseOptions = ref({
   legend: {
     icon: 'circle',
-    top: '75%',
-    itemWidth: 10,
-    itemHeight: 10,
-    width: 200,
+    bottom: '10%',
+    top: 'auto',
+    left: 'center',
   },
-  roseType: 'radius',
   series: [
     {
       name: '风险等级',
       serieType: 'pie',
       center: ['50%', '40%'],
+      roseType: 'radius',
     },
   ],
 })
@@ -356,7 +310,7 @@ const riskLevelDataset = ref({
   source: [
     {
       name: '低风险',
-      value: 823,
+      value: 323,
     },
     {
       name: '中风险',
@@ -598,83 +552,83 @@ const carMileageDataset = ref({
 // 过温时长及占比
 var effectDTOList = [
   {
-    date: '[0,20)',
-    salesCnt: 100,
+    name: '[0,20)',
+    count: 100,
     status: 0,
   },
   {
-    date: '[20,40)',
-    salesCnt: 50,
+    name: '[20,40)',
+    count: 50,
     status: 0,
   },
   {
-    date: '[40,60)',
-    salesCnt: 100,
+    name: '[40,60)',
+    count: 100,
     status: 0,
   },
   {
-    date: '[60,80)',
-    salesCnt: 140,
+    name: '[60,80)',
+    count: 140,
     status: 0,
   },
   {
-    date: '[80,100)',
-    salesCnt: 105,
+    name: '[80,100)',
+    count: 105,
     status: 0,
   },
   {
-    date: '[100,120)',
-    salesCnt: 150,
+    name: '[100,120)',
+    count: 150,
     status: 1,
   },
   {
-    date: '[120,140)',
-    salesCnt: 220,
+    name: '[120,140)',
+    count: 220,
     status: 1,
   },
   {
-    date: '[140,160)',
-    salesCnt: 150,
+    name: '[140,160)',
+    count: 150,
     status: 1,
   },
   {
-    date: '[160,180)',
-    salesCnt: 80,
+    name: '[160,180)',
+    count: 80,
     status: 1,
   },
   {
-    date: '[180,200)',
-    salesCnt: 100,
+    name: '[180,200)',
+    count: 100,
     status: 2,
   },
   {
-    date: '[200,220)',
-    salesCnt: 160,
+    name: '[200,220)',
+    count: 160,
     status: 2,
   },
   {
-    date: '[220,240)',
-    salesCnt: 180,
+    name: '[220,240)',
+    count: 180,
     status: 2,
   },
   {
-    date: '[240,260)',
-    salesCnt: 120,
+    name: '[240,260)',
+    count: 120,
     status: 3,
   },
   {
-    date: '[260,280)',
-    salesCnt: 100,
+    name: '[260,280)',
+    count: 100,
     status: 3,
   },
   {
-    date: '[280,∞)',
-    salesCnt: 100,
+    name: '[280,∞)',
+    count: 100,
     status: 3,
   },
 ]
-let series = ref([])
-let xAxis = ref([])
+let effectDTOSeries = ref([])
+let effectDTOXAxis = ref([])
 
 const lineAreaOptions = computed(() => {
   return {
@@ -689,9 +643,9 @@ const lineAreaOptions = computed(() => {
         rotate: 35,
       },
       position: 'bottom',
-      data: xAxis.value,
+      data: effectDTOXAxis.value,
     },
-    series: series.value,
+    series: effectDTOSeries.value,
   }
 })
 const getSeries = (httpData) => {
@@ -699,9 +653,9 @@ const getSeries = (httpData) => {
   let seriesItem
   var st = httpData[0].status
   for (var i = 0; i < httpData.length; i++) {
-    var date = httpData[i].date
-    xAxis.value.push(date)
-    data.push([date, httpData[i].salesCnt])
+    var name = httpData[i].name
+    effectDTOXAxis.value.push(name)
+    data.push([name, httpData[i].count])
     if (st != httpData[i].status || i == httpData.length - 1) {
       let areaColor = ''
       let lineColor = ''
@@ -803,12 +757,159 @@ const getSeries = (httpData) => {
           color: lineColor,
         },
       }
-      series.value.push(seriesItem)
-      data = [[date, httpData[i].salesCnt]]
+      effectDTOSeries.value.push(seriesItem)
+      data = [[name, httpData[i].count]]
       st = httpData[i].status
     }
   }
 }
+// 工况预警展示
+const scatter3dOptions = {
+  legend: {
+    ...legend,
+    ...{
+      bottom: 0,
+      top: 'auto',
+      left: 'center',
+      selectedMode: false,
+    },
+  },
+  visualMap: {
+    show: false,
+    max: 1,
+    type: 'piecewise',
+    splitNumber: 3,
+    inRange: {
+      color: ['#1EE7E7', '#187FE9', '#F16258'],
+    },
+    dimension: 2,
+    orient: 'horizontal',
+    textStyle: {
+      color: '#fff',
+    },
+    left: 'center',
+    bottom: 0,
+  },
+  grid3D: {
+    axisPointer: {
+      show: false,
+    },
+    left: 10,
+    right: 0,
+    top: 'auto',
+    bottom: 40,
+    viewControl: {
+      alpha: 5,
+      beta: 37,
+    },
+  },
+  xAxis3D: {
+    ...xAxis,
+    ...{
+      splitLine: {
+        show: true,
+        lineStyle: {
+          type: 'dashed',
+          color: 'rgba(126, 137, 164, 0.5)',
+          width: 1,
+        },
+      },
+      axisLabel: {
+        color: 'rgba(126, 137, 164, 1)',
+        fontSize: 12,
+        margin: 12,
+      },
+    },
+  },
+  yAxis3D: yAxis,
+  zAxis3D: {
+    ...yAxis,
+    ...{
+      axisLabel: {
+        color: 'rgba(126, 137, 164, 1)',
+        fontSize: 12,
+        margin: 16,
+      },
+    },
+  },
+  series: [
+    {
+      type: 'scatter3D',
+      name: '高风险',
+      symbolSize: 8,
+      itemStyle: {
+        opacity: 1,
+        color: 'rgba(241, 98, 88, 1)',
+      },
+    },
+    {
+      type: 'scatter3D',
+      name: '中风险',
+      symbolSize: 8,
+      itemStyle: {
+        opacity: 1,
+        color: 'rgba(24, 127, 233, 1)',
+      },
+    },
+    {
+      type: 'scatter3D',
+      symbolSize: 8,
+      name: '低风险',
+      itemStyle: {
+        opacity: 1,
+        color: 'rgba(30, 231, 231, 1)',
+      },
+    },
+  ],
+  dataset: {
+    source: [
+      [0, -20, 1],
+      [-10, 0, 0.5],
+      [-20, 10, 0.2],
+      [10, 20, 0.6],
+      [4, 80, 0.7],
+      [-1, 0, 0.5],
+      [-18, 10, 0.5],
+      [10, 10, 0.9],
+    ],
+  },
+}
+
+// SOH分布
+const scatterOptions = ref({
+  grid: {
+    right: 0,
+    top: 50,
+    bottom: 66,
+  },
+  legend: {
+    top: 'auto',
+    bottom: 0,
+    left: 'center',
+  },
+  yAxis: {
+    name: '里程表(万公里)',
+  },
+  series: [
+    {
+      name: 'SOH电池容量百分比',
+      serieType: 'scatter',
+      symbol: 'image://scatter-symbol.svg',
+    },
+  ],
+})
+const sohDataset = ref({
+  source: [
+    [5, 323],
+    [5, 167],
+    [5, 284],
+    [10, 413],
+    [13, 217],
+    [20, 587],
+    [35, 487],
+    [50, 287],
+  ],
+})
 </script>
 <template>
   <div class="battery-content">
@@ -869,10 +970,24 @@ const getSeries = (httpData) => {
               <span class="card-title">各项目预警车辆数量分布</span>
             </div>
             <div class="card-body">
-              <HChart
-                :options="getCarNumOptions()"
-                :dataset="carNumDataset"
-              ></HChart>
+              <Carousel autoplay>
+                <HChart
+                  :options="getCarNumOptions()"
+                  :dataset="carNumDataset"
+                ></HChart>
+                <HChart
+                  :options="getCarNumOptions()"
+                  :dataset="carNumDataset"
+                ></HChart>
+                <HChart
+                  :options="getCarNumOptions()"
+                  :dataset="carNumDataset"
+                ></HChart>
+                <HChart
+                  :options="getCarNumOptions()"
+                  :dataset="carNumDataset"
+                ></HChart>
+              </Carousel>
             </div>
           </div>
           <div class="card car-algorithm-spread">
@@ -880,16 +995,48 @@ const getSeries = (httpData) => {
               <span class="card-title">各算法预警车辆数量分布</span>
             </div>
             <div class="card-body">
-              <HChart
-                :options="
-                  getCarNumOptions(
-                    'rgba(30, 231, 231, 1)',
-                    'rgba(30, 231, 231, 0.35)',
-                    '#1EE7E7'
-                  )
-                "
-                :dataset="carAlgorithmDataset"
-              ></HChart>
+              <Carousel autoplay>
+                <HChart
+                  :options="
+                    getCarNumOptions(
+                      'rgba(30, 231, 231, 1)',
+                      'rgba(30, 231, 231, 0.35)',
+                      '#1EE7E7'
+                    )
+                  "
+                  :dataset="carAlgorithmDataset"
+                ></HChart>
+                <HChart
+                  :options="
+                    getCarNumOptions(
+                      'rgba(30, 231, 231, 1)',
+                      'rgba(30, 231, 231, 0.35)',
+                      '#1EE7E7'
+                    )
+                  "
+                  :dataset="carAlgorithmDataset"
+                ></HChart>
+                <HChart
+                  :options="
+                    getCarNumOptions(
+                      'rgba(30, 231, 231, 1)',
+                      'rgba(30, 231, 231, 0.35)',
+                      '#1EE7E7'
+                    )
+                  "
+                  :dataset="carAlgorithmDataset"
+                ></HChart>
+                <HChart
+                  :options="
+                    getCarNumOptions(
+                      'rgba(30, 231, 231, 1)',
+                      'rgba(30, 231, 231, 0.35)',
+                      '#1EE7E7'
+                    )
+                  "
+                  :dataset="carAlgorithmDataset"
+                ></HChart>
+              </Carousel>
             </div>
           </div>
           <div class="card car-mileage-spread">
@@ -922,37 +1069,25 @@ const getSeries = (httpData) => {
                 <dl>
                   <dt>超40℃时长预警车辆数量分布</dt>
                   <dd>
-                    <HChart
-                      :options="lineAreaOptions"
-                      :dataset="carMileageDataset"
-                    ></HChart>
+                    <HChart :options="lineAreaOptions"></HChart>
                   </dd>
                 </dl>
                 <dl>
                   <dt>超40℃时长占比预警车辆数量分布</dt>
                   <dd>
-                    <HChart
-                      :options="lineAreaOptions"
-                      :dataset="carMileageDataset"
-                    ></HChart>
+                    <HChart :options="lineAreaOptions"></HChart>
                   </dd>
                 </dl>
                 <dl>
                   <dt>超45℃时长预警车辆数量分布</dt>
                   <dd>
-                    <HChart
-                      :options="lineAreaOptions"
-                      :dataset="carMileageDataset"
-                    ></HChart>
+                    <HChart :options="lineAreaOptions"></HChart>
                   </dd>
                 </dl>
                 <dl>
                   <dt>超45℃时长占比预警车辆数量分布</dt>
                   <dd>
-                    <HChart
-                      :options="lineAreaOptions"
-                      :dataset="carMileageDataset"
-                    ></HChart>
+                    <HChart :options="lineAreaOptions"></HChart>
                   </dd>
                 </dl>
               </div>
@@ -961,7 +1096,22 @@ const getSeries = (httpData) => {
               <div class="card-header">
                 <span class="card-title">工况预警展示</span>
               </div>
-              <div class="card-body"></div>
+              <div class="card-body">
+                <!-- <div id="scatter3d" style="width: 100%; height: 100%"></div> -->
+                <!-- <HChart
+                  :options="scatter3dOptions"
+                  :dataset="workingShowDataset"
+                ></HChart> -->
+                <VChart
+                  ref="chart"
+                  element-loading-text="Loading..."
+                  class="chart"
+                  :autoresize="true"
+                  :option="scatter3dOptions"
+                  theme="dark"
+                  :style="{ width: '100%', height: '100%' }"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -969,7 +1119,19 @@ const getSeries = (httpData) => {
           <div class="right-bottom-right-title">
             <img src="../assets/battery/soh-title.svg" alt="" />
           </div>
-          <div class="right-bottom-right-content"></div>
+          <div class="right-bottom-right-content">
+            <div class="card car-soh">
+              <div class="card-header">
+                <span class="card-title">SOH分布</span>
+              </div>
+              <div class="card-body">
+                <HChart
+                  :options="scatterOptions"
+                  :dataset="sohDataset"
+                ></HChart>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -989,8 +1151,6 @@ const getSeries = (httpData) => {
   }
 }
 .left-sidelayer {
-  display: flex;
-  flex-direction: column;
   width: 400px;
   flex-shrink: 0;
   &::before,
@@ -1089,6 +1249,31 @@ const getSeries = (httpData) => {
   }
 }
 
+.ant-carousel :deep(.slick-slide) {
+  height: 314px;
+  overflow: hidden;
+  > div {
+    width: 100%;
+    height: 100%;
+  }
+}
+.ant-carousel :deep(.slick-dots) {
+  li {
+    width: 5px;
+    height: 5px;
+    button {
+      border-radius: 5px;
+      height: 100%;
+      background: rgb(255, 255, 255);
+    }
+    &.slick-active {
+      width: 22px;
+      button {
+        background: rgb(255, 255, 255);
+      }
+    }
+  }
+}
 .right-bottom-container {
   display: flex;
   align-items: center;
@@ -1101,13 +1286,18 @@ const getSeries = (httpData) => {
 }
 .right-bottom-left-content {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  height: 455px;
+  padding-top: 24px;
+  .card {
+    margin-top: 0;
+  }
 }
 .car-temp-rate {
   width: 659px;
   flex: auto;
   margin-right: 24px;
-  height: 550px;
+  height: 100%;
   .card-header {
     background-image: url('@/assets/card-title-long-bg.png');
   }
@@ -1115,6 +1305,7 @@ const getSeries = (httpData) => {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
+    padding: 14px 0;
     dl {
       display: flex;
       flex-direction: column;
@@ -1139,8 +1330,19 @@ const getSeries = (httpData) => {
 .car-working-show {
   width: 365px;
   flex: auto;
+  height: 100%;
 }
 .right-bottom-right-container {
   width: 365px;
+}
+.right-bottom-right-content {
+  height: 455px;
+  padding-top: 24px;
+  .card {
+    margin-top: 0;
+  }
+}
+.car-soh {
+  height: 100%;
 }
 </style>
