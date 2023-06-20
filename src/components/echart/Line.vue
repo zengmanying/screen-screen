@@ -1,10 +1,11 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { ref, defineProps } from 'vue'
 import VChart from 'vue-echarts'
 import { use } from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
 import { LineChart } from 'echarts/charts'
 import { GridComponent, DatasetComponent } from 'echarts/components'
+import { smoothLine } from '@/utils'
 
 use([CanvasRenderer, LineChart, GridComponent, DatasetComponent])
 
@@ -17,6 +18,25 @@ const props = defineProps({
 const initOptions = ref({
   renderer: 'canvas',
 })
+const lineArrData = props.data.map((item, idx) => [
+  idx + 1,
+  Object.values(item)[1],
+  Object.values(item)[0],
+])
+const lineData = smoothLine(lineArrData)
+const coordsData = [
+  {
+    coords: [],
+  },
+]
+
+for (var i = 0; i < lineData.length; i++) {
+  coordsData[0].coords.push([lineData[i][0], lineData[i][1]])
+}
+
+// const datacoords = computed(() => {
+//   return props.data.map((item) => [item.name, item.value])
+// })
 
 const lineOptions = {
   backgroundColor: 'transparent',
@@ -27,41 +47,40 @@ const lineOptions = {
     x2: 20,
     y2: 0,
   },
-  yAxis: [
-    {
-      type: 'value',
-      z: 0,
-      axisLabel: {
-        formatter: '{value}',
-        fontSize: 12,
-        color: '#7E89A4',
-      },
-      axisTick: {
-        show: false,
-      },
-      axisLine: {
-        show: true,
-        lineStyle: {
-          color: 'rgba(126, 137, 164, 0.5)',
-        },
-      },
-      splitLine: {
-        show: true,
-        lineStyle: {
-          color: 'rgba(126, 137, 164, 0.3)',
-          type: 'dashed',
-        },
+  yAxis: {
+    splitNumber: 4,
+    z: 0,
+    axisLabel: {
+      formatter: '{value}',
+      fontSize: 12,
+      color: '#7E89A4',
+    },
+    axisTick: {
+      show: false,
+    },
+    axisLine: {
+      show: true,
+      lineStyle: {
+        color: 'rgba(126, 137, 164, 0.5)',
       },
     },
-  ],
+    splitLine: {
+      show: true,
+      lineStyle: {
+        color: 'rgba(126, 137, 164, 0.3)',
+        type: 'dashed',
+      },
+    },
+  },
   xAxis: {
-    type: 'category',
-    boundaryGap: false,
-    z: 2,
-    splitNumber: 5,
+    min: 1,
+    minInterval: 1,
     axisLabel: {
       fontSize: 12,
       color: '#7E89A4',
+      formatter: (params) => {
+        return lineArrData[params - 1][2]
+      },
     },
     axisTick: {
       show: false,
@@ -76,21 +95,27 @@ const lineOptions = {
       show: false,
     },
   },
-  animation: true,
   series: [
     {
       type: 'line',
-      smooth: true,
       lineStyle: {
         color: '#187FE9',
         width: 3,
       },
       symbol: 'circle',
-      symbolSize: 6,
+      symbolSize: (value, params) => {
+        return [1, 2, 3, 4, 5, 6].includes(params.value[0]) ? 6 : 0
+      },
+      showAllSymbol: false,
       label: {
         show: true,
         fontSize: 14,
         color: '#fff',
+        formatter: (params) => {
+          return [1, 2, 3, 4, 5, 6].includes(params.value[0])
+            ? params.value[1]
+            : ''
+        },
       },
       itemStyle: {
         color: '#187FE9',
@@ -117,19 +142,46 @@ const lineOptions = {
           globalCoord: false, // 缺省为 false
         },
       },
+      data: lineData,
+    },
+    {
+      name: '',
+      type: 'lines',
+      coordinateSystem: 'cartesian2d',
+      zlevel: 1,
+      polyline: true,
+      symbol: 'circle',
+      effect: {
+        show: true,
+        trailLength: 0.8,
+        symbol: 'circle',
+        period: 2, //光点滑动速度
+        symbolSize: 6,
+      },
+      lineStyle: {
+        normal: {
+          color: 'rgba(14, 197, 255, 0.5)',
+          width: 0,
+          opacity: 0,
+          curveness: 0,
+        },
+      },
+      data: coordsData,
     },
   ],
 }
 
-const openOptions = computed(() => {
-  return {
-    ...lineOptions,
-    dataset: {
-      dimensions: ['name', 'value'],
-      source: props.data,
-    },
-  }
-})
+console.log(lineOptions)
+
+// const openOptions = computed(() => {
+//   return {
+//     ...lineOptions,
+//     dataset: {
+//       dimensions: ['name', 'value', 'coord'],
+//       source: props.data,
+//     },
+//   }
+// })
 </script>
 <template>
   <VChart
@@ -137,7 +189,7 @@ const openOptions = computed(() => {
     class="chart"
     :autoresize="true"
     :init-options="initOptions"
-    :option="openOptions"
+    :option="lineOptions"
     :style="{ width: '100%', height: '100%' }"
     theme="dark"
   />

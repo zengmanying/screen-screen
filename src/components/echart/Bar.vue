@@ -3,10 +3,17 @@ import { computed, ref } from 'vue'
 import VChart from 'vue-echarts'
 import { use } from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
-import { BarChart, ScatterChart } from 'echarts/charts'
+import { BarChart, ScatterChart, PictorialBarChart } from 'echarts/charts'
 import { GridComponent, DatasetComponent } from 'echarts/components'
 
-use([CanvasRenderer, BarChart, ScatterChart, GridComponent, DatasetComponent])
+use([
+  CanvasRenderer,
+  BarChart,
+  ScatterChart,
+  PictorialBarChart,
+  GridComponent,
+  DatasetComponent,
+])
 
 const initOptions = ref({
   renderer: 'canvas',
@@ -82,27 +89,27 @@ const lineOptions = {
         color: '#fff',
         position: 'top',
       },
-      showBackground: true,
-      backgroundStyle: {
-        color: {
-          type: 'linear',
-          x: 0,
-          y: 0,
-          x2: 0,
-          y2: 1,
-          colorStops: [
-            {
-              offset: 0,
-              color: 'rgba(195, 226, 255, 0.1)', // 100% 处的颜色
-            },
-            {
-              offset: 1,
-              color: 'rgba(195, 226, 255, 0)', // 100% 处的颜色
-            },
-          ],
-          global: false, // 缺省为 false
-        },
-      },
+      // showBackground: true,
+      // backgroundStyle: {
+      //   color: {
+      //     type: 'linear',
+      //     x: 0,
+      //     y: 0,
+      //     x2: 0,
+      //     y2: 1,
+      //     colorStops: [
+      //       {
+      //         offset: 0,
+      //         color: 'rgba(195, 226, 255, 0.1)', // 100% 处的颜色
+      //       },
+      //       {
+      //         offset: 1,
+      //         color: 'rgba(195, 226, 255, 0)', // 100% 处的颜色
+      //       },
+      //     ],
+      //     global: false, // 缺省为 false
+      //   },
+      // },
       itemStyle: {
         color: {
           type: 'linear',
@@ -113,11 +120,11 @@ const lineOptions = {
           colorStops: [
             {
               offset: 0,
-              color: 'rgba(24, 144, 255, 0.35)', // 0% 处的颜色
+              color: 'rgba(28, 84, 165, 1)', // 0% 处的颜色
             },
             {
               offset: 1,
-              color: 'rgba(24, 130, 255, 1)', // 100% 处的颜色
+              color: 'rgba(97, 182, 230, 1)', // 100% 处的颜色
             },
           ],
           global: false, // 缺省为 false
@@ -125,19 +132,42 @@ const lineOptions = {
       },
     },
     {
-      name: 'Object',
-      type: 'scatter',
-      symbol: 'rect',
-      silent: true,
+      type: 'pictorialBar',
+      barMaxWidth: '20',
+      symbol: 'diamond',
+      symbolOffset: [0, '50%'],
+      symbolSize: [16, 8],
+      zlevel: 2,
       itemStyle: {
-        normal: {
-          color: '#1ee7e7',
-        },
+        color: 'rgba(97, 182, 230, 1)',
       },
-      symbolSize: [16, 5],
-      symbolOffset: [0, 0],
-      z: 20,
     },
+    {
+      type: 'pictorialBar',
+      barMaxWidth: '20',
+      symbolPosition: 'end',
+      symbol: 'diamond',
+      symbolOffset: [0, '-50%'],
+      symbolSize: [16, 8],
+      zlevel: 2,
+      itemStyle: {
+        color: '#1EE7E7',
+      },
+    },
+    // {
+    //   name: 'Object',
+    //   type: 'scatter',
+    //   symbol: 'rect',
+    //   silent: true,
+    //   itemStyle: {
+    //     normal: {
+    //       color: '#1ee7e7',
+    //     },
+    //   },
+    //   symbolSize: [16, 5],
+    //   symbolOffset: [0, 0],
+    //   z: 20,
+    // },
   ],
 }
 
@@ -157,7 +187,6 @@ const data = [
   {
     name: '15-20',
     value: 1435,
-    symbol: 100,
   },
   {
     name: '20-25',
@@ -203,6 +232,7 @@ const hasSymbolData = computed(() => {
     arr.push({
       name: item.name,
       value: item.value,
+      diamond: 1,
       symbol: item.value,
     })
   })
@@ -213,7 +243,7 @@ const openOptions = computed(() => {
   return {
     ...lineOptions,
     dataset: {
-      dimensions: ['name', 'value', 'symbol'],
+      dimensions: ['name', 'value', 'diamond', 'symbol'],
       source: hasSymbolData.value,
     },
   }

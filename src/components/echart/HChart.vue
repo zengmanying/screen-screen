@@ -2,7 +2,13 @@
 import { ref, computed, provide } from 'vue'
 import { use } from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
-import { BarChart, LineChart, PieChart, ScatterChart } from 'echarts/charts'
+import {
+  BarChart,
+  LineChart,
+  PieChart,
+  ScatterChart,
+  LinesChart,
+} from 'echarts/charts'
 import { Scatter3DChart } from 'echarts-gl/charts'
 import { Grid3DComponent } from 'echarts-gl/components'
 import {
@@ -24,6 +30,7 @@ use([
   PieChart,
   LineChart,
   ScatterChart,
+  LinesChart,
   TitleComponent,
   TooltipComponent,
   LegendComponent,

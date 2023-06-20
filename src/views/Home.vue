@@ -7,12 +7,12 @@ import Map from '../components/echart/Map.vue'
 import Bar from '../components/echart/Bar.vue'
 import scrollTagsClond from '@/assets/js/fesucai.js'
 import { onMounted, onUnmounted, ref } from 'vue'
-import { getSaleStatistics } from '@/api/api'
+// import { getSaleStatistics } from '@/api/api'
 let tagsCloudWeekTimer = null
 let tagsCloudWeekMonth = null
 const saleTopData = [
   {
-    name: 'EU3009',
+    name: 'EU300',
     value: 5529,
   },
   {
@@ -68,10 +68,36 @@ onUnmounted(() => {
 })
 let lineData = ref([])
 const getSaleStatisticsData = async () => {
-  const resp = await getSaleStatistics()
-  if (resp.resultCode === '200') {
-    lineData.value = resp.data
-  }
+  // const resp = await getSaleStatistics()
+  // if (resp.resultCode === '200') {
+  //   lineData.value = resp.data
+  // }
+  lineData.value = [
+    {
+      name: '1月',
+      value: 521,
+    },
+    {
+      name: '2月',
+      value: 623,
+    },
+    {
+      name: '3月',
+      value: 712,
+    },
+    {
+      name: '4月',
+      value: 895,
+    },
+    {
+      name: '5月',
+      value: 930,
+    },
+    {
+      name: '6月',
+      value: 1000,
+    },
+  ]
 }
 </script>
 
@@ -151,7 +177,7 @@ const getSaleStatisticsData = async () => {
           <span class="card-title">近6个月实销车辆统计</span>
         </div>
         <div class="card-body">
-          <Line :data="lineData"></Line>
+          <Line v-if="lineData.length > 0" :data="lineData"></Line>
         </div>
       </div>
       <!-- 销售Top5车型 -->
@@ -548,25 +574,25 @@ const getSaleStatisticsData = async () => {
     border-radius: 100px;
     white-space: nowrap;
     &:nth-child(n) {
-      background-color: rgba(155, 81, 224, 1);
+      background-color: rgba(96, 98, 194, 1);
     }
     &:nth-child(2n) {
-      background-color: rgba(86, 204, 242, 1);
+      background-color: rgba(101, 141, 218, 1);
     }
     &:nth-child(3n) {
-      background-color: rgba(93, 95, 239, 1);
+      background-color: rgba(125, 94, 192, 1);
     }
   }
   &.tagsCloudMonth {
     .tagcloud-item {
       &:nth-child(n) {
-        background-color: rgba(47, 128, 237, 1);
+        background-color: rgba(65, 109, 169, 1);
       }
       &:nth-child(2n) {
-        background-color: rgba(39, 174, 96, 1);
+        background-color: rgba(130, 130, 130, 1);
       }
       &:nth-child(3n) {
-        background-color: rgba(130, 130, 130, 1);
+        background-color: rgba(53, 127, 151, 1);
       }
     }
   }

@@ -6,23 +6,29 @@ import CreateChartThemeColor from '../components/echart/config/color'
 import VChart from 'vue-echarts'
 import { Carousel } from 'ant-design-vue'
 import '../assets/ant-carousel.css'
+import { smoothLine } from '@/utils'
 onBeforeMount(() => {
   CreateChartThemeColor()
 })
 onMounted(() => {
-  getSeries(effectDTOList)
+  getSeries(lineData)
 })
 const barAndLineOptions = {
   legend: {
     top: 'auto',
     bottom: 6,
     left: 'center',
+    width: 300,
+    textStyle: {
+      width: 120,
+      backgroundColor: 'transparent',
+    },
   },
   grid: {
     top: 30,
-    right: 60,
+    right: 50,
     bottom: 80,
-    left: 60,
+    left: 50,
   },
   yAxis: [
     {
@@ -52,6 +58,7 @@ const recognitionRateSeries = [
     name: '新增预警车辆',
     serieType: 'bar',
     yAxisIndex: 0,
+    barGap: '65%',
   },
   {
     name: '历史预警车辆',
@@ -136,6 +143,7 @@ const accuracyRateSeries = [
     serieType: 'bar',
     yAxisIndex: 0,
     barWidth: 6,
+    barGap: '70%',
     itemStyle: {
       color: {
         type: 'linear',
@@ -146,11 +154,11 @@ const accuracyRateSeries = [
         colorStops: [
           {
             offset: 0,
-            color: 'rgba(254, 219, 150, 1)', // 0% 处的颜色
+            color: '#41FFDD', // 0% 处的颜色
           },
           {
             offset: 1,
-            color: 'rgba(254, 219, 150, 0.35)', // 100% 处的颜色
+            color: 'rgba(65, 255, 221, 0.35)', // 100% 处的颜色
           },
         ],
         global: false, // 缺省为 false
@@ -172,11 +180,11 @@ const accuracyRateSeries = [
         colorStops: [
           {
             offset: 0,
-            color: 'rgba(120, 101, 241, 1)', // 0% 处的颜色
+            color: '#2B59FF', // 0% 处的颜色
           },
           {
             offset: 1,
-            color: 'rgba(120, 101, 241, 0.35)', // 100% 处的颜色
+            color: 'rgba(43, 89, 255, 0.35)', // 100% 处的颜色
           },
         ],
         global: false, // 缺省为 false
@@ -198,11 +206,11 @@ const accuracyRateSeries = [
         colorStops: [
           {
             offset: 0,
-            color: 'rgba(186, 231, 255, 1)', // 0% 处的颜色
+            color: '#9180FF', // 0% 处的颜色
           },
           {
             offset: 1,
-            color: 'rgba(186, 231, 255, 0.35)', // 100% 处的颜色
+            color: 'rgba(145, 128, 255, 0.35)', // 100% 处的颜色
           },
         ],
         global: false, // 缺省为 false
@@ -285,7 +293,38 @@ const accuracyRateDataset = ref({
 })
 
 const accuracyRateOpt = computed(() => {
-  return { ...barAndLineOptions, ...{ series: accuracyRateSeries } }
+  return {
+    ...barAndLineOptions,
+    ...{
+      legend: {
+        top: 'auto',
+        bottom: 6,
+        left: 'center',
+        right: 'center',
+        width: 350,
+        data: [
+          '预警车辆总数',
+          '维修车辆总数',
+          '维修清单中预警车辆数',
+          '检出率',
+          '准确率',
+        ],
+        // formatter: function (name) {
+        //   return name === '准确率' ? name + `{a|居中文案}` : name
+        // },
+        // textStyle: {
+        //   rich: {
+        //     a: {
+        //       width: 100,
+        //       color: 'transparent',
+        //       align: 'center',
+        //     },
+        //   },
+        // },
+      },
+    },
+    ...{ series: accuracyRateSeries },
+  }
 })
 
 // 预警车辆风险等级分布
@@ -628,8 +667,22 @@ var effectDTOList = [
   },
 ]
 let effectDTOSeries = ref([])
-let effectDTOXAxis = ref([])
+const lineArrData = effectDTOList.map((item, idx) => [
+  idx + 1,
+  Object.values(item)[1],
+  Object.values(item)[0],
+  Object.values(item)[2],
+])
+const lineData = smoothLine(lineArrData)
+const coordsData = [
+  {
+    coords: [],
+  },
+]
 
+for (var i = 0; i < lineData.length; i++) {
+  coordsData[0].coords.push([lineData[i][0], lineData[i][1]])
+}
 const lineAreaOptions = computed(() => {
   return {
     grid: {
@@ -639,24 +692,53 @@ const lineAreaOptions = computed(() => {
       right: 0,
     },
     xAxis: {
+      type: 'value',
+      min: 1,
+      interval: 2,
       axisLabel: {
         rotate: 35,
+        formatter: (params) => {
+          return lineArrData[params - 1] ? lineArrData[params - 1][2] : ''
+        },
       },
       position: 'bottom',
-      data: effectDTOXAxis.value,
     },
-    series: effectDTOSeries.value,
+    series: [
+      ...effectDTOSeries.value,
+      {
+        name: '',
+        type: 'lines',
+        coordinateSystem: 'cartesian2d',
+        zlevel: 1,
+        polyline: true,
+        symbol: 'circle',
+        effect: {
+          show: true,
+          trailLength: 0.8,
+          symbol: 'circle',
+          period: 2, //光点滑动速度
+          symbolSize: 4,
+        },
+        lineStyle: {
+          normal: {
+            color: 'rgba(220, 209, 151, .8)',
+            width: 0,
+            opacity: 0,
+            curveness: 0,
+          },
+        },
+        data: coordsData,
+      },
+    ],
   }
 })
 const getSeries = (httpData) => {
   let data = []
   let seriesItem
-  var st = httpData[0].status
+  var st = httpData[0][5]
   for (var i = 0; i < httpData.length; i++) {
-    var name = httpData[i].name
-    effectDTOXAxis.value.push(name)
-    data.push([name, httpData[i].count])
-    if (st != httpData[i].status || i == httpData.length - 1) {
+    data.push([httpData[i][0], httpData[i][1]])
+    if (st != httpData[i][5] || i == httpData.length - 1) {
       let areaColor = ''
       let lineColor = ''
       switch (st) {
@@ -748,6 +830,7 @@ const getSeries = (httpData) => {
         name: '',
         serieType: 'line',
         data: data,
+        smooth: false,
         areaStyle: {
           color: areaColor,
           opacity: 1,
@@ -758,8 +841,8 @@ const getSeries = (httpData) => {
         },
       }
       effectDTOSeries.value.push(seriesItem)
-      data = [[name, httpData[i].count]]
-      st = httpData[i].status
+      data = [[httpData[i][0], httpData[i][1]]]
+      st = httpData[i][5]
     }
   }
 }
@@ -776,13 +859,14 @@ const scatter3dOptions = {
   },
   visualMap: {
     show: false,
-    max: 1,
+    max: 2,
+    min: 0,
     type: 'piecewise',
     splitNumber: 3,
     inRange: {
       color: ['#1EE7E7', '#187FE9', '#F16258'],
     },
-    dimension: 2,
+    dimension: 3,
     orient: 'horizontal',
     textStyle: {
       color: '#fff',
@@ -799,13 +883,14 @@ const scatter3dOptions = {
     top: 'auto',
     bottom: 40,
     viewControl: {
-      alpha: 5,
-      beta: 37,
+      alpha: 3,
+      beta: 35,
     },
   },
   xAxis3D: {
     ...xAxis,
     ...{
+      type: 'value',
       splitLine: {
         show: true,
         lineStyle: {
@@ -863,14 +948,22 @@ const scatter3dOptions = {
   ],
   dataset: {
     source: [
-      [0, -20, 1],
-      [-10, 0, 0.5],
-      [-20, 10, 0.2],
-      [10, 20, 0.6],
-      [4, 80, 0.7],
-      [-1, 0, 0.5],
-      [-18, 10, 0.5],
-      [10, 10, 0.9],
+      [0, -11, 0.5, 0],
+      [-10, 0, 0.5, 1],
+      [-20, 10, 0.2, 2],
+      [4, 20, 0.6, 0],
+      [4, 10, 1, 0],
+      [-1, 0, 0.5, 0],
+      [-18, 10, 0.5, 1],
+      [10, 9, 0.1, 2],
+      [5, -11, 0.5, 2],
+      [-10, 5, 0.5, 2],
+      [-20, 10, 0.2, 1],
+      [4, 10, 0.6, 1],
+      [4, 6, 0.3, 0],
+      [-1, 3, 0.5, 0],
+      [-18, 1, 0.5, 0],
+      [10, 2, 0.1, 0],
     ],
   },
 }
@@ -878,7 +971,7 @@ const scatter3dOptions = {
 // SOH分布
 const scatterOptions = ref({
   grid: {
-    right: 0,
+    right: 10,
     top: 50,
     bottom: 66,
   },
@@ -886,6 +979,9 @@ const scatterOptions = ref({
     top: 'auto',
     bottom: 0,
     left: 'center',
+  },
+  xAxis: {
+    type: 'value',
   },
   yAxis: {
     name: '里程表(万公里)',

@@ -1,10 +1,10 @@
 ﻿var radius = 30
-var radiusX = 60
-var d = 200
-var dtr = Math.PI / 180
+var radiusX = 70
+var d = 150
+var dtr = Math.PI / 360
 var distr = true
 var tspeed = 11
-var size = 200
+var size = 400
 var mouseX = 0
 var mouseY = 10
 var howElliptical = 1
@@ -91,7 +91,7 @@ class scrollTagsClond {
       this.mcList[i].scale = per
       var alpha = per
       alpha = (alpha - 0.6) * (10 / 6)
-      this.mcList[i].alpha = alpha * alpha * alpha - 0.2
+      this.mcList[i].alpha = alpha * alpha * alpha - 0.1
       this.mcList[i].zIndex = Math.ceil(100 - Math.floor(this.mcList[i].cz))
     }
     this.doPosition()
