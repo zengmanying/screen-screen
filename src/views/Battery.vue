@@ -6,13 +6,45 @@ import CreateChartThemeColor from '../components/echart/config/color'
 import VChart from 'vue-echarts'
 import { Carousel } from 'ant-design-vue'
 import '../assets/ant-carousel.css'
-import { smoothLine } from '@/utils'
+import { smoothLine, changeTo2dArray } from '@/utils'
+import {
+  getAlgorithmTotal,
+  getRecognitionRate,
+  getAccuracyRate,
+  getRiskLevel,
+  getWarnCarNum,
+  getAlgorithmCarNum,
+  getCarMileage,
+  getOverTemplate,
+  getWorkingWarning,
+  getSoh,
+} from '@/mock/battery'
 onBeforeMount(() => {
   CreateChartThemeColor()
 })
 onMounted(() => {
-  getSeries(lineData)
+  getAlgorithmTotalData()
+  getRecognitionRateData()
+  getAccuracyRateData()
+  getRiskLevelData()
+  getWarnCarNumData()
+  getAlgorithmCarNumData()
+  getCarMileageData()
+  getOverTemplate40Data()
+  getOverTemplate40Rate()
+  getOverTemplate45Data()
+  getOverTemplate45Rate()
+  getWorkingWarningData()
+  getSohData()
 })
+// 预警算法应用总数
+const totalCount = ref(0)
+const getAlgorithmTotalData = async () => {
+  const resp = await getAlgorithmTotal()
+  if (resp.resultCode === '200') {
+    totalCount.value = resp.data.totalCount
+  }
+}
 const barAndLineOptions = {
   legend: {
     top: 'auto',
@@ -98,44 +130,16 @@ const recognitionRateOpt = computed(() => {
   return { ...barAndLineOptions, ...{ series: recognitionRateSeries } }
 })
 const recognitionRateDataset = ref({
-  source: [
-    {
-      name: '1月',
-      newCar: 823,
-      historyCar: 1000,
-      totalRate: 0.5,
-      newRate: 0.8,
-    },
-    {
-      name: '2月',
-      newCar: 823,
-      historyCar: 1200,
-      totalRate: 0.6,
-      newRate: 0.8,
-    },
-    {
-      name: '3月',
-      newCar: 2200,
-      historyCar: 1800,
-      totalRate: 0.7,
-      newRate: 0.8,
-    },
-    {
-      name: '4月',
-      newCar: 823,
-      historyCar: 1400,
-      totalRate: 0.9,
-      newRate: 0.5,
-    },
-    {
-      name: '5月',
-      newCar: 1500,
-      historyCar: 1600,
-      totalRate: 0.8,
-      newRate: 0.6,
-    },
-  ],
+  source: [],
 })
+
+const getRecognitionRateData = async () => {
+  const resp = await getRecognitionRate()
+  if (resp.resultCode === '200') {
+    recognitionRateDataset.value.source = resp.data
+  }
+}
+
 // 预警车辆检出率/准确率统计
 const accuracyRateSeries = [
   {
@@ -246,52 +250,6 @@ const accuracyRateSeries = [
     },
   },
 ]
-
-const accuracyRateDataset = ref({
-  source: [
-    {
-      name: '1月',
-      waringRepairCar: 823,
-      totalCar: 1000,
-      underRepairCar: 400,
-      detectionRate: 0.5,
-      accuracyRate: 0.8,
-    },
-    {
-      name: '2月',
-      waringRepairCar: 823,
-      totalCar: 1200,
-      underRepairCar: 800,
-      detectionRate: 0.6,
-      accuracyRate: 0.8,
-    },
-    {
-      name: '3月',
-      waringRepairCar: 2200,
-      totalCar: 1800,
-      underRepairCar: 900,
-      detectionRate: 0.7,
-      accuracyRate: 0.8,
-    },
-    {
-      name: '4月',
-      waringRepairCar: 823,
-      totalCar: 1400,
-      underRepairCar: 1000,
-      detectionRate: 0.9,
-      accuracyRate: 0.5,
-    },
-    {
-      name: '5月',
-      waringRepairCar: 1500,
-      totalCar: 1600,
-      underRepairCar: 1200,
-      detectionRate: 0.8,
-      accuracyRate: 0.6,
-    },
-  ],
-})
-
 const accuracyRateOpt = computed(() => {
   return {
     ...barAndLineOptions,
@@ -300,32 +258,23 @@ const accuracyRateOpt = computed(() => {
         top: 'auto',
         bottom: 6,
         left: 'center',
-        right: 'center',
         width: 350,
-        data: [
-          '预警车辆总数',
-          '维修车辆总数',
-          '维修清单中预警车辆数',
-          '检出率',
-          '准确率',
-        ],
-        // formatter: function (name) {
-        //   return name === '准确率' ? name + `{a|居中文案}` : name
-        // },
-        // textStyle: {
-        //   rich: {
-        //     a: {
-        //       width: 100,
-        //       color: 'transparent',
-        //       align: 'center',
-        //     },
-        //   },
-        // },
       },
     },
     ...{ series: accuracyRateSeries },
   }
 })
+
+const accuracyRateDataset = ref({
+  source: [],
+})
+
+const getAccuracyRateData = async () => {
+  const resp = await getAccuracyRate()
+  if (resp.resultCode === '200') {
+    accuracyRateDataset.value.source = resp.data
+  }
+}
 
 // 预警车辆风险等级分布
 const roseOptions = ref({
@@ -346,21 +295,15 @@ const roseOptions = ref({
 })
 
 const riskLevelDataset = ref({
-  source: [
-    {
-      name: '低风险',
-      value: 323,
-    },
-    {
-      name: '中风险',
-      value: 723,
-    },
-    {
-      name: '高风险',
-      value: 523,
-    },
-  ],
+  source: [],
 })
+
+const getRiskLevelData = async () => {
+  const resp = await getRiskLevel()
+  if (resp.resultCode === '200') {
+    riskLevelDataset.value.source = resp.data
+  }
+}
 
 // 各项目预警车辆数量分布
 const getCarNumOptions = (
@@ -455,235 +398,150 @@ const getCarNumOptions = (
   }
 }
 
-const carNumDataset = ref({
-  dimensions: ['name', 'value', 'symbol'],
-  source: [
-    {
-      name: '项目001',
-      value: 823,
-      symbol: 823,
-    },
-    {
-      name: '项目002',
-      value: 723,
-      symbol: 723,
-    },
-    {
-      name: '项目003',
-      value: 523,
-      symbol: 523,
-    },
-    {
-      name: '项目004',
-      value: 823,
-      symbol: 823,
-    },
-    {
-      name: '项目005',
-      value: 723,
-      symbol: 723,
-    },
-    {
-      name: '项目006',
-      value: 523,
-      symbol: 523,
-    },
-    {
-      name: '项目007',
-      value: 823,
-      symbol: 823,
-    },
-    {
-      name: '项目008',
-      value: 723,
-      symbol: 723,
-    },
-    {
-      name: '项目009',
-      value: 523,
-      symbol: 523,
-    },
-  ],
-})
+const carNumData = ref([])
+
+const getWarnCarNumData = async () => {
+  const resp = await getWarnCarNum()
+  if (resp.resultCode === '200') {
+    carNumData.value = changeTo2dArray(resp.data, 10)
+  }
+}
 
 // 各算法预警车辆数量分布
-const carAlgorithmDataset = ref({
-  dimensions: ['name', 'value', 'symbol'],
-  source: [
-    {
-      name: '40℃过温时长',
-      value: 823,
-      symbol: 823,
-    },
-    {
-      name: '45℃过温时长',
-      value: 723,
-      symbol: 723,
-    },
-    {
-      name: '电池温度过高',
-      value: 823,
-      symbol: 823,
-    },
-    {
-      name: '温度跳变',
-      value: 723,
-      symbol: 723,
-    },
-    {
-      name: '温差离散',
-      value: 523,
-      symbol: 523,
-    },
-    {
-      name: '压差预警',
-      value: 823,
-      symbol: 823,
-    },
-    {
-      name: 'ΔSOC绝对值',
-      value: 723,
-      symbol: 723,
-    },
-    {
-      name: 'ΔSOC变化率',
-      value: 523,
-      symbol: 523,
-    },
-    {
-      name: '压差一致性',
-      value: 523,
-      symbol: 523,
-    },
-  ],
-})
+const carAlgorithmData = ref([])
+
+const getAlgorithmCarNumData = async () => {
+  const resp = await getAlgorithmCarNum()
+  if (resp.resultCode === '200') {
+    carAlgorithmData.value = changeTo2dArray(resp.data, 10)
+  }
+}
 
 //预警车辆里程分布
 const carMileageDataset = ref({
-  source: [
-    {
-      name: '[0-5]',
-      value: 823,
-    },
-    {
-      name: '(5-10]',
-      value: 723,
-    },
-    {
-      name: '(10-15]',
-      value: 523,
-    },
-    {
-      name: '(15-20]',
-      value: 823,
-    },
-    {
-      name: '(20-30]',
-      value: 723,
-    },
-    {
-      name: '30以上',
-      value: 523,
-    },
-  ],
+  source: [],
 })
 
-// 过温时长及占比
-var effectDTOList = [
-  {
-    name: '[0,20)',
-    count: 100,
-    status: 0,
-  },
-  {
-    name: '[20,40)',
-    count: 50,
-    status: 0,
-  },
-  {
-    name: '[40,60)',
-    count: 100,
-    status: 0,
-  },
-  {
-    name: '[60,80)',
-    count: 140,
-    status: 0,
-  },
-  {
-    name: '[80,100)',
-    count: 105,
-    status: 0,
-  },
-  {
-    name: '[100,120)',
-    count: 150,
-    status: 1,
-  },
-  {
-    name: '[120,140)',
-    count: 220,
-    status: 1,
-  },
-  {
-    name: '[140,160)',
-    count: 150,
-    status: 1,
-  },
-  {
-    name: '[160,180)',
-    count: 80,
-    status: 1,
-  },
-  {
-    name: '[180,200)',
-    count: 100,
-    status: 2,
-  },
-  {
-    name: '[200,220)',
-    count: 160,
-    status: 2,
-  },
-  {
-    name: '[220,240)',
-    count: 180,
-    status: 2,
-  },
-  {
-    name: '[240,260)',
-    count: 120,
-    status: 3,
-  },
-  {
-    name: '[260,280)',
-    count: 100,
-    status: 3,
-  },
-  {
-    name: '[280,∞)',
-    count: 100,
-    status: 3,
-  },
-]
-let effectDTOSeries = ref([])
-const lineArrData = effectDTOList.map((item, idx) => [
-  idx + 1,
-  Object.values(item)[1],
-  Object.values(item)[0],
-  Object.values(item)[2],
-])
-const lineData = smoothLine(lineArrData)
-const coordsData = [
+const getCarMileageData = async () => {
+  const resp = await getCarMileage()
+  if (resp.resultCode === '200') {
+    carMileageDataset.value.source = resp.data
+  }
+}
+
+// 超40℃时长预警车辆数量分布
+let overTemplate40NumSeries = []
+let overTemplate40NumCoordsData = [
   {
     coords: [],
   },
 ]
-
-for (var i = 0; i < lineData.length; i++) {
-  coordsData[0].coords.push([lineData[i][0], lineData[i][1]])
+let overTemplate40NumLineArrData = []
+const getOverTemplate40Data = async () => {
+  const resp = await getOverTemplate()
+  if (resp.resultCode === '200') {
+    overTemplate40NumLineArrData = resp.data.map((item, idx) => [
+      idx + 1,
+      Object.values(item)[1],
+      Object.values(item)[0],
+      Object.values(item)[2],
+    ])
+    const smoothLineData = smoothLine(overTemplate40NumLineArrData)
+    overTemplate40NumSeries = getSegmentLineAreaSeries(smoothLineData)
+    for (var i = 0; i < smoothLineData.length; i++) {
+      overTemplate40NumCoordsData[0].coords.push([
+        smoothLineData[i][0],
+        smoothLineData[i][1],
+      ])
+    }
+  }
 }
-const lineAreaOptions = computed(() => {
+
+// 超40℃时长占比预警车辆数量分布
+let overTemplate40RateSeries = []
+let overTemplate40RateCoordsData = [
+  {
+    coords: [],
+  },
+]
+let overTemplate40RateLineArrData = []
+const getOverTemplate40Rate = async () => {
+  const resp = await getOverTemplate()
+  if (resp.resultCode === '200') {
+    overTemplate40RateLineArrData = resp.data.map((item, idx) => [
+      idx + 1,
+      Object.values(item)[1],
+      Object.values(item)[0],
+      Object.values(item)[2],
+    ])
+    const smoothLineData = smoothLine(overTemplate40RateLineArrData)
+    overTemplate40RateSeries = getSegmentLineAreaSeries(smoothLineData)
+    for (var i = 0; i < smoothLineData.length; i++) {
+      overTemplate40RateCoordsData[0].coords.push([
+        smoothLineData[i][0],
+        smoothLineData[i][1],
+      ])
+    }
+  }
+}
+
+// 超45℃时长预警车辆数量分布
+let overTemplate45NumSeries = []
+let overTemplate45NumCoordsData = [
+  {
+    coords: [],
+  },
+]
+let overTemplate45NumLineArrData = []
+const getOverTemplate45Data = async () => {
+  const resp = await getOverTemplate()
+  if (resp.resultCode === '200') {
+    overTemplate45NumLineArrData = resp.data.map((item, idx) => [
+      idx + 1,
+      Object.values(item)[1],
+      Object.values(item)[0],
+      Object.values(item)[2],
+    ])
+    const smoothLineData = smoothLine(overTemplate45NumLineArrData)
+    overTemplate45NumSeries = getSegmentLineAreaSeries(smoothLineData)
+    for (var i = 0; i < smoothLineData.length; i++) {
+      overTemplate45NumCoordsData[0].coords.push([
+        smoothLineData[i][0],
+        smoothLineData[i][1],
+      ])
+    }
+  }
+}
+
+// 超45℃时长占比预警车辆数量分布
+let overTemplate45RateSeries = []
+let overTemplate45RateCoordsData = [
+  {
+    coords: [],
+  },
+]
+let overTemplate45RateLineArrData = []
+const getOverTemplate45Rate = async () => {
+  const resp = await getOverTemplate()
+  if (resp.resultCode === '200') {
+    overTemplate45RateLineArrData = resp.data.map((item, idx) => [
+      idx + 1,
+      Object.values(item)[1],
+      Object.values(item)[0],
+      Object.values(item)[2],
+    ])
+    const smoothLineData = smoothLine(overTemplate45RateLineArrData)
+    overTemplate45RateSeries = getSegmentLineAreaSeries(smoothLineData)
+    for (var i = 0; i < smoothLineData.length; i++) {
+      overTemplate45RateCoordsData[0].coords.push([
+        smoothLineData[i][0],
+        smoothLineData[i][1],
+      ])
+    }
+  }
+}
+
+const getLineAreaOptions = (lineArrData, coordsData, effectDTOSeries) => {
   return {
     grid: {
       top: 10,
@@ -704,7 +562,7 @@ const lineAreaOptions = computed(() => {
       position: 'bottom',
     },
     series: [
-      ...effectDTOSeries.value,
+      ...effectDTOSeries,
       {
         name: '',
         type: 'lines',
@@ -731,8 +589,10 @@ const lineAreaOptions = computed(() => {
       },
     ],
   }
-})
-const getSeries = (httpData) => {
+}
+
+const getSegmentLineAreaSeries = (httpData) => {
+  let series = []
   let data = []
   let seriesItem
   var st = httpData[0][5]
@@ -840,136 +700,139 @@ const getSeries = (httpData) => {
           color: lineColor,
         },
       }
-      effectDTOSeries.value.push(seriesItem)
+      series.push(seriesItem)
       data = [[httpData[i][0], httpData[i][1]]]
       st = httpData[i][5]
     }
   }
+  return series
 }
 // 工况预警展示
-const scatter3dOptions = {
-  legend: {
-    ...legend,
-    ...{
-      bottom: 0,
-      top: 'auto',
-      left: 'center',
-      selectedMode: false,
+const workingWarningData = ref([])
+
+const getWorkingWarningData = async () => {
+  const resp = await getWorkingWarning()
+  if (resp.resultCode === '200') {
+    workingWarningData.value = resp.data
+  }
+}
+const scatter3dOptions = computed(() => {
+  return {
+    legend: {
+      ...legend,
+      ...{
+        bottom: 0,
+        top: 'auto',
+        left: 'center',
+        selectedMode: false,
+      },
     },
-  },
-  visualMap: {
-    show: false,
-    max: 2,
-    min: 0,
-    type: 'piecewise',
-    splitNumber: 3,
-    inRange: {
-      color: ['#1EE7E7', '#187FE9', '#F16258'],
-    },
-    dimension: 3,
-    orient: 'horizontal',
-    textStyle: {
-      color: '#fff',
-    },
-    left: 'center',
-    bottom: 0,
-  },
-  grid3D: {
-    axisPointer: {
+    visualMap: {
       show: false,
+      max: 2,
+      min: 0,
+      type: 'piecewise',
+      splitNumber: 3,
+      inRange: {
+        color: ['#1EE7E7', '#187FE9', '#F16258'],
+      },
+      dimension: 3,
+      orient: 'horizontal',
+      textStyle: {
+        color: '#fff',
+      },
+      left: 'center',
+      bottom: 0,
     },
-    left: 10,
-    right: 0,
-    top: 'auto',
-    bottom: 40,
-    viewControl: {
-      alpha: 3,
-      beta: 35,
+    grid3D: {
+      axisPointer: {
+        show: false,
+      },
+      left: 10,
+      right: 0,
+      top: 'auto',
+      bottom: 40,
+      viewControl: {
+        alpha: 3,
+        beta: 35,
+      },
     },
-  },
-  xAxis3D: {
-    ...xAxis,
-    ...{
-      type: 'value',
-      splitLine: {
-        show: true,
-        lineStyle: {
-          type: 'dashed',
-          color: 'rgba(126, 137, 164, 0.5)',
-          width: 1,
+    xAxis3D: {
+      ...xAxis,
+      ...{
+        type: 'value',
+        splitLine: {
+          show: true,
+          lineStyle: {
+            type: 'dashed',
+            color: 'rgba(126, 137, 164, 0.5)',
+            width: 1,
+          },
+        },
+        axisLabel: {
+          color: 'rgba(126, 137, 164, 1)',
+          fontSize: 12,
+          margin: 12,
         },
       },
-      axisLabel: {
-        color: 'rgba(126, 137, 164, 1)',
-        fontSize: 12,
-        margin: 12,
+    },
+    yAxis3D: yAxis,
+    zAxis3D: {
+      ...yAxis,
+      ...{
+        axisLabel: {
+          color: 'rgba(126, 137, 164, 1)',
+          fontSize: 12,
+          margin: 16,
+        },
       },
     },
-  },
-  yAxis3D: yAxis,
-  zAxis3D: {
-    ...yAxis,
-    ...{
-      axisLabel: {
-        color: 'rgba(126, 137, 164, 1)',
-        fontSize: 12,
-        margin: 16,
+    series: [
+      {
+        type: 'scatter3D',
+        name: '高风险',
+        symbolSize: 8,
+        itemStyle: {
+          opacity: 1,
+          color: 'rgba(241, 98, 88, 1)',
+        },
       },
-    },
-  },
-  series: [
-    {
-      type: 'scatter3D',
-      name: '高风险',
-      symbolSize: 8,
-      itemStyle: {
-        opacity: 1,
-        color: 'rgba(241, 98, 88, 1)',
+      {
+        type: 'scatter3D',
+        name: '中风险',
+        symbolSize: 8,
+        itemStyle: {
+          opacity: 1,
+          color: 'rgba(24, 127, 233, 1)',
+        },
       },
-    },
-    {
-      type: 'scatter3D',
-      name: '中风险',
-      symbolSize: 8,
-      itemStyle: {
-        opacity: 1,
-        color: 'rgba(24, 127, 233, 1)',
+      {
+        type: 'scatter3D',
+        symbolSize: 8,
+        name: '低风险',
+        itemStyle: {
+          opacity: 1,
+          color: 'rgba(30, 231, 231, 1)',
+        },
       },
-    },
-    {
-      type: 'scatter3D',
-      symbolSize: 8,
-      name: '低风险',
-      itemStyle: {
-        opacity: 1,
-        color: 'rgba(30, 231, 231, 1)',
-      },
-    },
-  ],
-  dataset: {
-    source: [
-      [0, -11, 0.5, 0],
-      [-10, 0, 0.5, 1],
-      [-20, 10, 0.2, 2],
-      [4, 20, 0.6, 0],
-      [4, 10, 1, 0],
-      [-1, 0, 0.5, 0],
-      [-18, 10, 0.5, 1],
-      [10, 9, 0.1, 2],
-      [5, -11, 0.5, 2],
-      [-10, 5, 0.5, 2],
-      [-20, 10, 0.2, 1],
-      [4, 10, 0.6, 1],
-      [4, 6, 0.3, 0],
-      [-1, 3, 0.5, 0],
-      [-18, 1, 0.5, 0],
-      [10, 2, 0.1, 0],
     ],
-  },
-}
+    dataset: {
+      source: workingWarningData.value,
+    },
+  }
+})
 
 // SOH分布
-const scatterOptions = ref({
+const sohDataset = ref({
+  source: [],
+})
+const getSohData = async () => {
+  const resp = await getSoh()
+  if (resp.resultCode === '200') {
+    sohDataset.value.source = resp.data
+  }
+}
+const scatterOptions = {
   grid: {
     right: 10,
     top: 50,
@@ -993,19 +856,7 @@ const scatterOptions = ref({
       symbol: 'image://scatter-symbol.svg',
     },
   ],
-})
-const sohDataset = ref({
-  source: [
-    [5, 323],
-    [5, 167],
-    [5, 284],
-    [10, 413],
-    [13, 217],
-    [20, 587],
-    [35, 487],
-    [50, 287],
-  ],
-})
+}
 </script>
 <template>
   <div class="battery-content">
@@ -1016,7 +867,8 @@ const sohDataset = ref({
         </div>
         <section class="car-num">
           <div class="car-num-content">
-            预警算法应用总数<span class="car-num-count">51</span>个
+            预警算法应用总数<span class="car-num-count">{{ totalCount }}</span
+            >个
           </div>
         </section>
       </div>
@@ -1055,6 +907,7 @@ const sohDataset = ref({
             </div>
             <div class="card-body">
               <HChart
+                v-if="riskLevelDataset.source.length > 0"
                 :options="roseOptions"
                 :dataset="riskLevelDataset"
                 class="roseChart"
@@ -1068,20 +921,10 @@ const sohDataset = ref({
             <div class="card-body">
               <Carousel autoplay>
                 <HChart
+                  v-for="(item, idx) in carNumData"
+                  :key="`carNum${idx}`"
                   :options="getCarNumOptions()"
-                  :dataset="carNumDataset"
-                ></HChart>
-                <HChart
-                  :options="getCarNumOptions()"
-                  :dataset="carNumDataset"
-                ></HChart>
-                <HChart
-                  :options="getCarNumOptions()"
-                  :dataset="carNumDataset"
-                ></HChart>
-                <HChart
-                  :options="getCarNumOptions()"
-                  :dataset="carNumDataset"
+                  :dataset="{ source: item }"
                 ></HChart>
               </Carousel>
             </div>
@@ -1093,6 +936,8 @@ const sohDataset = ref({
             <div class="card-body">
               <Carousel autoplay>
                 <HChart
+                  v-for="(item, idx) in carAlgorithmData"
+                  :key="`carAlgorithm${idx}`"
                   :options="
                     getCarNumOptions(
                       'rgba(30, 231, 231, 1)',
@@ -1100,37 +945,7 @@ const sohDataset = ref({
                       '#1EE7E7'
                     )
                   "
-                  :dataset="carAlgorithmDataset"
-                ></HChart>
-                <HChart
-                  :options="
-                    getCarNumOptions(
-                      'rgba(30, 231, 231, 1)',
-                      'rgba(30, 231, 231, 0.35)',
-                      '#1EE7E7'
-                    )
-                  "
-                  :dataset="carAlgorithmDataset"
-                ></HChart>
-                <HChart
-                  :options="
-                    getCarNumOptions(
-                      'rgba(30, 231, 231, 1)',
-                      'rgba(30, 231, 231, 0.35)',
-                      '#1EE7E7'
-                    )
-                  "
-                  :dataset="carAlgorithmDataset"
-                ></HChart>
-                <HChart
-                  :options="
-                    getCarNumOptions(
-                      'rgba(30, 231, 231, 1)',
-                      'rgba(30, 231, 231, 0.35)',
-                      '#1EE7E7'
-                    )
-                  "
-                  :dataset="carAlgorithmDataset"
+                  :dataset="{ source: item }"
                 ></HChart>
               </Carousel>
             </div>
@@ -1165,25 +980,57 @@ const sohDataset = ref({
                 <dl>
                   <dt>超40℃时长预警车辆数量分布</dt>
                   <dd>
-                    <HChart :options="lineAreaOptions"></HChart>
+                    <HChart
+                      :options="
+                        getLineAreaOptions(
+                          overTemplate40NumLineArrData,
+                          overTemplate40NumCoordsData,
+                          overTemplate40NumSeries
+                        )
+                      "
+                    ></HChart>
                   </dd>
                 </dl>
                 <dl>
                   <dt>超40℃时长占比预警车辆数量分布</dt>
                   <dd>
-                    <HChart :options="lineAreaOptions"></HChart>
+                    <HChart
+                      :options="
+                        getLineAreaOptions(
+                          overTemplate40RateLineArrData,
+                          overTemplate40RateCoordsData,
+                          overTemplate40RateSeries
+                        )
+                      "
+                    ></HChart>
                   </dd>
                 </dl>
                 <dl>
                   <dt>超45℃时长预警车辆数量分布</dt>
                   <dd>
-                    <HChart :options="lineAreaOptions"></HChart>
+                    <HChart
+                      :options="
+                        getLineAreaOptions(
+                          overTemplate45NumLineArrData,
+                          overTemplate45NumCoordsData,
+                          overTemplate45NumSeries
+                        )
+                      "
+                    ></HChart>
                   </dd>
                 </dl>
                 <dl>
                   <dt>超45℃时长占比预警车辆数量分布</dt>
                   <dd>
-                    <HChart :options="lineAreaOptions"></HChart>
+                    <HChart
+                      :options="
+                        getLineAreaOptions(
+                          overTemplate45RateLineArrData,
+                          overTemplate45RateCoordsData,
+                          overTemplate45RateSeries
+                        )
+                      "
+                    ></HChart>
                   </dd>
                 </dl>
               </div>

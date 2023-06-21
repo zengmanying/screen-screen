@@ -8,6 +8,16 @@ export function isPlainObject(obj) {
   )
 }
 
+export function changeTo2dArray(arr, per) {
+  const slideNum = Math.ceil(arr.length / per)
+  const twoDArray = []
+  for (let i = 0; i < slideNum; i++) {
+    const tempArr = arr.slice(i * per, (i + 1) * per)
+    twoDArray.push(tempArr)
+  }
+  return twoDArray
+}
+
 /**
  *深度合并多个对象的方法
  */

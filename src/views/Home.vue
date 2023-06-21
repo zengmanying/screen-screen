@@ -6,33 +6,138 @@ import Gauge from '../components/echart/Gauge.vue'
 import Map from '../components/echart/Map.vue'
 import Bar from '../components/echart/Bar.vue'
 import scrollTagsClond from '@/assets/js/fesucai.js'
-import { onMounted, onUnmounted, ref } from 'vue'
-// import { getSaleStatistics } from '@/api/api'
+import { onMounted, onUnmounted, reactive, ref } from 'vue'
+import {
+  getWarningMarketTotal,
+  getWarningDailyProcess,
+  getWarningDailyCharge,
+  getCarModelTotal,
+  getCarNumTotal,
+  getCarActiveNumTotal,
+  getCarVehicleArea,
+  getCarMileageDistribute,
+  getWarnAlgoTotal,
+  getAddaccumRate,
+  getAccuRate,
+  getActualSales,
+  getSalesTop5,
+} from '@/mock/home'
+
+// 车辆基本信息
+const carModelTotal = ref(0)
+let totalTypes = reactive({
+  total: 0,
+  A: 0,
+  B: 0,
+  C: 0,
+})
+let activeTypes = reactive({
+  total: 0,
+  A: 0,
+  B: 0,
+  C: 0,
+})
+
+const getCarModelTotalData = async () => {
+  const resp = await getCarModelTotal()
+  if (resp.resultCode === '200') {
+    carModelTotal.value = resp.data.typesCount
+  }
+}
+
+const getCarNumTotalData = async () => {
+  const resp = await getCarNumTotal()
+  if (resp.resultCode === '200') {
+    const { total, A, B, C } = resp.data.totalTypes
+    totalTypes.total = total
+    totalTypes.A = A
+    totalTypes.B = B
+    totalTypes.C = C
+  }
+}
+
+const getCarActiveNumTotalData = async () => {
+  const resp = await getCarActiveNumTotal()
+  if (resp.resultCode === '200') {
+    const { total, A, B, C } = resp.data.activeTypes
+    activeTypes.total = total
+    activeTypes.A = A
+    activeTypes.B = B
+    activeTypes.C = C
+  }
+}
+
+// 近6个月实销车辆统计
+let lineData = ref([])
+const getActualSalesData = async () => {
+  const resp = await getActualSales()
+  if (resp.resultCode === '200') {
+    lineData.value = resp.data
+  }
+}
+
+// 销售Top5车型
+const saleTopData = ref([])
+const getSalesTop5Data = async () => {
+  const resp = await getSalesTop5()
+  if (resp.resultCode === '200') {
+    saleTopData.value = resp.data
+  }
+}
+
+// 车辆区域分布
+const linesData = ref({})
+const hotData = ref([])
+const getCarVehicleAreaData = async () => {
+  const resp = await getCarVehicleArea()
+  if (resp.resultCode === '200') {
+    linesData.value = resp.data.linesData
+    hotData.value = resp.data.hotData
+  }
+}
+
+// 所有车辆里程分布情况
+const mileageData = ref([])
+const getCarMileageDistributeData = async () => {
+  const resp = await getCarMileageDistribute()
+  if (resp.resultCode === '200') {
+    mileageData.value = resp.data
+  }
+}
+
+// 预警集市
+const overall = ref(0)
+const dailyProcess = ref(0)
+const dailyVehicle = ref(0)
+const getWarningMarketTotalData = async () => {
+  const resp = await getWarningMarketTotal()
+  if (resp.resultCode === '200') {
+    overall.value = resp.data.overall
+  }
+}
+const getWarningDailyProcessData = async () => {
+  const resp = await getWarningDailyProcess()
+  if (resp.resultCode === '200') {
+    dailyProcess.value = resp.data.dailyProcess
+  }
+}
+const getWarningDailyChargeData = async () => {
+  const resp = await getWarningDailyCharge()
+  if (resp.resultCode === '200') {
+    dailyVehicle.value = resp.data.dailyVehicle
+  }
+}
+
+// 算法应用
+const algoTotal = ref(0)
+const getWarnAlgoTotalData = async () => {
+  const resp = await getWarnAlgoTotal()
+  if (resp.resultCode === '200') {
+    algoTotal.value = resp.data.total
+  }
+}
 let tagsCloudWeekTimer = null
 let tagsCloudWeekMonth = null
-const saleTopData = [
-  {
-    name: 'EU300',
-    value: 5529,
-  },
-  {
-    name: 'EC180',
-    value: 5154,
-  },
-  {
-    name: 'EX3',
-    value: 3864,
-  },
-  {
-    name: 'EU5',
-    value: 2169,
-  },
-  {
-    name: 'LITE',
-    value: 1087,
-  },
-]
-
 const tagscloudData = [
   '容量衰减预警',
   '40℃过温时长预警',
@@ -48,7 +153,7 @@ const tagscloudData = [
   '动态自放电预警',
 ]
 
-onMounted(() => {
+const tagscloudUpdate = () => {
   const tagsCloudWeekObj = new scrollTagsClond('tagsCloudWeek')
   const tagsCloudMonthObj = new scrollTagsClond('tagsCloudMonth')
   tagsCloudWeekTimer = setInterval(() => {
@@ -57,7 +162,43 @@ onMounted(() => {
   tagsCloudWeekMonth = setInterval(() => {
     tagsCloudMonthObj.update()
   }, 160)
-  getSaleStatisticsData()
+}
+
+// 预警指标
+const recognitionNewRate = ref([])
+const recognitionTotalRate = ref([])
+const detectionRate = ref([])
+const accuracyRate = ref([])
+const getAddaccumRateData = async () => {
+  const resp = await getAddaccumRate()
+  if (resp.resultCode === '200') {
+    recognitionNewRate.value = [resp.data[0]]
+    recognitionTotalRate.value = [resp.data[1]]
+  }
+}
+const getAccuRateData = async () => {
+  const resp = await getAccuRate()
+  if (resp.resultCode === '200') {
+    detectionRate.value = [resp.data[0]]
+    accuracyRate.value = [resp.data[1]]
+  }
+}
+
+onMounted(() => {
+  getCarModelTotalData()
+  getCarNumTotalData()
+  getCarActiveNumTotalData()
+  getActualSalesData()
+  getSalesTop5Data()
+  getCarVehicleAreaData()
+  getCarMileageDistributeData()
+  getWarnAlgoTotalData()
+  tagscloudUpdate()
+  getWarningMarketTotalData()
+  getWarningDailyProcessData()
+  getWarningDailyChargeData()
+  getAddaccumRateData()
+  getAccuRateData()
 })
 
 onUnmounted(() => {
@@ -66,39 +207,6 @@ onUnmounted(() => {
   clearInterval(tagsCloudWeekMonth)
   tagsCloudWeekMonth = null
 })
-let lineData = ref([])
-const getSaleStatisticsData = async () => {
-  // const resp = await getSaleStatistics()
-  // if (resp.resultCode === '200') {
-  //   lineData.value = resp.data
-  // }
-  lineData.value = [
-    {
-      name: '1月',
-      value: 521,
-    },
-    {
-      name: '2月',
-      value: 623,
-    },
-    {
-      name: '3月',
-      value: 712,
-    },
-    {
-      name: '4月',
-      value: 895,
-    },
-    {
-      name: '5月',
-      value: 930,
-    },
-    {
-      name: '6月',
-      value: 1000,
-    },
-  ]
-}
 </script>
 
 <template>
@@ -112,7 +220,8 @@ const getSaleStatisticsData = async () => {
         <div class="card-body">
           <section class="car-num">
             <div class="car-num-content">
-              车型数量<span class="car-num-count">51</span>个
+              车型数量<span class="car-num-count">{{ carModelTotal }}</span
+              >个
             </div>
           </section>
           <section class="car-total">
@@ -121,7 +230,7 @@ const getSaleStatisticsData = async () => {
               <count-to
                 class="count"
                 :start-val="0"
-                :end-val="883451"
+                :end-val="totalTypes.total"
                 :duration="3000"
                 separator=""
               ></count-to>
@@ -130,15 +239,15 @@ const getSaleStatisticsData = async () => {
             <div class="car-total-classify">
               <dl>
                 <dt>A品牌车型</dt>
-                <dd>5341</dd>
+                <dd>{{ totalTypes.A }}</dd>
               </dl>
               <dl>
                 <dt>B品牌车型</dt>
-                <dd>5341</dd>
+                <dd>{{ totalTypes.B }}</dd>
               </dl>
               <dl>
                 <dt>C品牌车型</dt>
-                <dd>5341</dd>
+                <dd>{{ totalTypes.C }}</dd>
               </dl>
             </div>
           </section>
@@ -148,7 +257,7 @@ const getSaleStatisticsData = async () => {
               <count-to
                 class="count"
                 :start-val="0"
-                :end-val="883419"
+                :end-val="activeTypes.total"
                 :duration="3000"
                 separator=""
               ></count-to>
@@ -157,15 +266,15 @@ const getSaleStatisticsData = async () => {
             <div class="car-total-classify">
               <dl>
                 <dt>A品牌车型</dt>
-                <dd>5341</dd>
+                <dd>{{ activeTypes.A }}</dd>
               </dl>
               <dl>
                 <dt>B品牌车型</dt>
-                <dd>5341</dd>
+                <dd>{{ activeTypes.B }}</dd>
               </dl>
               <dl>
                 <dt>C品牌车型</dt>
-                <dd>5341</dd>
+                <dd>{{ activeTypes.C }}</dd>
               </dl>
             </div>
           </section>
@@ -214,14 +323,18 @@ const getSaleStatisticsData = async () => {
     <div class="center-content">
       <img src="@/assets/home-page-title.svg" alt="" class="home-page-title" />
       <div class="map-container">
-        <Map></Map>
+        <Map
+          v-if="hotData.length > 0"
+          :lines-data="linesData"
+          :hot-data="hotData"
+        ></Map>
       </div>
       <div class="card card-mileage">
         <div class="card-header">
           <span class="card-title">所有车辆里程分布情况</span>
         </div>
         <div class="card-body">
-          <Bar></Bar>
+          <Bar v-if="mileageData.length > 0" :data="mileageData"></Bar>
         </div>
       </div>
     </div>
@@ -237,28 +350,39 @@ const getSaleStatisticsData = async () => {
               <img src="@/assets/icon-warning-1.svg" alt="" />
             </dt>
             <dd>总体数据规模</dd>
-            <dd><span class="value">300</span><span class="unit">TB</span></dd>
+            <dd>
+              <span class="value">{{ overall }}</span
+              ><span class="unit">TB</span>
+            </dd>
           </dl>
           <dl>
             <dt>
               <img src="@/assets/icon-warning-2.svg" alt="" />
             </dt>
             <dd>每天处理数据</dd>
-            <dd><span class="value">30</span><span class="unit">TB</span></dd>
+            <dd>
+              <span class="value">{{ dailyProcess }}</span
+              ><span class="unit">TB</span>
+            </dd>
           </dl>
           <dl>
             <dt>
               <img src="@/assets/icon-warning-3.svg" alt="" />
             </dt>
             <dd>车辆当日充电次数</dd>
-            <dd><span class="value">30</span><span class="unit">次</span></dd>
+            <dd>
+              <span class="value">{{ dailyVehicle }}</span
+              ><span class="unit">次</span>
+            </dd>
           </dl>
         </div>
       </div>
       <!-- 算法应用总数 -->
       <div class="card card-word-cloud">
         <div class="card-header">
-          <span class="card-title">算法应用总数 <b>23</b></span>
+          <span class="card-title"
+            >算法应用总数 <b>{{ algoTotal }}</b></span
+          >
         </div>
         <div class="card-body">
           <section>
@@ -288,16 +412,32 @@ const getSaleStatisticsData = async () => {
         </div>
         <div class="card-body">
           <section class="gauge-chart">
-            <Gauge color="#6975F3"></Gauge>
+            <Gauge
+              v-if="recognitionNewRate.length > 0"
+              color="#6975F3"
+              :data="recognitionNewRate"
+            ></Gauge>
           </section>
           <section class="gauge-chart">
-            <Gauge color="#1A8AEC"></Gauge>
+            <Gauge
+              v-if="recognitionTotalRate.length > 0"
+              color="#1A8AEC"
+              :data="recognitionTotalRate"
+            ></Gauge>
           </section>
           <section class="gauge-chart">
-            <Gauge color="#1EDFEE"></Gauge>
+            <Gauge
+              v-if="detectionRate.length > 0"
+              color="#1EDFEE"
+              :data="detectionRate"
+            ></Gauge>
           </section>
           <section class="gauge-chart">
-            <Gauge color="#1EBD89"></Gauge>
+            <Gauge
+              v-if="accuracyRate.length > 0"
+              color="#1EBD89"
+              :data="accuracyRate"
+            ></Gauge>
           </section>
         </div>
       </div>

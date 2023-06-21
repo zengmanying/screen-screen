@@ -13,6 +13,10 @@ const props = defineProps({
     type: String,
     default: '#6975F3',
   },
+  data: {
+    type: Array,
+    default: () => [],
+  },
 })
 
 const initOptions = ref({
@@ -82,12 +86,7 @@ const options = {
           backgroundColor: props.color,
         },
       },
-      data: [
-        {
-          name: '新增识别率',
-          value: 42.03,
-        },
-      ],
+      data: props.data,
       pointer: {
         show: true,
         length: '55%',

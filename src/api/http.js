@@ -2,7 +2,8 @@ import axios from 'axios'
 
 // 创建一个 axios 实例
 const http = axios.create({
-  baseURL: 'http://10.19.89.80:8085/mock/188', // 接口的基础路径
+  // baseURL: 'http://10.19.89.80:8085/mock/188', // 接口的基础路径
+  baseURL: 'http://10.68.15.160:8081',
   timeout: 10000, // 请求超时时间
 })
 

@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, defineProps } from 'vue'
 import VChart from 'vue-echarts'
 import { use } from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
@@ -14,6 +14,13 @@ use([
   GridComponent,
   DatasetComponent,
 ])
+
+const props = defineProps({
+  data: {
+    type: Array,
+    default: () => [],
+  },
+})
 
 const initOptions = ref({
   renderer: 'canvas',
@@ -171,64 +178,9 @@ const lineOptions = {
   ],
 }
 
-const data = [
-  {
-    name: '0-5',
-    value: 521,
-  },
-  {
-    name: '5-10',
-    value: 895,
-  },
-  {
-    name: '10-15',
-    value: 623,
-  },
-  {
-    name: '15-20',
-    value: 1435,
-  },
-  {
-    name: '20-25',
-    value: 1386,
-  },
-  {
-    name: '25-30',
-    value: 712,
-  },
-  {
-    name: '30-35',
-    value: 521,
-  },
-  {
-    name: '35-40',
-    value: 895,
-  },
-  {
-    name: '40-45',
-    value: 623,
-  },
-  {
-    name: '45-50',
-    value: 1435,
-  },
-  {
-    name: '50-55',
-    value: 1386,
-  },
-  {
-    name: '55-60',
-    value: 712,
-  },
-  {
-    name: '60~∞',
-    value: 712,
-  },
-]
-
 const hasSymbolData = computed(() => {
   let arr = []
-  data.forEach((item) => {
+  props.data.forEach((item) => {
     arr.push({
       name: item.name,
       value: item.value,

@@ -1,6 +1,6 @@
 <script setup>
 import * as echarts from 'echarts/core'
-import { computed, ref } from 'vue'
+import { computed, ref, defineProps } from 'vue'
 import VChart from 'vue-echarts'
 import { use } from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
@@ -27,127 +27,16 @@ use([
 echarts.registerMap('china', chinaJson)
 echarts.registerMap('chinaPartJson', chinaPartJson)
 
-const linesData = {
-  name: '北京',
-  value: [
-    [
-      {
-        name: '北京',
-      },
-      {
-        name: '北京',
-        value: 200,
-      },
-    ],
-    [
-      {
-        name: '北京',
-      },
-      {
-        name: '青岛',
-        value: 200,
-      },
-    ],
-    [
-      {
-        name: '北京',
-      },
-      {
-        name: '广州',
-        value: 90,
-      },
-    ],
-    [
-      {
-        name: '北京',
-      },
-      {
-        name: '昆明',
-        value: 90,
-      },
-    ],
-    [
-      {
-        name: '北京',
-      },
-      {
-        name: '南京',
-        value: 90,
-      },
-    ],
-    [
-      {
-        name: '北京',
-      },
-      {
-        name: '石家庄',
-        value: 90,
-      },
-    ],
-    [
-      {
-        name: '北京',
-      },
-      {
-        name: '成都',
-        value: 90,
-      },
-    ],
-    [
-      {
-        name: '北京',
-      },
-      {
-        name: '合肥',
-        value: 90,
-      },
-    ],
-    [
-      {
-        name: '北京',
-      },
-      {
-        name: '西安',
-        value: 90,
-      },
-    ],
-  ],
-}
-
-const chartData = [
-  { name: '台湾', value: 45 },
-  { name: '新疆', value: 76 },
-  { name: '宁夏', value: 75 },
-  { name: '青海', value: 18 },
-  { name: '甘肃', value: 124 },
-  { name: '陕西', value: 245 },
-  { name: '西藏', value: 1 },
-  { name: '云南', value: 174 },
-  { name: '贵州', value: 146 },
-  { name: '四川', value: 539 },
-  { name: '重庆', value: 576 },
-  { name: '海南', value: 168 },
-  { name: '广西', value: 5252 },
-  { name: '广东', value: 5352 },
-  { name: '湖南', value: 4018 },
-  { name: '湖北', value: 743 },
-  { name: '河南', value: 1272 },
-  { name: '山东', value: 758 },
-  { name: '江西', value: 2935 },
-  { name: '福建', value: 5296 },
-  { name: '安徽', value: 990 },
-  { name: '浙江', value: 5215 },
-  { name: '江苏', value: 631 },
-  { name: '上海', value: 342 },
-  { name: '黑龙江', value: 481 },
-  { name: '吉林', value: 93 },
-  { name: '辽宁', value: 125 },
-  { name: '内蒙古', value: 675 },
-  { name: '山西', value: 133 },
-  { name: '河北', value: 318 },
-  { name: '天津', value: 136 },
-  { name: '北京', value: 428 },
-]
+const props = defineProps({
+  linesData: {
+    type: Object,
+    default: () => {},
+  },
+  hotData: {
+    type: Array,
+    default: () => [],
+  },
+})
 
 const initOptions = ref({
   renderer: 'canvas',
@@ -290,11 +179,11 @@ const options = computed(() => {
         type: 'map',
         map: 'china',
         zlevel: 1,
-        data: chartData,
+        data: props.hotData,
         geoIndex: 0,
       },
       {
-        name: linesData.name,
+        name: props.linesData.name,
         type: 'lines',
         geoIndex: 0,
         zlevel: 2,
@@ -332,10 +221,10 @@ const options = computed(() => {
             curveness: -0.2,
           },
         },
-        data: getLinesData(linesData.value),
+        data: getLinesData(props.linesData.value),
       },
       {
-        name: linesData.name,
+        name: props.linesData.name,
         type: 'effectScatter',
         coordinateSystem: 'geo',
         zlevel: 1,
@@ -350,7 +239,7 @@ const options = computed(() => {
           show: false,
         },
         symbolSize: 30,
-        data: linesData.value.map(function (dataItem) {
+        data: props.linesData.value.map(function (dataItem) {
           return {
             name: dataItem[1].name,
             value: geoCoordMap[dataItem[1].name].concat([dataItem[1].value]),
