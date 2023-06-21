@@ -31,13 +31,14 @@ const lineOptions = {
   grid: {
     containLabel: true,
     x: 0,
-    y: 25,
-    x2: 15,
+    y: 30,
+    x2: 75,
     y2: 0,
   },
   yAxis: [
     {
       type: 'value',
+      name: '数量(辆)',
       z: 0,
       axisLabel: {
         formatter: '{value}',
@@ -63,6 +64,7 @@ const lineOptions = {
     },
   ],
   xAxis: {
+    name: '里程(公里)',
     type: 'category',
     boundaryGap: true,
     z: 2,
@@ -93,6 +95,7 @@ const lineOptions = {
       label: {
         show: true,
         fontSize: 14,
+        fontWeight: 'bolder',
         color: '#fff',
         position: 'top',
       },

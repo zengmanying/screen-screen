@@ -125,11 +125,12 @@ h1 {
     width: 60px;
     flex-shrink: 0;
     margin-left: auto;
+    font-weight: 500;
   }
   &__bar {
     height: 5px;
     border-radius: 5px;
-    background: rgba(156, 156, 156, 1)
+    background: rgba(156, 156, 156, 1);
   }
   &--blue {
     .progress__bar {

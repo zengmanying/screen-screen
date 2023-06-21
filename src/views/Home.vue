@@ -239,15 +239,21 @@ onUnmounted(() => {
             <div class="car-total-classify">
               <dl>
                 <dt>A品牌车型</dt>
-                <dd>{{ totalTypes.A }}</dd>
+                <dd>
+                  {{ totalTypes.A }}<span class="unit text-muted">辆</span>
+                </dd>
               </dl>
               <dl>
                 <dt>B品牌车型</dt>
-                <dd>{{ totalTypes.B }}</dd>
+                <dd>
+                  {{ totalTypes.B }}<span class="unit text-muted">辆</span>
+                </dd>
               </dl>
               <dl>
                 <dt>C品牌车型</dt>
-                <dd>{{ totalTypes.C }}</dd>
+                <dd>
+                  {{ totalTypes.C }}<span class="unit text-muted">辆</span>
+                </dd>
               </dl>
             </div>
           </section>
@@ -266,15 +272,21 @@ onUnmounted(() => {
             <div class="car-total-classify">
               <dl>
                 <dt>A品牌车型</dt>
-                <dd>{{ activeTypes.A }}</dd>
+                <dd>
+                  {{ activeTypes.A }}<span class="unit text-muted">辆</span>
+                </dd>
               </dl>
               <dl>
                 <dt>B品牌车型</dt>
-                <dd>{{ activeTypes.B }}</dd>
+                <dd>
+                  {{ activeTypes.B }}<span class="unit text-muted">辆</span>
+                </dd>
               </dl>
               <dl>
                 <dt>C品牌车型</dt>
-                <dd>{{ activeTypes.C }}</dd>
+                <dd>
+                  {{ activeTypes.C }}<span class="unit text-muted">辆</span>
+                </dd>
               </dl>
             </div>
           </section>
@@ -359,10 +371,10 @@ onUnmounted(() => {
             <dt>
               <img src="@/assets/icon-warning-2.svg" alt="" />
             </dt>
-            <dd>每天处理数据</dd>
+            <dd>每天处理数据量</dd>
             <dd>
               <span class="value">{{ dailyProcess }}</span
-              ><span class="unit">TB</span>
+              ><span class="unit">亿</span>
             </dd>
           </dl>
           <dl>
@@ -531,6 +543,10 @@ onUnmounted(() => {
       dd {
         margin: 4px 0 0;
         font-size: 20px;
+        .unit {
+          font-size: 14px;
+          margin-left: 4px;
+        }
       }
       &:nth-child(2) {
         position: relative;

@@ -48,6 +48,7 @@ const lineOptions = {
     y2: 0,
   },
   yAxis: {
+    name: '数量(辆)',
     splitNumber: 4,
     z: 0,
     axisLabel: {
