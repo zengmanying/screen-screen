@@ -22,6 +22,7 @@ import {
   getActualSales,
   getSalesTop5,
 } from '@/mock/home'
+import { updateDataInBeforeDawn, updateDataByHalfHour } from '@/utils'
 
 // 车辆基本信息
 const carModelTotal = ref(0)
@@ -64,6 +65,7 @@ const getCarActiveNumTotalData = async () => {
     activeTypes.A = A
     activeTypes.B = B
     activeTypes.C = C
+    updateActiveCarNum(activeTypes.total)
   }
 }
 
@@ -184,13 +186,12 @@ const getAccuRateData = async () => {
   }
 }
 
-onMounted(() => {
+const getServiceData = () => {
   getCarModelTotalData()
   getCarNumTotalData()
   getCarActiveNumTotalData()
   getActualSalesData()
   getSalesTop5Data()
-  getCarVehicleAreaData()
   getCarMileageDistributeData()
   getWarnAlgoTotalData()
   tagscloudUpdate()
@@ -199,6 +200,79 @@ onMounted(() => {
   getWarningDailyChargeData()
   getAddaccumRateData()
   getAccuRateData()
+  getCarVehicleAreaData()
+}
+const activeCarNumStartVal = ref(0)
+const activeCarNumEndVal = ref(0)
+const updateActiveCarNum = (end_value) => {
+  const copies = (24 * 60) / 5
+  const maxIncrement = Math.floor(end_value / copies)
+  const minIncrement = maxIncrement - 100
+  // 获取当前时间
+  const startTime = new Date()
+  let endTime = new Date(startTime)
+  endTime.setHours(23)
+  endTime.setMinutes(59)
+  if (!localStorage.getItem('currentActiveCarNum')) {
+    localStorage.setItem(
+      'currentActiveCarNum',
+      Math.floor(
+        ((startTime.getHours() * 60 + startTime.getMinutes()) / 5) *
+          maxIncrement
+      )
+    )
+  }
+  activeCarNumEndVal.value = +localStorage.getItem('currentActiveCarNum')
+
+  // 每隔五分钟更新数据
+  const interval = setInterval(() => {
+    if (startTime < endTime && activeCarNumStartVal.value < end_value) {
+      // 生成随机数并添加到起始值上
+      const random =
+        Math.floor(Math.random() * (maxIncrement - minIncrement + 1)) +
+        minIncrement
+      activeCarNumStartVal.value = activeCarNumEndVal.value
+      activeCarNumEndVal.value += random
+
+      // 打印当前时间和起始值
+      // 更新时间
+      startTime.setMinutes(startTime.getMinutes() + 5)
+      localStorage.setItem('currentActiveCarNum', activeCarNumEndVal.value)
+    } else {
+      // 终止循环
+      clearInterval(interval)
+      // 最后将起始值设为结束值
+      activeCarNumEndVal.value = end_value
+      localStorage.removeItem('currentActiveCarNum')
+    }
+  }, 5 * 60 * 1000) // 五分钟为单位，转换为毫秒
+}
+
+onMounted(() => {
+  // 初始调用所有接口数据
+  getServiceData()
+  // 每天凌晨更新数据
+  updateDataInBeforeDawn(() => {
+    console.log('每天更新了----------------')
+    getServiceData()
+    getCarModelTotalData()
+    getCarNumTotalData()
+    getCarActiveNumTotalData()
+    getActualSalesData()
+    getSalesTop5Data()
+    getCarMileageDistributeData()
+    getWarnAlgoTotalData()
+    tagscloudUpdate()
+    getWarningMarketTotalData()
+    getWarningDailyProcessData()
+    getWarningDailyChargeData()
+    getAddaccumRateData()
+    getAccuRateData()
+  })
+  // 30分钟更新数据
+  updateDataByHalfHour(() => {
+    getCarVehicleAreaData()
+  })
 })
 
 onUnmounted(() => {
@@ -262,8 +336,8 @@ onUnmounted(() => {
               <span class="name">活跃车辆</span>
               <count-to
                 class="count"
-                :start-val="0"
-                :end-val="activeTypes.total"
+                :start-val="activeCarNumStartVal"
+                :end-val="activeCarNumEndVal"
                 :duration="3000"
                 separator=""
               ></count-to>
@@ -525,6 +599,8 @@ onUnmounted(() => {
       font-weight: bold;
       letter-spacing: 19px;
       margin-left: 12px;
+      width: 200px;
+      text-align: right;
     }
   }
   &-classify {

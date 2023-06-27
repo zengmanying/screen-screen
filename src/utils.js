@@ -138,3 +138,34 @@ export function smoothLine(points, smooth = 50) {
   }
   return newPoints
 }
+
+// 每天凌晨更新接口数据
+export const updateDataInBeforeDawn = (cb) => {
+  var now = new Date()
+  var tomorrow = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate() + 1,
+    0,
+    0,
+    0
+  )
+  var timeToMidnight = tomorrow - now
+  let interval = null
+  // 终止循环
+  clearInterval(interval)
+  interval = setTimeout(function () {
+    cb() // 执行更新数据的操作
+    updateDataInBeforeDawn(cb) // 启动下一个定时器
+  }, timeToMidnight)
+}
+
+// 半小时更新接口数据
+export const updateDataByHalfHour = (cb) => {
+  let interval = null
+  // 终止循环
+  clearInterval(interval)
+  interval = setInterval(() => {
+    cb()
+  }, 30 * 60 * 1000)
+}
