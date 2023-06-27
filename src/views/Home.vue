@@ -11,9 +11,9 @@ import {
   getWarningMarketTotal,
   getWarningDailyProcess,
   getWarningDailyCharge,
-  getCarModelTotal,
-  getCarNumTotal,
-  getCarActiveNumTotal,
+  // getCarModelTotal,
+  // getCarNumTotal,
+  // getCarActiveNumTotal,
   getCarVehicleArea,
   getCarMileageDistribute,
   getWarnAlgoTotal,
@@ -22,6 +22,11 @@ import {
   getActualSales,
   getSalesTop5,
 } from '@/mock/home'
+import {
+  getCarModelTotal,
+  getCarNumTotal,
+  getCarActiveNumTotal,
+} from '@/api/home'
 import { updateDataInBeforeDawn, updateDataByHalfHour } from '@/utils'
 
 // 车辆基本信息
@@ -65,7 +70,7 @@ const getCarActiveNumTotalData = async () => {
     activeTypes.A = A
     activeTypes.B = B
     activeTypes.C = C
-    updateActiveCarNum(activeTypes.total)
+    updateActiveCarNum(activeTypes.total, 5)
   }
 }
 
@@ -204,8 +209,8 @@ const getServiceData = () => {
 }
 const activeCarNumStartVal = ref(0)
 const activeCarNumEndVal = ref(0)
-const updateActiveCarNum = (end_value) => {
-  const copies = (24 * 60) / 5
+const updateActiveCarNum = (end_value, intervalTime) => {
+  const copies = (24 * 60) / intervalTime
   const maxIncrement = Math.floor(end_value / copies)
   const minIncrement = maxIncrement - 100
   // 获取当前时间
@@ -213,16 +218,9 @@ const updateActiveCarNum = (end_value) => {
   let endTime = new Date(startTime)
   endTime.setHours(23)
   endTime.setMinutes(59)
-  if (!localStorage.getItem('currentActiveCarNum')) {
-    localStorage.setItem(
-      'currentActiveCarNum',
-      Math.floor(
-        ((startTime.getHours() * 60 + startTime.getMinutes()) / 5) *
-          maxIncrement
-      )
-    )
-  }
-  activeCarNumEndVal.value = +localStorage.getItem('currentActiveCarNum')
+  activeCarNumEndVal.value = Math.floor(
+    ((startTime.getHours() * 60 + startTime.getMinutes()) / 5) * maxIncrement
+  )
 
   // 每隔五分钟更新数据
   const interval = setInterval(() => {
@@ -237,15 +235,13 @@ const updateActiveCarNum = (end_value) => {
       // 打印当前时间和起始值
       // 更新时间
       startTime.setMinutes(startTime.getMinutes() + 5)
-      localStorage.setItem('currentActiveCarNum', activeCarNumEndVal.value)
     } else {
       // 终止循环
       clearInterval(interval)
       // 最后将起始值设为结束值
       activeCarNumEndVal.value = end_value
-      localStorage.removeItem('currentActiveCarNum')
     }
-  }, 5 * 60 * 1000) // 五分钟为单位，转换为毫秒
+  }, intervalTime * 60 * 1000) // 五分钟为单位，转换为毫秒
 }
 
 onMounted(() => {
@@ -253,7 +249,6 @@ onMounted(() => {
   getServiceData()
   // 每天凌晨更新数据
   updateDataInBeforeDawn(() => {
-    console.log('每天更新了----------------')
     getServiceData()
     getCarModelTotalData()
     getCarNumTotalData()
