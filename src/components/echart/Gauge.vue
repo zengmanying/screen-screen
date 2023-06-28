@@ -58,8 +58,7 @@ const options = {
       detail: {
         formatter: function (value) {
           if (value !== 0) {
-            var num = Math.round(value)
-            return num.toFixed(2) + '%'
+            return value.toFixed(2) + '%'
           } else {
             return 0
           }

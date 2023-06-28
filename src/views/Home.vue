@@ -6,26 +6,24 @@ import Gauge from '../components/echart/Gauge.vue'
 import Map from '../components/echart/Map.vue'
 import Bar from '../components/echart/Bar.vue'
 import scrollTagsClond from '@/assets/js/fesucai.js'
-import { onMounted, onUnmounted, reactive, ref } from 'vue'
-import {
-  getWarningMarketTotal,
-  getWarningDailyProcess,
-  getWarningDailyCharge,
-  // getCarModelTotal,
-  // getCarNumTotal,
-  // getCarActiveNumTotal,
-  getCarVehicleArea,
-  getCarMileageDistribute,
-  getWarnAlgoTotal,
-  getAddaccumRate,
-  getAccuRate,
-  getActualSales,
-  getSalesTop5,
-} from '@/mock/home'
+import { nextTick, onMounted, onUnmounted, reactive, ref } from 'vue'
+import {} from '@/mock/home'
 import {
   getCarModelTotal,
   getCarNumTotal,
   getCarActiveNumTotal,
+  getActualSales,
+  getSalesTop5,
+  getCarVehicleArea,
+  getCarMileageDistribute,
+  getWarningMarketTotal,
+  getWarningDailyProcess,
+  getWarningDailyCharge,
+  getWarnAlgoTotal,
+  getTagscloudWeek,
+  getTagscloudMonth,
+  getAddaccumRate,
+  getAccuRate,
 } from '@/api/home'
 import { updateDataInBeforeDawn, updateDataByHalfHour } from '@/utils'
 
@@ -93,13 +91,11 @@ const getSalesTop5Data = async () => {
 }
 
 // 车辆区域分布
-const linesData = ref({})
 const hotData = ref([])
-const getCarVehicleAreaData = async () => {
-  const resp = await getCarVehicleArea()
+const getCarVehicleAreaData = async (segmentation = 1) => {
+  const resp = await getCarVehicleArea(segmentation)
   if (resp.resultCode === '200') {
-    linesData.value = resp.data.linesData
-    hotData.value = resp.data.hotData
+    hotData.value = resp.data
   }
 }
 
@@ -125,7 +121,7 @@ const getWarningMarketTotalData = async () => {
 const getWarningDailyProcessData = async () => {
   const resp = await getWarningDailyProcess()
   if (resp.resultCode === '200') {
-    dailyProcess.value = resp.data.dailyProcess
+    dailyProcess.value = (resp.data.dailyProcess / 100000000).toFixed(2)
   }
 }
 const getWarningDailyChargeData = async () => {
@@ -143,32 +139,35 @@ const getWarnAlgoTotalData = async () => {
     algoTotal.value = resp.data.total
   }
 }
+
+const tagscloudWeekData = ref([])
+const tagscloudMonthData = ref([])
 let tagsCloudWeekTimer = null
 let tagsCloudWeekMonth = null
-const tagscloudData = [
-  '容量衰减预警',
-  '40℃过温时长预警',
-  '绝缘离散预警',
-  '遗传算法SOH预警',
-  '内阻一致性预',
-  '动态自放电预警',
-  '容量衰减预警',
-  '40℃过温时长预警',
-  '绝缘离散预警',
-  '遗传算法SOH预警',
-  '内阻一致性预',
-  '动态自放电预警',
-]
+const getTagscloudWeekData = async () => {
+  const resp = await getTagscloudWeek()
+  if (resp.resultCode === '200') {
+    tagscloudWeekData.value = resp.data
+    nextTick(() => {
+      const tagsCloudWeekObj = new scrollTagsClond('tagsCloudWeek')
+      tagsCloudWeekTimer = setInterval(() => {
+        tagsCloudWeekObj.update()
+      }, 120)
+    })
+  }
+}
 
-const tagscloudUpdate = () => {
-  const tagsCloudWeekObj = new scrollTagsClond('tagsCloudWeek')
-  const tagsCloudMonthObj = new scrollTagsClond('tagsCloudMonth')
-  tagsCloudWeekTimer = setInterval(() => {
-    tagsCloudWeekObj.update()
-  }, 120)
-  tagsCloudWeekMonth = setInterval(() => {
-    tagsCloudMonthObj.update()
-  }, 160)
+const getTagscloudMonthData = async () => {
+  const resp = await getTagscloudMonth()
+  if (resp.resultCode === '200') {
+    tagscloudMonthData.value = resp.data
+    nextTick(() => {
+      const tagsCloudMonthObj = new scrollTagsClond('tagsCloudMonth')
+      tagsCloudWeekMonth = setInterval(() => {
+        tagsCloudMonthObj.update()
+      }, 160)
+    })
+  }
 }
 
 // 预警指标
@@ -199,13 +198,18 @@ const getServiceData = () => {
   getSalesTop5Data()
   getCarMileageDistributeData()
   getWarnAlgoTotalData()
-  tagscloudUpdate()
+  getTagscloudWeekData()
+  getTagscloudMonthData()
   getWarningMarketTotalData()
   getWarningDailyProcessData()
   getWarningDailyChargeData()
   getAddaccumRateData()
   getAccuRateData()
-  getCarVehicleAreaData()
+  const startTime = new Date()
+  const segmentation = Math.floor(
+    (startTime.getHours() * 60 + startTime.getMinutes()) / 30
+  )
+  getCarVehicleAreaData(segmentation)
 }
 const activeCarNumStartVal = ref(0)
 const activeCarNumEndVal = ref(0)
@@ -249,7 +253,6 @@ onMounted(() => {
   getServiceData()
   // 每天凌晨更新数据
   updateDataInBeforeDawn(() => {
-    getServiceData()
     getCarModelTotalData()
     getCarNumTotalData()
     getCarActiveNumTotalData()
@@ -257,7 +260,8 @@ onMounted(() => {
     getSalesTop5Data()
     getCarMileageDistributeData()
     getWarnAlgoTotalData()
-    tagscloudUpdate()
+    getTagscloudWeekData()
+    getTagscloudMonthData()
     getWarningMarketTotalData()
     getWarningDailyProcessData()
     getWarningDailyChargeData()
@@ -265,8 +269,8 @@ onMounted(() => {
     getAccuRateData()
   })
   // 30分钟更新数据
-  updateDataByHalfHour(() => {
-    getCarVehicleAreaData()
+  updateDataByHalfHour((segmentation) => {
+    getCarVehicleAreaData(segmentation)
   })
 })
 
@@ -391,7 +395,7 @@ onUnmounted(() => {
                   <div class="progress progress--blue">
                     <div
                       class="progress__bar"
-                      :style="{ width: `${(item.value / 10000) * 100}%` }"
+                      :style="{ width: `${(item.value / 100000) * 100}%` }"
                     ></div>
                   </div>
                 </div>
@@ -404,11 +408,7 @@ onUnmounted(() => {
     <div class="center-content">
       <img src="@/assets/home-page-title.svg" alt="" class="home-page-title" />
       <div class="map-container">
-        <Map
-          v-if="hotData.length > 0"
-          :lines-data="linesData"
-          :hot-data="hotData"
-        ></Map>
+        <Map v-if="hotData.length > 0" :hot-data="hotData"></Map>
       </div>
       <div class="card card-mileage">
         <div class="card-header">
@@ -469,7 +469,10 @@ onUnmounted(() => {
           <section>
             <div class="word-cloud-title"><span>按周更新</span></div>
             <div id="tagsCloudWeek" class="tagscloud">
-              <a v-for="item in tagscloudData" :key="item" class="tagcloud-item"
+              <a
+                v-for="item in tagscloudWeekData"
+                :key="item"
+                class="tagcloud-item"
                 ><span :style="{ color: $randomColor }">{{ item }}</span></a
               >
             </div>
@@ -479,7 +482,10 @@ onUnmounted(() => {
               <span>按半月及月更新</span>
             </div>
             <div id="tagsCloudMonth" class="tagscloud tagsCloudMonth">
-              <a v-for="item in tagscloudData" :key="item" class="tagcloud-item"
+              <a
+                v-for="item in tagscloudMonthData"
+                :key="item"
+                class="tagcloud-item"
                 ><span :style="{ color: $randomColor }">{{ item }}</span></a
               >
             </div>
@@ -660,10 +666,9 @@ onUnmounted(() => {
 }
 
 .card-sale-top {
-  flex: 1;
+  min-height: 250px;
   .card-body {
     display: flex;
-    align-items: center;
     padding: 0 20px 8px;
   }
   .sale-top-rank {

@@ -28,14 +28,21 @@ echarts.registerMap('china', chinaJson)
 echarts.registerMap('chinaPartJson', chinaPartJson)
 
 const props = defineProps({
-  linesData: {
-    type: Object,
-    default: () => {},
-  },
   hotData: {
     type: Array,
     default: () => [],
   },
+})
+
+const linesData = computed(() => {
+  const top10Arr = props.hotData.slice(0, 10)
+  const data = top10Arr.map((item) => {
+    return {
+      name: item.cityName,
+      value: item.value,
+    }
+  })
+  return data
 })
 
 const initOptions = ref({
@@ -49,7 +56,7 @@ const options = computed(() => {
       {
         splitNumber: 5,
         min: 0,
-        max: 10000,
+        max: 30000,
         left: 'left',
         bottom: '25%',
         calculable: true,
@@ -183,7 +190,7 @@ const options = computed(() => {
         geoIndex: 0,
       },
       {
-        name: props.linesData.name,
+        name: '北京',
         type: 'lines',
         geoIndex: 0,
         zlevel: 2,
@@ -221,10 +228,10 @@ const options = computed(() => {
             curveness: -0.2,
           },
         },
-        data: getLinesData(props.linesData.value),
+        data: getLinesData(linesData.value),
       },
       {
-        name: props.linesData.name,
+        name: '北京',
         type: 'effectScatter',
         coordinateSystem: 'geo',
         zlevel: 1,
@@ -239,10 +246,10 @@ const options = computed(() => {
           show: false,
         },
         symbolSize: 30,
-        data: props.linesData.value.map(function (dataItem) {
+        data: linesData.value.map(function (dataItem) {
           return {
-            name: dataItem[1].name,
-            value: geoCoordMap[dataItem[1].name].concat([dataItem[1].value]),
+            name: dataItem.name,
+            value: geoCoordMap[dataItem.name].concat([dataItem.value.value]),
           }
         }),
       },
@@ -254,12 +261,12 @@ const getLinesData = (data) => {
   var res = []
   for (var i = 0; i < data.length; i++) {
     var dataItem = data[i]
-    var fromCoord = geoCoordMap[dataItem[0].name]
-    var toCoord = geoCoordMap[dataItem[1].name]
+    var fromCoord = geoCoordMap['北京']
+    var toCoord = geoCoordMap[dataItem.name]
     if (fromCoord && toCoord) {
       res.push({
-        fromName: dataItem[0].name,
-        toName: dataItem[1].name,
+        fromName: '北京',
+        toName: dataItem.name,
         coords: [fromCoord, toCoord],
         lineStyle: {
           color: 'rgba(254, 228, 84, 0.1)',

@@ -3,11 +3,11 @@ import { ref, defineProps } from 'vue'
 import VChart from 'vue-echarts'
 import { use } from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
-import { LineChart } from 'echarts/charts'
+import { LineChart, LinesChart } from 'echarts/charts'
 import { GridComponent, DatasetComponent } from 'echarts/components'
 import { smoothLine } from '@/utils'
 
-use([CanvasRenderer, LineChart, GridComponent, DatasetComponent])
+use([CanvasRenderer, LineChart, LinesChart, GridComponent, DatasetComponent])
 
 const props = defineProps({
   data: {

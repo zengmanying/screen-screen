@@ -165,7 +165,12 @@ export const updateDataByHalfHour = (cb) => {
   let interval = null
   // 终止循环
   clearInterval(interval)
+  const startTime = new Date()
+  let segmentation = Math.floor(
+    (startTime.getHours() * 60 + startTime.getMinutes()) / 30
+  )
   interval = setInterval(() => {
-    cb()
+    segmentation++
+    cb(segmentation)
   }, 30 * 60 * 1000)
 }
