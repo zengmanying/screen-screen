@@ -83,10 +83,14 @@ const getActualSalesData = async () => {
 
 // 销售Top5车型
 const saleTopData = ref([])
+const saleTop1 = ref(0)
 const getSalesTop5Data = async () => {
   const resp = await getSalesTop5()
   if (resp.resultCode === '200') {
     saleTopData.value = resp.data
+    saleTop1.value = saleTopData.value.reduce((prev, next) => {
+      return Math.max(prev.value, next.value)
+    })
   }
 }
 
@@ -395,7 +399,7 @@ onUnmounted(() => {
                   <div class="progress progress--blue">
                     <div
                       class="progress__bar"
-                      :style="{ width: `${(item.value / 100000) * 100}%` }"
+                      :style="{ width: `${(item.value / saleTop1) * 100}%` }"
                     ></div>
                   </div>
                 </div>
