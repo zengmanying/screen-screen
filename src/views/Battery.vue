@@ -7,6 +7,7 @@ import VChart from 'vue-echarts'
 import { Carousel } from 'ant-design-vue'
 import '../assets/ant-carousel.css'
 import { smoothLine, changeTo2dArray } from '@/utils'
+import { getOverTemplate, getWorkingWarning, getSoh } from '@/mock/battery'
 import {
   getAlgorithmTotal,
   getRecognitionRate,
@@ -15,10 +16,7 @@ import {
   getWarnCarNum,
   getAlgorithmCarNum,
   getCarMileage,
-  getOverTemplate,
-  getWorkingWarning,
-  getSoh,
-} from '@/mock/battery'
+} from '@/api/battery'
 onBeforeMount(() => {
   CreateChartThemeColor()
 })
@@ -76,7 +74,7 @@ const barAndLineOptions = {
       gridIndex: 0,
       axisLabel: {
         formatter: function (value) {
-          return value * 100 + '%'
+          return value + '%'
         },
       },
       position: 'right',
@@ -294,6 +292,24 @@ const roseOptions = ref({
   ],
 })
 
+const mileageRoseOptions = ref({
+  legend: {
+    icon: 'circle',
+    bottom: '5%',
+    top: 'auto',
+    left: 'center',
+  },
+  series: [
+    {
+      name: '风险等级',
+      serieType: 'pie',
+      center: ['50%', '40%'],
+      radius: ['25%', '48%'],
+      roseType: 'radius',
+    },
+  ],
+})
+
 const riskLevelDataset = ref({
   source: [],
 })
@@ -309,15 +325,16 @@ const getRiskLevelData = async () => {
 const getCarNumOptions = (
   barColor1 = 'rgba(24, 130, 255, 1)',
   barColor2 = 'rgba(24, 144, 255, 0.35)',
-  scatterColor = '#187FE9'
+  scatterColor = '#187FE9',
+  len = 10
 ) => {
   return {
     grid: {
       containLabel: true,
-      top: 40,
+      top: 20,
       left: 20,
       right: 40,
-      bottom: 35,
+      bottom: 18 * (10 - len) + 20,
     },
     legend: {
       show: false,
@@ -413,6 +430,16 @@ const carAlgorithmData = ref([])
 const getAlgorithmCarNumData = async () => {
   const resp = await getAlgorithmCarNum()
   if (resp.resultCode === '200') {
+    // const len = resp.data.length
+    // const fillLenth = 10 - (len % 10)
+    // const fillArr = []
+    // for (let i = 0; i < fillLenth; i++) {
+    //   fillArr.push({
+    //     name: 'fill' + i,
+    //     value: 0,
+    //   })
+    // }
+    // const data = resp.data.concat(fillArr)
     carAlgorithmData.value = changeTo2dArray(resp.data, 10)
   }
 }
@@ -942,7 +969,8 @@ const scatterOptions = {
                     getCarNumOptions(
                       'rgba(30, 231, 231, 1)',
                       'rgba(30, 231, 231, 0.35)',
-                      '#1EE7E7'
+                      '#1EE7E7',
+                      item.length
                     )
                   "
                   :dataset="{ source: item }"
@@ -955,9 +983,9 @@ const scatterOptions = {
               <span class="card-title">预警车辆里程分布</span>
             </div>
             <div class="card-body">
-              <div style="width: 74%; height: 100%">
+              <div style="width: 100%; height: 100%">
                 <HChart
-                  :options="roseOptions"
+                  :options="mileageRoseOptions"
                   :dataset="carMileageDataset"
                   class="roseChart"
                 ></HChart>
@@ -1189,6 +1217,10 @@ const scatterOptions = {
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+  .roseChart {
+    background-size: 45% auto;
+    background-position: 50% 29%;
   }
 }
 
