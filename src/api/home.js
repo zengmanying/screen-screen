@@ -69,7 +69,7 @@ export const getCarModelTotal = async () => {
 // 车辆总数
 export const getCarNumTotal = async () => {
   const url = isProd
-    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=OVERVIEW&SQL_REF=RESULT_OVERVIEW_CARNUM_TOTA'
+    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=OVERVIEW&SQL_REF=RESULT_OVERVIEW_CARNUM_TOTAL'
     : '/carTotalNum'
   const resp = await http.get(url)
   resp.data.totalTypes = resp.data[0]
