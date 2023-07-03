@@ -25,7 +25,11 @@ import {
   getAddaccumRate,
   getAccuRate,
 } from '@/api/home'
-import { updateDataInBeforeDawn, updateDataByHalfHour } from '@/utils'
+import {
+  updateDataInBeforeDawn,
+  updateDataByHalfHour,
+  UpdateDataByFiveMinu,
+} from '@/utils'
 
 // 车辆基本信息
 const carModelTotal = ref(0)
@@ -63,12 +67,12 @@ const getCarNumTotalData = async () => {
 const getCarActiveNumTotalData = async () => {
   const resp = await getCarActiveNumTotal()
   if (resp.resultCode === '200') {
-    const { total, A, B, C } = resp.data.activeTypes
-    activeTypes.total = total
-    activeTypes.A = A
-    activeTypes.B = B
-    activeTypes.C = C
-    updateActiveCarNum(activeTypes.total, 5)
+    // const { total, A, B, C } = resp.data.activeTypes
+    // activeTypes.total = total
+    // activeTypes.A = A
+    // activeTypes.B = B
+    // activeTypes.C = C
+    updateActiveCarNum(resp.data.activeTypes, 5)
   }
 }
 
@@ -131,8 +135,21 @@ const getWarningDailyProcessData = async () => {
 const getWarningDailyChargeData = async () => {
   const resp = await getWarningDailyCharge()
   if (resp.resultCode === '200') {
-    dailyVehicle.value = resp.data.dailyVehicle
+    updateDailyVehicle(resp.data.dailyVehicle, 5)
   }
+}
+const updateDailyVehicle = (data, intervalTime) => {
+  const updateObj = new UpdateDataByFiveMinu(data, intervalTime, 0)
+  dailyVehicle.value = updateObj.initFn()
+  // 每隔五分钟更新数据
+  let intervalVehicle = null
+  if (intervalVehicle) {
+    clearInterval(intervalVehicle)
+  }
+  intervalVehicle = setInterval(() => {
+    const currentDataA = updateObj.updateFn()
+    dailyVehicle.value = currentDataA.currentEndVal
+  }, intervalTime * 60 * 1000) // 五分钟为单位，转换为毫秒
 }
 
 // 算法应用
@@ -217,38 +234,35 @@ const getServiceData = () => {
 }
 const activeCarNumStartVal = ref(0)
 const activeCarNumEndVal = ref(0)
-const updateActiveCarNum = (end_value, intervalTime) => {
-  const copies = (24 * 60) / intervalTime
-  const maxIncrement = Math.floor(end_value / copies)
-  const minIncrement = maxIncrement - 100
-  // 获取当前时间
-  const startTime = new Date()
-  let endTime = new Date(startTime)
-  endTime.setHours(23)
-  endTime.setMinutes(59)
-  activeCarNumEndVal.value = Math.floor(
-    ((startTime.getHours() * 60 + startTime.getMinutes()) / 5) * maxIncrement
-  )
+const updateActiveCarNum = (data, intervalTime) => {
+  const { A, B, C } = data
+  const updateObjA = new UpdateDataByFiveMinu(A, intervalTime)
+  activeTypes.A = updateObjA.initFn()
 
+  const updateObjB = new UpdateDataByFiveMinu(B, intervalTime)
+  activeTypes.B = updateObjB.initFn()
+
+  const updateObjC = new UpdateDataByFiveMinu(C, intervalTime)
+  activeTypes.C = updateObjC.initFn()
+
+  activeCarNumEndVal.value = activeTypes.A + activeTypes.B + activeTypes.C
+  let interval = null
+  if (interval) {
+    clearInterval(interval)
+  }
   // 每隔五分钟更新数据
-  const interval = setInterval(() => {
-    if (startTime < endTime && activeCarNumStartVal.value < end_value) {
-      // 生成随机数并添加到起始值上
-      const random =
-        Math.floor(Math.random() * (maxIncrement - minIncrement + 1)) +
-        minIncrement
-      activeCarNumStartVal.value = activeCarNumEndVal.value
-      activeCarNumEndVal.value += random
-
-      // 打印当前时间和起始值
-      // 更新时间
-      startTime.setMinutes(startTime.getMinutes() + 5)
-    } else {
-      // 终止循环
-      clearInterval(interval)
-      // 最后将起始值设为结束值
-      activeCarNumEndVal.value = end_value
-    }
+  interval = setInterval(() => {
+    const currentDataA = updateObjA.updateFn()
+    activeTypes.A = currentDataA.currentEndVal
+    const currentDataB = updateObjB.updateFn()
+    activeTypes.B = currentDataB.currentEndVal
+    const currentDataC = updateObjC.updateFn()
+    activeTypes.C = currentDataC.currentEndVal
+    activeCarNumStartVal.value =
+      currentDataA.currentStartVal +
+      currentDataB.currentStartVal +
+      currentDataC.currentStartVal
+    activeCarNumEndVal.value = activeTypes.A + activeTypes.B + activeTypes.C
   }, intervalTime * 60 * 1000) // 五分钟为单位，转换为毫秒
 }
 

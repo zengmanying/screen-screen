@@ -121,7 +121,10 @@ export function smoothLine(points, smooth = 50) {
       for (let j = 0; j < smooth; j++) {
         const prev = controls[controls.length - 1]
         const x = bezier3(p0[0], prev[0], _m1[0], p1[0], j / smooth)
-        const y = bezier3(p0[1], prev[1], _m1[1], p1[1], j / smooth)
+        let y = bezier3(p0[1], prev[1], _m1[1], p1[1], j / smooth)
+        if (y < 0) {
+          y = 0
+        }
         newPoints.push([x, y, ...p0])
       }
       controls.push(_m1)
@@ -173,4 +176,52 @@ export const updateDataByHalfHour = (cb) => {
     segmentation++
     cb(segmentation)
   }, 30 * 60 * 1000)
+}
+
+export class UpdateDataByFiveMinu {
+  currentEndVal = 0
+  currentStartVal = 0
+  maxIncrement = 0
+  minIncrement = 0
+  startTime = new Date()
+  endTime = new Date(this.startTime)
+  constructor(end_value, intervalTime, randomRange = 200) {
+    this.end_value = end_value
+    const copies = (24 * 60) / intervalTime
+    this.maxIncrement = Math.floor(end_value / copies)
+    this.minIncrement = this.maxIncrement - randomRange
+    this.endTime.setHours(23)
+    this.endTime.setMinutes(59)
+  }
+
+  initFn = () => {
+    this.currentEndVal = Math.floor(
+      ((this.startTime.getHours() * 60 + this.startTime.getMinutes()) / 5) *
+        this.maxIncrement
+    )
+    return this.currentEndVal
+  }
+
+  updateFn = () => {
+    if (this.startTime < this.endTime && this.currentEndVal < this.end_value) {
+      // 生成随机数并添加到起始值上
+      const random =
+        Math.floor(
+          Math.random() * (this.maxIncrement - this.minIncrement + 1)
+        ) + this.minIncrement
+      this.currentStartVal = this.currentEndVal
+      this.currentEndVal += random
+
+      // 打印当前时间和起始值
+      // 更新时间
+      this.startTime.setMinutes(this.startTime.getMinutes() + 5)
+    } else {
+      // 最后将起始值设为结束值
+      this.currentEndVal = this.end_value
+    }
+    return {
+      currentStartVal: this.currentStartVal,
+      currentEndVal: this.currentEndVal,
+    }
+  }
 }
