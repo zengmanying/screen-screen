@@ -149,7 +149,7 @@ const lineOptions = {
       name: '',
       type: 'lines',
       coordinateSystem: 'cartesian2d',
-      zlevel: 1,
+      zlevel: 2,
       polyline: true,
       symbol: 'circle',
       effect: {
@@ -167,6 +167,7 @@ const lineOptions = {
           curveness: 0,
         },
       },
+      animation: false,
       data: coordsData,
     },
   ],

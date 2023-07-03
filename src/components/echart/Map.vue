@@ -228,6 +228,7 @@ const options = computed(() => {
             curveness: -0.2,
           },
         },
+        animation: false,
         data: getLinesData(linesData.value),
       },
       {
