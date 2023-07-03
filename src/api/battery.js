@@ -112,3 +112,28 @@ export const getCarMileage = async () => {
   })
   return resp
 }
+
+// 过温时长及占比
+export const getOverTemplate = async (sqlRef, project) => {
+  const url = isProd
+    ? `/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=PREWARNING&SQL_REF=${sqlRef}&project=${project}`
+    : '/over-temperature'
+  const resp = await http.get(url)
+  resp.data = resp.data.map((item) => {
+    return {
+      name: item.NAME,
+      count: +item.COUNT,
+      status: item.STATUS,
+    }
+  })
+  return resp
+}
+
+// 过温时长及占比项目号
+export const getOverTemplateProject = async () => {
+  const url = isProd
+    ? `/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=PREWARNING&SQL_REF=RESULT_PERWARNING_OVERTEMP_PROJECT`
+    : '/over-temperature-project'
+  const resp = await http.get(url)
+  return resp
+}

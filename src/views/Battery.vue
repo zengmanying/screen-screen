@@ -7,7 +7,7 @@ import VChart from 'vue-echarts'
 import { Carousel } from 'ant-design-vue'
 import '../assets/ant-carousel.css'
 import { smoothLine, changeTo2dArray } from '@/utils'
-import { getOverTemplate, getWorkingWarning, getSoh } from '@/mock/battery'
+import { getWorkingWarning, getSoh } from '@/mock/battery'
 import {
   getAlgorithmTotal,
   getRecognitionRate,
@@ -16,11 +16,14 @@ import {
   getWarnCarNum,
   getAlgorithmCarNum,
   getCarMileage,
+  getOverTemplate,
+  getOverTemplateProject,
 } from '@/api/battery'
+import { updateDataInBeforeDawn } from '@/utils'
 onBeforeMount(() => {
   CreateChartThemeColor()
 })
-onMounted(() => {
+const getServiceData = () => {
   getAlgorithmTotalData()
   getRecognitionRateData()
   getAccuracyRateData()
@@ -28,12 +31,17 @@ onMounted(() => {
   getWarnCarNumData()
   getAlgorithmCarNumData()
   getCarMileageData()
-  getOverTemplate40Data()
-  getOverTemplate40Rate()
-  getOverTemplate45Data()
-  getOverTemplate45Rate()
+  getOverTemplateProjectData()
   getWorkingWarningData()
   getSohData()
+}
+onMounted(() => {
+  // 初始调用所有接口数据
+  getServiceData()
+  // 每天凌晨更新数据
+  updateDataInBeforeDawn(() => {
+    getServiceData()
+  })
 })
 // 预警算法应用总数
 const totalCount = ref(0)
@@ -334,7 +342,7 @@ const getCarNumOptions = (
       top: 20,
       left: 20,
       right: 40,
-      bottom: 18 * (10 - len) + 20,
+      bottom: 18 * (10 - len) + 35,
     },
     legend: {
       show: false,
@@ -457,114 +465,110 @@ const getCarMileageData = async () => {
 }
 
 // 超40℃时长预警车辆数量分布
-let overTemplate40NumSeries = []
-let overTemplate40NumCoordsData = [
+let overTemplate40NumSeries = ref([])
+let overTemplate40NumCoordsData = ref([
   {
     coords: [],
   },
-]
-let overTemplate40NumLineArrData = []
-const getOverTemplate40Data = async () => {
-  const resp = await getOverTemplate()
+])
+let overTemplate40NumLineArrData = ref([])
+const getOverTemplate40Data = async (project) => {
+  const resp = await getOverTemplate('RESULT_PERWARNING_OVERTEMP_40', project)
   if (resp.resultCode === '200') {
-    overTemplate40NumLineArrData = resp.data.map((item, idx) => [
+    overTemplate40NumLineArrData.value = resp.data.map((item, idx) => [
       idx + 1,
       Object.values(item)[1],
       Object.values(item)[0],
       Object.values(item)[2],
     ])
-    const smoothLineData = smoothLine(overTemplate40NumLineArrData)
-    overTemplate40NumSeries = getSegmentLineAreaSeries(smoothLineData)
-    for (var i = 0; i < smoothLineData.length; i++) {
-      overTemplate40NumCoordsData[0].coords.push([
-        smoothLineData[i][0],
-        smoothLineData[i][1],
-      ])
-    }
+    const smoothLineData = smoothLine(overTemplate40NumLineArrData.value)
+    overTemplate40NumSeries.value = getSegmentLineAreaSeries(smoothLineData)
+    overTemplate40NumCoordsData.value[0].coords = smoothLineData.map((item) => [
+      item[0],
+      item[1],
+    ])
   }
 }
 
 // 超40℃时长占比预警车辆数量分布
-let overTemplate40RateSeries = []
-let overTemplate40RateCoordsData = [
+let overTemplate40RateSeries = ref([])
+let overTemplate40RateCoordsData = ref([
   {
     coords: [],
   },
-]
-let overTemplate40RateLineArrData = []
-const getOverTemplate40Rate = async () => {
-  const resp = await getOverTemplate()
+])
+let overTemplate40RateLineArrData = ref([])
+const getOverTemplate40Rate = async (project) => {
+  const resp = await getOverTemplate(
+    'RESULT_PERWARNING_OVERTEMP_40PRO',
+    project
+  )
   if (resp.resultCode === '200') {
-    overTemplate40RateLineArrData = resp.data.map((item, idx) => [
+    overTemplate40RateLineArrData.value = resp.data.map((item, idx) => [
       idx + 1,
       Object.values(item)[1],
       Object.values(item)[0],
       Object.values(item)[2],
     ])
-    const smoothLineData = smoothLine(overTemplate40RateLineArrData)
-    overTemplate40RateSeries = getSegmentLineAreaSeries(smoothLineData)
-    for (var i = 0; i < smoothLineData.length; i++) {
-      overTemplate40RateCoordsData[0].coords.push([
-        smoothLineData[i][0],
-        smoothLineData[i][1],
-      ])
-    }
+    const smoothLineData = smoothLine(overTemplate40RateLineArrData.value)
+    overTemplate40RateSeries.value = getSegmentLineAreaSeries(smoothLineData)
+    overTemplate40RateCoordsData.value[0].coords = smoothLineData.map(
+      (item) => [item[0], item[1]]
+    )
   }
 }
 
 // 超45℃时长预警车辆数量分布
-let overTemplate45NumSeries = []
-let overTemplate45NumCoordsData = [
+let overTemplate45NumSeries = ref([])
+let overTemplate45NumCoordsData = ref([
   {
     coords: [],
   },
-]
-let overTemplate45NumLineArrData = []
-const getOverTemplate45Data = async () => {
-  const resp = await getOverTemplate()
+])
+let overTemplate45NumLineArrData = ref([])
+const getOverTemplate45Data = async (project) => {
+  const resp = await getOverTemplate('RESULT_PERWARNING_OVERTEMP_50', project)
   if (resp.resultCode === '200') {
-    overTemplate45NumLineArrData = resp.data.map((item, idx) => [
+    overTemplate45NumLineArrData.value = resp.data.map((item, idx) => [
       idx + 1,
       Object.values(item)[1],
       Object.values(item)[0],
       Object.values(item)[2],
     ])
-    const smoothLineData = smoothLine(overTemplate45NumLineArrData)
-    overTemplate45NumSeries = getSegmentLineAreaSeries(smoothLineData)
-    for (var i = 0; i < smoothLineData.length; i++) {
-      overTemplate45NumCoordsData[0].coords.push([
-        smoothLineData[i][0],
-        smoothLineData[i][1],
-      ])
-    }
+    const smoothLineData = smoothLine(overTemplate45NumLineArrData.value)
+    overTemplate45NumSeries.value = getSegmentLineAreaSeries(smoothLineData)
+    overTemplate45NumCoordsData.value[0].coords = smoothLineData.map((item) => [
+      item[0],
+      item[1],
+    ])
   }
 }
 
 // 超45℃时长占比预警车辆数量分布
-let overTemplate45RateSeries = []
-let overTemplate45RateCoordsData = [
+let overTemplate45RateSeries = ref([])
+let overTemplate45RateCoordsData = ref([
   {
     coords: [],
   },
-]
-let overTemplate45RateLineArrData = []
-const getOverTemplate45Rate = async () => {
-  const resp = await getOverTemplate()
+])
+let overTemplate45RateLineArrData = ref([])
+const getOverTemplate45Rate = async (project) => {
+  const resp = await getOverTemplate(
+    'RESULT_PERWARNING_OVERTEMP_50pro',
+    project
+  )
   if (resp.resultCode === '200') {
-    overTemplate45RateLineArrData = resp.data.map((item, idx) => [
+    overTemplate45RateLineArrData.value = resp.data.map((item, idx) => [
       idx + 1,
       Object.values(item)[1],
       Object.values(item)[0],
       Object.values(item)[2],
     ])
-    const smoothLineData = smoothLine(overTemplate45RateLineArrData)
-    overTemplate45RateSeries = getSegmentLineAreaSeries(smoothLineData)
-    for (var i = 0; i < smoothLineData.length; i++) {
-      overTemplate45RateCoordsData[0].coords.push([
-        smoothLineData[i][0],
-        smoothLineData[i][1],
-      ])
-    }
+    const smoothLineData = smoothLine(overTemplate45RateLineArrData.value)
+    overTemplate45RateSeries.value = getSegmentLineAreaSeries(smoothLineData)
+    overTemplate45RateCoordsData.value[0].coords = smoothLineData.map(
+      (item) => [item[0], item[1]]
+    )
   }
 }
 
@@ -579,7 +583,7 @@ const getLineAreaOptions = (lineArrData, coordsData, effectDTOSeries) => {
     xAxis: {
       type: 'value',
       min: 1,
-      interval: 2,
+      interval: 1,
       axisLabel: {
         rotate: 35,
         formatter: (params) => {
@@ -594,7 +598,7 @@ const getLineAreaOptions = (lineArrData, coordsData, effectDTOSeries) => {
         name: '',
         type: 'lines',
         coordinateSystem: 'cartesian2d',
-        zlevel: 1,
+        zlevel: 4,
         polyline: true,
         symbol: 'circle',
         effect: {
@@ -612,6 +616,7 @@ const getLineAreaOptions = (lineArrData, coordsData, effectDTOSeries) => {
             curveness: 0,
           },
         },
+        animation: false,
         data: coordsData,
       },
     ],
@@ -623,9 +628,11 @@ const getSegmentLineAreaSeries = (httpData) => {
   let data = []
   let seriesItem
   var st = httpData[0][5]
+  let stArr = [st]
   for (var i = 0; i < httpData.length; i++) {
     data.push([httpData[i][0], httpData[i][1]])
-    if (st != httpData[i][5] || i == httpData.length - 1) {
+    if (!stArr.includes(httpData[i][5]) || i == httpData.length - 1) {
+      stArr.push(httpData[i][5])
       let areaColor = ''
       let lineColor = ''
       switch (st) {
@@ -733,6 +740,27 @@ const getSegmentLineAreaSeries = (httpData) => {
     }
   }
   return series
+}
+
+const overTemplateProject = ref([])
+const getOverTemplateProjectData = async () => {
+  const resp = await getOverTemplateProject()
+  if (resp.resultCode === '200') {
+    overTemplateProject.value = resp.data
+    getOverTemplate40Data(overTemplateProject.value[0].PROJECT)
+    getOverTemplate40Rate(overTemplateProject.value[0].PROJECT)
+    getOverTemplate45Data(overTemplateProject.value[0].PROJECT)
+    getOverTemplate45Rate(overTemplateProject.value[0].PROJECT)
+  }
+}
+
+const currentTemplateOverIdx = ref(0)
+const handleCarouselChange = (from, to) => {
+  currentTemplateOverIdx.value = to
+  getOverTemplate40Data(overTemplateProject.value[to].PROJECT)
+  getOverTemplate40Rate(overTemplateProject.value[to].PROJECT)
+  getOverTemplate45Data(overTemplateProject.value[to].PROJECT)
+  getOverTemplate45Rate(overTemplateProject.value[to].PROJECT)
 }
 // 工况预警展示
 const workingWarningData = ref([])
@@ -1002,65 +1030,86 @@ const scatterOptions = {
           <div class="right-bottom-left-content">
             <div class="card car-temp-rate">
               <div class="card-header">
-                <span class="card-title">过温时长及占比</span>
+                <span class="card-title"
+                  >过温时长及占比({{
+                    overTemplateProject[currentTemplateOverIdx] &&
+                    overTemplateProject[currentTemplateOverIdx].PROJECT
+                  }})</span
+                >
               </div>
               <div class="card-body">
-                <dl>
-                  <dt>超40℃时长预警车辆数量分布</dt>
-                  <dd>
-                    <HChart
-                      :options="
-                        getLineAreaOptions(
-                          overTemplate40NumLineArrData,
-                          overTemplate40NumCoordsData,
-                          overTemplate40NumSeries
-                        )
-                      "
-                    ></HChart>
-                  </dd>
-                </dl>
-                <dl>
-                  <dt>超40℃时长占比预警车辆数量分布</dt>
-                  <dd>
-                    <HChart
-                      :options="
-                        getLineAreaOptions(
-                          overTemplate40RateLineArrData,
-                          overTemplate40RateCoordsData,
-                          overTemplate40RateSeries
-                        )
-                      "
-                    ></HChart>
-                  </dd>
-                </dl>
-                <dl>
-                  <dt>超45℃时长预警车辆数量分布</dt>
-                  <dd>
-                    <HChart
-                      :options="
-                        getLineAreaOptions(
-                          overTemplate45NumLineArrData,
-                          overTemplate45NumCoordsData,
-                          overTemplate45NumSeries
-                        )
-                      "
-                    ></HChart>
-                  </dd>
-                </dl>
-                <dl>
-                  <dt>超45℃时长占比预警车辆数量分布</dt>
-                  <dd>
-                    <HChart
-                      :options="
-                        getLineAreaOptions(
-                          overTemplate45RateLineArrData,
-                          overTemplate45RateCoordsData,
-                          overTemplate45RateSeries
-                        )
-                      "
-                    ></HChart>
-                  </dd>
-                </dl>
+                <Carousel
+                  style="width: 100%"
+                  autoplay
+                  :autoplay-speed="5 * 60 * 1000"
+                  :before-change="handleCarouselChange"
+                >
+                  <div
+                    v-for="item in overTemplateProject"
+                    :key="item.PROJECT"
+                    class="temp-rate-item"
+                  >
+                    <dl>
+                      <dt>超40℃时长预警车辆数量分布</dt>
+                      <dd v-if="overTemplate40NumLineArrData.length > 0">
+                        <HChart
+                          :options="
+                            getLineAreaOptions(
+                              overTemplate40NumLineArrData,
+                              overTemplate40NumCoordsData,
+                              overTemplate40NumSeries
+                            )
+                          "
+                        ></HChart>
+                      </dd>
+                    </dl>
+                    <dl>
+                      <dt>超40℃时长占比预警车辆数量分布</dt>
+                      <dd>
+                        <HChart
+                          v-if="overTemplate40RateLineArrData.length > 0"
+                          :options="
+                            getLineAreaOptions(
+                              overTemplate40RateLineArrData,
+                              overTemplate40RateCoordsData,
+                              overTemplate40RateSeries
+                            )
+                          "
+                        ></HChart>
+                      </dd>
+                    </dl>
+                    <dl>
+                      <dt>超45℃时长预警车辆数量分布</dt>
+                      <dd>
+                        <HChart
+                          v-if="overTemplate45NumLineArrData.length > 0"
+                          :options="
+                            getLineAreaOptions(
+                              overTemplate45NumLineArrData,
+                              overTemplate45NumCoordsData,
+                              overTemplate45NumSeries
+                            )
+                          "
+                        ></HChart>
+                      </dd>
+                    </dl>
+                    <dl>
+                      <dt>超45℃时长占比预警车辆数量分布</dt>
+                      <dd>
+                        <HChart
+                          v-if="overTemplate45RateLineArrData.length > 0"
+                          :options="
+                            getLineAreaOptions(
+                              overTemplate45RateLineArrData,
+                              overTemplate45RateCoordsData,
+                              overTemplate45RateSeries
+                            )
+                          "
+                        ></HChart>
+                      </dd>
+                    </dl>
+                  </div>
+                </Carousel>
               </div>
             </div>
             <div class="card car-working-show">
@@ -1273,6 +1322,9 @@ const scatterOptions = {
   flex: auto;
   margin-right: 24px;
   height: 100%;
+  .card {
+    width: 100%;
+  }
   .card-header {
     background-image: url('@/assets/card-title-long-bg.png');
   }
@@ -1281,6 +1333,12 @@ const scatterOptions = {
     align-items: center;
     flex-wrap: wrap;
     padding: 14px 0;
+    .temp-rate-item {
+      width: 100%;
+      height: 100%;
+      display: flex !important;
+      flex-wrap: wrap;
+    }
     dl {
       display: flex;
       flex-direction: column;
@@ -1293,11 +1351,22 @@ const scatterOptions = {
         background-position: left center;
         background-repeat: no-repeat;
         padding-left: 32px;
+        color: #fff;
       }
       dd {
         flex: 1;
         margin: 0;
         padding: 4px 0 16px;
+      }
+    }
+    & ::v-deep .ant-carousel {
+      width: 100%;
+      height: 100%;
+      .slick-slider,
+      .slick-list,
+      .slick-track,
+      .slick-slide {
+        height: 100%;
       }
     }
   }
