@@ -192,17 +192,22 @@ export class UpdateDataByFiveMinu {
     this.minIncrement = this.maxIncrement - randomRange
     this.endTime.setHours(23)
     this.endTime.setMinutes(59)
+    this.intervalTime = intervalTime
   }
 
   initFn = () => {
     this.currentEndVal = Math.floor(
-      ((this.startTime.getHours() * 60 + this.startTime.getMinutes()) / 5) *
+      ((this.startTime.getHours() * 60 * 60 * 1000 +
+        this.startTime.getMinutes() * 60 * 1000 +
+        this.startTime.getSeconds() * 1000) /
+        this.intervalTime) *
         this.maxIncrement
     )
     return this.currentEndVal
   }
 
   updateFn = () => {
+    this.startTime = new Date()
     if (this.startTime < this.endTime && this.currentEndVal < this.end_value) {
       // 生成随机数并添加到起始值上
       const random =
@@ -211,10 +216,6 @@ export class UpdateDataByFiveMinu {
         ) + this.minIncrement
       this.currentStartVal = this.currentEndVal
       this.currentEndVal += random
-
-      // 打印当前时间和起始值
-      // 更新时间
-      this.startTime.setMinutes(this.startTime.getMinutes() + 5)
     } else {
       // 最后将起始值设为结束值
       this.currentEndVal = this.end_value
