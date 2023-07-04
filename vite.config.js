@@ -19,4 +19,14 @@ export default defineConfig({
     alias,
   },
   plugins: [vue(), eslintPlugin()],
+  build: {
+    // 清除console和debugger
+    minify: 'terser', // 使用terserOptions需要配置
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+      },
+    },
+  },
 })
