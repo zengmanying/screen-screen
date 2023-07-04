@@ -20,6 +20,7 @@ import {
   getOverTemplateProject,
 } from '@/api/battery'
 import { updateDataInBeforeDawn } from '@/utils'
+import { CAROUSELSPEED } from '@/constant'
 onBeforeMount(() => {
   CreateChartThemeColor()
 })
@@ -52,25 +53,34 @@ const getAlgorithmTotalData = async () => {
   }
 }
 const barAndLineOptions = {
+  title: {
+    show: true,
+    text: '2023年',
+    textStyle: {
+      color: '#fff',
+      fontSize: 12,
+    },
+    left: 0,
+    top: 0,
+  },
   legend: {
     top: 'auto',
     bottom: 6,
     left: 'center',
-    width: 300,
     textStyle: {
-      width: 120,
+      width: 100,
       backgroundColor: 'transparent',
     },
   },
   grid: {
-    top: 30,
+    top: 60,
     right: 50,
     bottom: 80,
     left: 50,
   },
   yAxis: [
     {
-      name: '2023',
+      name: '数量(辆)',
       type: 'value',
       gridIndex: 0,
       position: 'left',
@@ -264,7 +274,10 @@ const accuracyRateOpt = computed(() => {
         top: 'auto',
         bottom: 6,
         left: 'center',
-        width: 350,
+        textStyle: {
+          width: 80,
+          backgroundColor: 'transparent',
+        },
       },
     },
     ...{ series: accuracyRateSeries },
@@ -465,58 +478,58 @@ const getCarMileageData = async () => {
 }
 
 // 超40℃时长预警车辆数量分布
-let overTemplate40NumSeries = ref([])
-let overTemplate40NumCoordsData = ref([
-  {
-    coords: [],
-  },
-])
-let overTemplate40NumLineArrData = ref([])
-const getOverTemplate40Data = async (project) => {
-  const resp = await getOverTemplate('RESULT_PERWARNING_OVERTEMP_40', project)
-  if (resp.resultCode === '200') {
-    overTemplate40NumLineArrData.value = resp.data.map((item, idx) => [
-      idx + 1,
-      Object.values(item)[1],
-      Object.values(item)[0],
-      Object.values(item)[2],
-    ])
-    const smoothLineData = smoothLine(overTemplate40NumLineArrData.value)
-    overTemplate40NumSeries.value = getSegmentLineAreaSeries(smoothLineData)
-    overTemplate40NumCoordsData.value[0].coords = smoothLineData.map((item) => [
-      item[0],
-      item[1],
-    ])
-  }
-}
+// let overTemplate40NumSeries = ref([])
+// let overTemplate40NumCoordsData = ref([
+//   {
+//     coords: [],
+//   },
+// ])
+// let overTemplate40NumLineArrData = ref([])
+// const getOverTemplate40Data = async (project) => {
+//   const resp = await getOverTemplate('RESULT_PERWARNING_OVERTEMP_40', project)
+//   if (resp.resultCode === '200') {
+//     overTemplate40NumLineArrData.value = resp.data.map((item, idx) => [
+//       idx + 1,
+//       Object.values(item)[1],
+//       Object.values(item)[0],
+//       Object.values(item)[2],
+//     ])
+//     const smoothLineData = smoothLine(overTemplate40NumLineArrData.value)
+//     overTemplate40NumSeries.value = getSegmentLineAreaSeries(smoothLineData)
+//     overTemplate40NumCoordsData.value[0].coords = smoothLineData.map((item) => [
+//       item[0],
+//       item[1],
+//     ])
+//   }
+// }
 
-// 超40℃时长占比预警车辆数量分布
-let overTemplate40RateSeries = ref([])
-let overTemplate40RateCoordsData = ref([
-  {
-    coords: [],
-  },
-])
-let overTemplate40RateLineArrData = ref([])
-const getOverTemplate40Rate = async (project) => {
-  const resp = await getOverTemplate(
-    'RESULT_PERWARNING_OVERTEMP_40PRO',
-    project
-  )
-  if (resp.resultCode === '200') {
-    overTemplate40RateLineArrData.value = resp.data.map((item, idx) => [
-      idx + 1,
-      Object.values(item)[1],
-      Object.values(item)[0],
-      Object.values(item)[2],
-    ])
-    const smoothLineData = smoothLine(overTemplate40RateLineArrData.value)
-    overTemplate40RateSeries.value = getSegmentLineAreaSeries(smoothLineData)
-    overTemplate40RateCoordsData.value[0].coords = smoothLineData.map(
-      (item) => [item[0], item[1]]
-    )
-  }
-}
+// // 超40℃时长占比预警车辆数量分布
+// let overTemplate40RateSeries = ref([])
+// let overTemplate40RateCoordsData = ref([
+//   {
+//     coords: [],
+//   },
+// ])
+// let overTemplate40RateLineArrData = ref([])
+// const getOverTemplate40Rate = async (project) => {
+//   const resp = await getOverTemplate(
+//     'RESULT_PERWARNING_OVERTEMP_40PRO',
+//     project
+//   )
+//   if (resp.resultCode === '200') {
+//     overTemplate40RateLineArrData.value = resp.data.map((item, idx) => [
+//       idx + 1,
+//       Object.values(item)[1],
+//       Object.values(item)[0],
+//       Object.values(item)[2],
+//     ])
+//     const smoothLineData = smoothLine(overTemplate40RateLineArrData.value)
+//     overTemplate40RateSeries.value = getSegmentLineAreaSeries(smoothLineData)
+//     overTemplate40RateCoordsData.value[0].coords = smoothLineData.map(
+//       (item) => [item[0], item[1]]
+//     )
+//   }
+// }
 
 // 超45℃时长预警车辆数量分布
 let overTemplate45NumSeries = ref([])
@@ -572,18 +585,27 @@ const getOverTemplate45Rate = async (project) => {
   }
 }
 
-const getLineAreaOptions = (lineArrData, coordsData, effectDTOSeries) => {
+const getLineAreaOptions = (
+  lineArrData,
+  coordsData,
+  effectDTOSeries,
+  xUnit
+) => {
   return {
     grid: {
-      top: 10,
-      bottom: 50,
-      left: 50,
-      right: 0,
+      top: 27,
+      bottom: 40,
+      left: 32,
+      right: 58,
     },
     xAxis: {
       type: 'value',
+      name: xUnit,
       min: 1,
       interval: 1,
+      axisTick: {
+        show: false,
+      },
       axisLabel: {
         rotate: 35,
         formatter: (params) => {
@@ -591,6 +613,9 @@ const getLineAreaOptions = (lineArrData, coordsData, effectDTOSeries) => {
         },
       },
       position: 'bottom',
+    },
+    yAxis: {
+      name: '数量(辆)',
     },
     series: [
       ...effectDTOSeries,
@@ -609,12 +634,31 @@ const getLineAreaOptions = (lineArrData, coordsData, effectDTOSeries) => {
           symbolSize: 4,
         },
         lineStyle: {
-          normal: {
-            color: 'rgba(220, 209, 151, .8)',
-            width: 0,
-            opacity: 0,
-            curveness: 0,
+          color: {
+            type: 'linear',
+            x: 0,
+            y: 0,
+            x2: 1,
+            y2: 0,
+            colorStops: [
+              {
+                offset: 0,
+                color: 'rgba(251, 190, 32, 0.2)', // 0% 处的颜色
+              },
+              {
+                offset: 0,
+                color: 'rgba(254, 228, 84, 1)', // 0% 处的颜色
+              },
+              {
+                offset: 1,
+                color: 'rgba(255, 254, 253, 1)', // 100% 处的颜色
+              },
+            ],
+            global: false, // 缺省为 false
           },
+          width: 0,
+          opacity: 0,
+          curveness: 0,
         },
         animation: false,
         data: coordsData,
@@ -655,7 +699,7 @@ const getSegmentLineAreaSeries = (httpData) => {
             ],
             global: false, // 缺省为 false
           }
-          lineColor = 'rgba(30, 231, 231, 1)'
+          lineColor = 'rgba(30, 231, 231, 0.55)'
           break
         case 1:
           areaColor = {
@@ -676,7 +720,7 @@ const getSegmentLineAreaSeries = (httpData) => {
             ],
             global: false, // 缺省为 false
           }
-          lineColor = 'rgba(220, 209, 151, 1)'
+          lineColor = 'rgba(220, 209, 151, 0.55)'
           break
         case 2:
           areaColor = {
@@ -697,7 +741,7 @@ const getSegmentLineAreaSeries = (httpData) => {
             ],
             global: false, // 缺省为 false
           }
-          lineColor = 'rgba(245, 163, 88, 1)'
+          lineColor = 'rgba(245, 163, 88, 0.55)'
           break
         case 3:
           areaColor = {
@@ -718,7 +762,7 @@ const getSegmentLineAreaSeries = (httpData) => {
             ],
             global: false, // 缺省为 false
           }
-          lineColor = 'rgba(241, 98, 88, 1)'
+          lineColor = 'rgba(241, 98, 88, 0.55)'
       }
       seriesItem = {
         name: '',
@@ -747,8 +791,8 @@ const getOverTemplateProjectData = async () => {
   const resp = await getOverTemplateProject()
   if (resp.resultCode === '200') {
     overTemplateProject.value = resp.data
-    getOverTemplate40Data(overTemplateProject.value[0].PROJECT)
-    getOverTemplate40Rate(overTemplateProject.value[0].PROJECT)
+    // getOverTemplate40Data(overTemplateProject.value[0].PROJECT)
+    // getOverTemplate40Rate(overTemplateProject.value[0].PROJECT)
     getOverTemplate45Data(overTemplateProject.value[0].PROJECT)
     getOverTemplate45Rate(overTemplateProject.value[0].PROJECT)
   }
@@ -757,8 +801,8 @@ const getOverTemplateProjectData = async () => {
 const currentTemplateOverIdx = ref(0)
 const handleCarouselChange = (from, to) => {
   currentTemplateOverIdx.value = to
-  getOverTemplate40Data(overTemplateProject.value[to].PROJECT)
-  getOverTemplate40Rate(overTemplateProject.value[to].PROJECT)
+  // getOverTemplate40Data(overTemplateProject.value[to].PROJECT)
+  // getOverTemplate40Rate(overTemplateProject.value[to].PROJECT)
   getOverTemplate45Data(overTemplateProject.value[to].PROJECT)
   getOverTemplate45Rate(overTemplateProject.value[to].PROJECT)
 }
@@ -879,6 +923,10 @@ const scatter3dOptions = computed(() => {
 
 // SOH分布
 const sohDataset = ref({
+  encode: {
+    x: 2,
+    y: 3,
+  },
   source: [],
 })
 const getSohData = async () => {
@@ -889,7 +937,7 @@ const getSohData = async () => {
 }
 const scatterOptions = {
   grid: {
-    right: 10,
+    right: 60,
     top: 50,
     bottom: 66,
   },
@@ -899,10 +947,11 @@ const scatterOptions = {
     left: 'center',
   },
   xAxis: {
-    type: 'value',
+    name: '里程表\n(万公里)',
   },
   yAxis: {
-    name: '里程表(万公里)',
+    name: 'SOH(%)',
+    type: 'value',
   },
   series: [
     {
@@ -974,7 +1023,7 @@ const scatterOptions = {
               <span class="card-title">各项目预警车辆数量分布</span>
             </div>
             <div class="card-body">
-              <Carousel autoplay>
+              <Carousel autoplay :autoplay-speed="CAROUSELSPEED">
                 <HChart
                   v-for="(item, idx) in carNumData"
                   :key="`carNum${idx}`"
@@ -989,7 +1038,7 @@ const scatterOptions = {
               <span class="card-title">各算法预警车辆数量分布</span>
             </div>
             <div class="card-body">
-              <Carousel autoplay>
+              <Carousel autoplay :autoplay-speed="CAROUSELSPEED">
                 <HChart
                   v-for="(item, idx) in carAlgorithmData"
                   :key="`carAlgorithm${idx}`"
@@ -1041,7 +1090,7 @@ const scatterOptions = {
                 <Carousel
                   style="width: 100%"
                   autoplay
-                  :autoplay-speed="5 * 60 * 1000"
+                  :autoplay-speed="CAROUSELSPEED"
                   :before-change="handleCarouselChange"
                 >
                   <div
@@ -1049,7 +1098,7 @@ const scatterOptions = {
                     :key="item.PROJECT"
                     class="temp-rate-item"
                   >
-                    <dl>
+                    <!-- <dl>
                       <dt>超40℃时长预警车辆数量分布</dt>
                       <dd v-if="overTemplate40NumLineArrData.length > 0">
                         <HChart
@@ -1077,7 +1126,7 @@ const scatterOptions = {
                           "
                         ></HChart>
                       </dd>
-                    </dl>
+                    </dl> -->
                     <dl>
                       <dt>超45℃时长预警车辆数量分布</dt>
                       <dd>
@@ -1087,7 +1136,8 @@ const scatterOptions = {
                             getLineAreaOptions(
                               overTemplate45NumLineArrData,
                               overTemplate45NumCoordsData,
-                              overTemplate45NumSeries
+                              overTemplate45NumSeries,
+                              '时长(h)'
                             )
                           "
                         ></HChart>
@@ -1102,7 +1152,8 @@ const scatterOptions = {
                             getLineAreaOptions(
                               overTemplate45RateLineArrData,
                               overTemplate45RateCoordsData,
-                              overTemplate45RateSeries
+                              overTemplate45RateSeries,
+                              '占比(%)'
                             )
                           "
                         ></HChart>
@@ -1332,7 +1383,7 @@ const scatterOptions = {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    padding: 14px 0;
+    padding: 14px 0 24px;
     .temp-rate-item {
       width: 100%;
       height: 100%;
@@ -1342,8 +1393,8 @@ const scatterOptions = {
     dl {
       display: flex;
       flex-direction: column;
-      width: 50%;
-      height: 50%;
+      width: 100%;
+      height: 48%;
       padding: 0 15px;
       margin: 0;
       dt {
@@ -1367,6 +1418,9 @@ const scatterOptions = {
       .slick-track,
       .slick-slide {
         height: 100%;
+      }
+      .slick-dots-bottom {
+        bottom: -5px;
       }
     }
   }

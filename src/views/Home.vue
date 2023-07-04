@@ -5,7 +5,7 @@ import Line from '@/components/echart/Line.vue'
 import Gauge from '../components/echart/Gauge.vue'
 import Map from '../components/echart/Map.vue'
 import Bar from '../components/echart/Bar.vue'
-import scrollTagsClond from '@/assets/js/fesucai.js'
+// import scrollTagsClond from '@/assets/js/fesucai.js'
 import { nextTick, onMounted, onUnmounted, reactive, ref } from 'vue'
 import {} from '@/mock/home'
 import {
@@ -30,6 +30,10 @@ import {
   updateDataByHalfHour,
   UpdateDataByFiveMinu,
 } from '@/utils'
+
+import { Carousel } from 'ant-design-vue'
+import '../assets/ant-carousel.css'
+import { CAROUSELSPEED, RANDOMUPDATETIME } from '@/constant'
 
 // 车辆基本信息
 const carModelTotal = ref(0)
@@ -72,7 +76,7 @@ const getCarActiveNumTotalData = async () => {
     // activeTypes.A = A
     // activeTypes.B = B
     // activeTypes.C = C
-    updateActiveCarNum(resp.data.activeTypes, 5)
+    updateActiveCarNum(resp.data.activeTypes, RANDOMUPDATETIME)
   }
 }
 
@@ -92,8 +96,9 @@ const getSalesTop5Data = async () => {
   const resp = await getSalesTop5()
   if (resp.resultCode === '200') {
     saleTopData.value = resp.data
-    saleTop1.value = saleTopData.value.reduce((prev, next) => {
-      return Math.max(prev.value, next.value)
+    const saleTopValueArr = saleTopData.value.map((item) => item.value)
+    saleTop1.value = saleTopValueArr.reduce((prev, next) => {
+      return Math.max(prev, next)
     })
   }
 }
@@ -135,7 +140,7 @@ const getWarningDailyProcessData = async () => {
 const getWarningDailyChargeData = async () => {
   const resp = await getWarningDailyCharge()
   if (resp.resultCode === '200') {
-    updateDailyVehicle(resp.data.dailyVehicle, 5)
+    updateDailyVehicle(resp.data.dailyVehicle, RANDOMUPDATETIME)
   }
 }
 const updateDailyVehicle = (data, intervalTime) => {
@@ -149,7 +154,7 @@ const updateDailyVehicle = (data, intervalTime) => {
   intervalVehicle = setInterval(() => {
     const currentDataA = updateObj.updateFn()
     dailyVehicle.value = currentDataA.currentEndVal
-  }, intervalTime * 60 * 1000) // 五分钟为单位，转换为毫秒
+  }, intervalTime)
 }
 
 // 算法应用
@@ -170,10 +175,10 @@ const getTagscloudWeekData = async () => {
   if (resp.resultCode === '200') {
     tagscloudWeekData.value = resp.data
     nextTick(() => {
-      const tagsCloudWeekObj = new scrollTagsClond('tagsCloudWeek')
-      tagsCloudWeekTimer = setInterval(() => {
-        tagsCloudWeekObj.update()
-      }, 120)
+      // const tagsCloudWeekObj = new scrollTagsClond('tagsCloudWeek')
+      // tagsCloudWeekTimer = setInterval(() => {
+      //   tagsCloudWeekObj.update()
+      // }, 120)
     })
   }
 }
@@ -183,10 +188,10 @@ const getTagscloudMonthData = async () => {
   if (resp.resultCode === '200') {
     tagscloudMonthData.value = resp.data
     nextTick(() => {
-      const tagsCloudMonthObj = new scrollTagsClond('tagsCloudMonth')
-      tagsCloudWeekMonth = setInterval(() => {
-        tagsCloudMonthObj.update()
-      }, 160)
+      // const tagsCloudMonthObj = new scrollTagsClond('tagsCloudMonth')
+      // tagsCloudWeekMonth = setInterval(() => {
+      //   tagsCloudMonthObj.update()
+      // }, 160)
     })
   }
 }
@@ -263,7 +268,7 @@ const updateActiveCarNum = (data, intervalTime) => {
       currentDataB.currentStartVal +
       currentDataC.currentStartVal
     activeCarNumEndVal.value = activeTypes.A + activeTypes.B + activeTypes.C
-  }, intervalTime * 60 * 1000) // 五分钟为单位，转换为毫秒
+  }, intervalTime)
 }
 
 onMounted(() => {
@@ -298,6 +303,20 @@ onUnmounted(() => {
   clearInterval(tagsCloudWeekMonth)
   tagsCloudWeekMonth = null
 })
+
+const algoModelData = [
+  '压差预警-双周',
+  '压差一致性-双周',
+  '内阻一致性-双周',
+  '内短路算法-双周',
+  '漏液预警-周',
+  '容量衰减-月',
+  '动态自放电-月',
+  '静态自放电-月',
+  '电压不一致-月',
+  '多时间尺度算法-双周',
+]
+const workingModelData = ['工况预警-季度', '过温占比、时长-半月']
 </script>
 
 <template>
@@ -407,7 +426,7 @@ onUnmounted(() => {
               >
                 <div class="progress-title">
                   {{ item.name }}
-                  <span class="progress__name">{{ item.value }}</span>
+                  <span class="progress__name">{{ item.value }}辆</span>
                 </div>
                 <div class="progress-outer">
                   <div class="progress progress--blue">
@@ -484,7 +503,7 @@ onUnmounted(() => {
           >
         </div>
         <div class="card-body">
-          <section>
+          <!-- <section>
             <div class="word-cloud-title"><span>按周更新</span></div>
             <div id="tagsCloudWeek" class="tagscloud">
               <a
@@ -507,7 +526,45 @@ onUnmounted(() => {
                 ><span :style="{ color: $randomColor }">{{ item }}</span></a
               >
             </div>
-          </section>
+          </section> -->
+          <Carousel autoplay :autoplay-speed="CAROUSELSPEED">
+            <div>
+              <dl>
+                <dt>机理模型</dt>
+                <dd>
+                  <span v-for="item in algoModelData" :key="item">{{
+                    item
+                  }}</span>
+                </dd>
+              </dl>
+              <dl style="margin-top: 16px">
+                <dt>使用工况模型</dt>
+                <dd>
+                  <span v-for="item in workingModelData" :key="item">{{
+                    item
+                  }}</span>
+                </dd>
+              </dl>
+            </div>
+            <div>
+              <dl>
+                <dt>机理模型</dt>
+                <dd>
+                  <span v-for="item in algoModelData" :key="item">{{
+                    item
+                  }}</span>
+                </dd>
+              </dl>
+              <dl style="margin-top: 16px">
+                <dt>使用工况模型</dt>
+                <dd>
+                  <span v-for="item in workingModelData" :key="item">{{
+                    item
+                  }}</span>
+                </dd>
+              </dl>
+            </div>
+          </Carousel>
         </div>
       </div>
       <!-- 预警指标 -->
@@ -760,6 +817,63 @@ onUnmounted(() => {
     flex: 1;
     padding: 0;
   }
+
+  & ::v-deep .ant-carousel {
+    .slick-dots-bottom {
+      bottom: -30px;
+    }
+  }
+
+  dl {
+    padding: 0 16px;
+    margin: 0;
+    dt {
+      background-image: url('@/assets/battery/icon-arrow.svg');
+      background-position: left center;
+      background-repeat: no-repeat;
+      padding-left: 1.67vw;
+      color: #fff;
+      font-weight: bold;
+    }
+    dd {
+      display: flex;
+      flex-wrap: wrap;
+      padding: 0;
+      margin: 0;
+      span {
+        position: relative;
+        font-size: 12px;
+        font-weight: 500;
+        display: block;
+        height: 34px;
+        border: 1px solid rgba(26, 98, 179, 0.8);
+        text-align: center;
+        line-height: 32px;
+        min-width: 110px;
+        margin-right: 8px;
+        margin-top: 8px;
+        color: #fff;
+        flex: 30%;
+        &:nth-child(3n),
+        &:last-child {
+          margin-right: 0;
+        }
+        &::after {
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          height: 2px;
+          display: block;
+          content: '';
+          background-image: url('@/assets/alogBg.svg');
+          background-size: 140% auto;
+          background-position: center bottom;
+          background-repeat: no-repeat;
+        }
+      }
+    }
+  }
 }
 
 .card-gauge {
@@ -795,7 +909,7 @@ onUnmounted(() => {
 }
 
 .card-mileage {
-  height: 244px;
+  height: 250px;
   .card-header {
     background-image: url('@/assets/card-title-long-bg.png');
   }

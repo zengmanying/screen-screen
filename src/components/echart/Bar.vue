@@ -32,7 +32,7 @@ const lineOptions = {
     containLabel: true,
     x: 0,
     y: 30,
-    x2: 75,
+    x2: 85,
     y2: 0,
   },
   yAxis: [
@@ -64,7 +64,7 @@ const lineOptions = {
     },
   ],
   xAxis: {
-    name: '里程(公里)',
+    name: '里程(万公里)',
     type: 'category',
     boundaryGap: true,
     z: 2,
@@ -94,8 +94,7 @@ const lineOptions = {
       barWidth: 16,
       label: {
         show: true,
-        fontSize: 14,
-        fontWeight: 'bolder',
+        fontSize: 12,
         color: '#fff',
         position: 'top',
       },

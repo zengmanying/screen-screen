@@ -77,7 +77,7 @@ const legend = {
   show: true,
   textStyle: {
     color: textColors.normal,
-    fontSize: 12,
+    fontSize: 10,
   },
   itemWidth: 10,
   itemHeight: 10,

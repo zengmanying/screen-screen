@@ -77,10 +77,10 @@ const options = {
         offsetCenter: [0, 45], // x, y，单位px
         textStyle: {
           color: '#fff',
-          fontSize: 12, //表盘上的标题文字大小
-          fontWeight: 400,
-          width: 72,
-          height: 20,
+          fontSize: 14, //表盘上的标题文字大小
+          fontWeight: 600,
+          width: 86,
+          height: 24,
           borderRadius: 20,
           backgroundColor: props.color,
         },

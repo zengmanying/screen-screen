@@ -81,6 +81,7 @@ const chartOptions = computed(() => {
         ? ChartThemeColor.pureColors
         : ChartThemeColor.colors,
     },
+    { title: deepAssign({}, props.options.title) },
     {
       legend: deepAssign({}, legend, props.options.legend),
     },

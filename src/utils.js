@@ -187,7 +187,7 @@ export class UpdateDataByFiveMinu {
   endTime = new Date(this.startTime)
   constructor(end_value, intervalTime, randomRange = 200) {
     this.end_value = end_value
-    const copies = (24 * 60) / intervalTime
+    const copies = (24 * 60 * 60 * 1000) / intervalTime
     this.maxIncrement = Math.floor(end_value / copies)
     this.minIncrement = this.maxIncrement - randomRange
     this.endTime.setHours(23)

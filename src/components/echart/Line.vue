@@ -100,8 +100,8 @@ const lineOptions = {
     {
       type: 'line',
       lineStyle: {
-        color: '#187FE9',
-        width: 3,
+        color: 'rgba(24, 127, 233, 0.55)',
+        width: 2,
       },
       symbol: 'circle',
       symbolSize: (value, params) => {
@@ -154,18 +154,41 @@ const lineOptions = {
       symbol: 'circle',
       effect: {
         show: true,
-        trailLength: 0.8,
+        trailLength: 0.5,
         symbol: 'circle',
-        period: 2, //光点滑动速度
-        symbolSize: 6,
+        period: 3, //光点滑动速度
+        symbolSize: 4,
       },
       lineStyle: {
-        normal: {
-          color: 'rgba(14, 197, 255, 0.5)',
-          width: 0,
-          opacity: 0,
-          curveness: 0,
+        color: {
+          type: 'linear',
+          x: 0,
+          y: 0,
+          x2: 1,
+          y2: 0,
+          colorStops: [
+            {
+              offset: 0,
+              color: 'rgba(153, 237, 255, 1)', // 0% 处的颜色
+            },
+            {
+              offset: 0.5,
+              color: 'rgba(80, 223, 255, 1)', // 100% 处的颜色
+            },
+            {
+              offset: 0.8,
+              color: 'rgba(33, 148, 255, 1)', // 100% 处的颜色
+            },
+            {
+              offset: 1,
+              color: 'rgba(24, 127, 233, 0)', // 100% 处的颜色
+            },
+          ],
+          global: false, // 缺省为 false
         },
+        width: 0,
+        opacity: 0,
+        curveness: 0,
       },
       animation: false,
       data: coordsData,
