@@ -60,29 +60,29 @@ const options = {
           if (value !== 0) {
             return value.toFixed(2) + '%'
           } else {
-            return 0
+            return 0 + '%'
           }
         },
-        offsetCenter: [0, 25],
+        offsetCenter: [0, 50], // x, y，单位px
         textStyle: {
-          padding: [0, 0, 0, 0],
-          fontSize: 16,
-          fontWeight: '700',
-          color: '#fff',
+          color: 'rgba(255, 255, 255, 1)',
+          fontSize: 14, //表盘上的标题文字大小
+          fontWeight: 600,
+          width: 72,
+          height: 26,
+          borderRadius: 20,
+          padding: 0,
+          backgroundColor: props.color,
         },
       },
       title: {
         //标题
         show: true,
-        offsetCenter: [0, 45], // x, y，单位px
+        offsetCenter: [0, 25],
         textStyle: {
-          color: '#fff',
-          fontSize: 14, //表盘上的标题文字大小
-          fontWeight: 600,
-          width: 86,
-          height: 24,
-          borderRadius: 20,
-          backgroundColor: props.color,
+          padding: 0,
+          fontSize: 12,
+          color: 'rgba(255,255,255,0.85)',
         },
       },
       data: props.data,

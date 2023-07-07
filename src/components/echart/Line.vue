@@ -156,7 +156,7 @@ const lineOptions = {
         show: true,
         trailLength: 0.5,
         symbol: 'circle',
-        period: 3, //光点滑动速度
+        period: 4, //光点滑动速度
         symbolSize: 4,
       },
       lineStyle: {

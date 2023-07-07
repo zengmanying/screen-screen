@@ -29,7 +29,7 @@ const isProd = loadEnv().MODE === 'production'
 // 预警集市总数
 export const getWarningMarketTotal = async () => {
   const url = isProd
-    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=OVERVIEW&SQL_REF=RESULT_OVERVIEW_TOTAL_DATA'
+    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=BS01&SQL_REF=RESULT_BS01_008'
     : '/warning'
   const resp = await http.get(url)
   resp.data.overall = resp.data[0].OVERALL
@@ -39,7 +39,7 @@ export const getWarningMarketTotal = async () => {
 // 预警集市每日处理
 export const getWarningDailyProcess = async () => {
   const url = isProd
-    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=OVERVIEW&SQL_REF=RESULT_OVERVIEW_DAILY_PROCESS'
+    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=bs01&SQL_REF=RESULT_BS01_009'
     : '/warning2'
   const resp = await http.get(url)
   resp.data.dailyProcess = resp.data[0].DAILYPROCESS
@@ -49,7 +49,7 @@ export const getWarningDailyProcess = async () => {
 // 预警集市每日充电次数
 export const getWarningDailyCharge = async () => {
   const url = isProd
-    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=OVERVIEW&SQL_REF=RESULT_OVERVIEW_DAY_CHARGE'
+    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=BS01&SQL_REF=RESULT_BS01_010'
     : '/warning3'
   const resp = await http.get(url)
   resp.data.dailyVehicle = resp.data[0].DAILYVEHICLE
@@ -59,7 +59,7 @@ export const getWarningDailyCharge = async () => {
 // 车型数量
 export const getCarModelTotal = async () => {
   const url = isProd
-    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=OVERVIEW&SQL_REF=RESULT_OVERVIEW_CARMODEL_TOTAL'
+    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=BS01&SQL_REF=RESULT_BS01_001'
     : '/carModelNum'
   const resp = await http.get(url)
   resp.data.typesCount = resp.data[0].TYPESCOUNT
@@ -69,7 +69,7 @@ export const getCarModelTotal = async () => {
 // 车辆总数
 export const getCarNumTotal = async () => {
   const url = isProd
-    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=OVERVIEW&SQL_REF=RESULT_OVERVIEW_CARNUM_TOTAL'
+    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=BS01&SQL_REF=RESULT_BS01_002'
     : '/carTotalNum'
   const resp = await http.get(url)
   resp.data.totalTypes = resp.data[0]
@@ -80,7 +80,7 @@ export const getCarNumTotal = async () => {
 // 活跃车辆总数
 export const getCarActiveNumTotal = async () => {
   const url = isProd
-    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=OVERVIEW&SQL_REF=RESULT_OVERVIEW_HYCAR_TOTALNUM'
+    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=BS01&SQL_REF=RESULT_BS01_003'
     : '/carActiveNum'
   const resp = await http.get(url)
   resp.data.activeTypes = resp.data[0]
@@ -91,7 +91,7 @@ export const getCarActiveNumTotal = async () => {
 // 车辆区域分布
 export const getCarVehicleArea = async (segmentation) => {
   const url = isProd
-    ? `/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=OVERVIEW&SQL_REF=RESULT_OVERVIEW_VEHICLE_AREA&segmentation=${segmentation}`
+    ? `/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=BS01&SQL_REF=RESULT_BS01_006&segmentation=${segmentation}`
     : '/map'
   const resp = await http.get(url)
   resp.data = resp.data.map((item) => {
@@ -107,7 +107,7 @@ export const getCarVehicleArea = async (segmentation) => {
 // 里程分布
 export const getCarMileageDistribute = async () => {
   const url = isProd
-    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=OVERVIEW&SQL_REF=RESULT_OVERVIEW_MILEAGE_DISTRIBUTE'
+    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=BS01&SQL_REF=RESULT_BS01_007'
     : '/mileage'
   const resp = await http.get(url)
   resp.data = resp.data.map((item) => {
@@ -119,7 +119,7 @@ export const getCarMileageDistribute = async () => {
 // 算法应用总数
 export const getWarnAlgoTotal = async () => {
   const url = isProd
-    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=OVERVIEW&SQL_REF=RESULT_OVERVIEW_TOTAL_WARNALGO'
+    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=BS01&SQL_REF=RESULT_BS01_011'
     : '/tagscloud'
   const resp = await http.get(url)
   resp.data.total = resp.data[0].TOTAL
@@ -128,7 +128,7 @@ export const getWarnAlgoTotal = async () => {
 
 export const getTagscloudWeek = async () => {
   const url = isProd
-    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=OVERVIEW&SQL_REF=RESULT_OVERVIEW_DISPLAY_WEEKLY'
+    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=BS01&SQL_REF=RESULT_BS01_012_WEEKLY'
     : '/tagscloudWeek'
   const resp = await http.get(url)
   resp.data = eval('(' + resp.data[0].WEEKLY + ')')
@@ -137,7 +137,7 @@ export const getTagscloudWeek = async () => {
 
 export const getTagscloudMonth = async () => {
   const url = isProd
-    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=OVERVIEW&SQL_REF=RESULT_OVERVIEW_DISPLAY_MONTHLY'
+    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=BS01&SQL_REF=RESULT_BS01_012_MONTHLY'
     : '/tagscloudMonth'
   const resp = await http.get(url)
   resp.data = eval('(' + resp.data[0].MONTHLY + ')')
@@ -147,7 +147,7 @@ export const getTagscloudMonth = async () => {
 // 预警指标-识别率
 export const getAddaccumRate = async () => {
   const url = isProd
-    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=OVERVIEW&SQL_REF=RESULT_OVERVIEW_ADDACCUM_RATE'
+    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=BS01&SQL_REF=RESULT_BS01_013'
     : '/warning-gauge'
   const resp = await http.get(url)
   resp.data = resp.data.map((item) => {
@@ -159,7 +159,7 @@ export const getAddaccumRate = async () => {
 // 预警指标-检出率-准确率
 export const getAccuRate = async () => {
   const url = isProd
-    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=OVERVIEW&SQL_REF=RESULT_OVERVIEW_DETECTION_ACCURATE'
+    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=BS01&SQL_REF=RESULT_BS01_014'
     : '/warning-gauge2'
   const resp = await http.get(url)
   resp.data = resp.data.map((item) => {
@@ -171,7 +171,7 @@ export const getAccuRate = async () => {
 // 近6月实销车辆统计图表
 export const getActualSales = async () => {
   const url = isProd
-    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=OVERVIEW&SQL_REF=RESULT_OVERVIEW_ACTUAL_SALES'
+    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=BS01&SQL_REF=RESULT_BS01_004'
     : '/six-month-sale-statistics'
   const resp = await http.get(url)
   resp.data = resp.data.map((item) => {
@@ -183,7 +183,7 @@ export const getActualSales = async () => {
 // top5
 export const getSalesTop5 = async () => {
   const url = isProd
-    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=OVERVIEW&SQL_REF=RESULT_OVERVIEW_SALES_TOP5'
+    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=BS01&SQL_REF=RESULT_BS01_005'
     : '/top-5'
   const resp = await http.get(url)
   resp.data = resp.data.map((item) => {

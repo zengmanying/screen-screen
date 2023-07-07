@@ -88,10 +88,6 @@ const options = computed(() => {
         },
         itemStyle: {
           borderColor: 'rgba(189, 219, 255, 0.5)',
-          shadowColor: 'rgba(0, 169, 253, 0.4)',
-          shadowBlur: 20,
-          shadowOffsetX: 0,
-          shadowOffsetY: 2,
         },
         emphasis: {
           disabled: true,
@@ -115,70 +111,69 @@ const options = computed(() => {
         ],
         itemStyle: {
           normal: {
-            borderColor: 'rgba(255,255,255,.8)',
-            borderWidth: 5,
-            shadowColor: 'rgba(0, 169, 253, 0.4)',
-            shadowBlur: 20,
+            borderColor: '#2a81fe',
+            borderWidth: 3,
+            shadowColor: '#3fa4dd',
             shadowOffsetX: 0,
-            shadowOffsetY: 2,
+            shadowOffsetY: 15,
           },
         },
       },
-      {
-        type: 'map',
-        map: 'chinaPartJson',
-        zlevel: -2,
-        aspectScale: 0.85,
-        layoutCenter: ['50%', '44%'],
-        layoutSize: '90%',
-        roam: false,
-        silent: true,
-        regions: [
-          {
-            name: '南海诸岛',
-            value: 0,
-            itemStyle: { normal: { opacity: 0, label: { show: false } } },
-          },
-        ],
-        itemStyle: {
-          normal: {
-            borderColor: 'rgba(255,255,255,.3)',
-            borderWidth: 2,
-            shadowColor: 'rgba(0, 169, 253, 0.4)',
-            shadowBlur: 20,
-            shadowOffsetX: 0,
-            shadowOffsetY: 2,
-            areaColor: 'rgba(11, 47, 83, 0.3)',
-          },
-        },
-      },
-      {
-        type: 'map',
-        map: 'chinaPartJson',
-        zlevel: -3,
-        aspectScale: 0.85,
-        layoutCenter: ['50%', '45%'],
-        layoutSize: '90%',
-        roam: false,
-        silent: true,
-        regions: [
-          {
-            name: '南海诸岛',
-            value: 0,
-            itemStyle: { normal: { opacity: 0, label: { show: false } } },
-          },
-        ],
-        itemStyle: {
-          normal: {
-            borderColor: 'rgba(255,255,255,.2)',
-            shadowColor: 'rgba(0, 169, 253, 0.4)',
-            shadowBlur: 20,
-            shadowOffsetX: 0,
-            shadowOffsetY: 2,
-            areaColor: 'rgba(11, 47, 83, 0.3)',
-          },
-        },
-      },
+      // {
+      //   type: 'map',
+      //   map: 'chinaPartJson',
+      //   zlevel: -2,
+      //   aspectScale: 0.85,
+      //   layoutCenter: ['50%', '44%'],
+      //   layoutSize: '90%',
+      //   roam: false,
+      //   silent: true,
+      //   regions: [
+      //     {
+      //       name: '南海诸岛',
+      //       value: 0,
+      //       itemStyle: { normal: { opacity: 0, label: { show: false } } },
+      //     },
+      //   ],
+      //   itemStyle: {
+      //     normal: {
+      //       borderColor: 'rgba(255,255,255,.3)',
+      //       borderWidth: 2,
+      //       shadowColor: 'rgba(0, 169, 253, 0.4)',
+      //       shadowBlur: 20,
+      //       shadowOffsetX: 0,
+      //       shadowOffsetY: 2,
+      //       areaColor: 'rgba(11, 47, 83, 0.3)',
+      //     },
+      //   },
+      // },
+      // {
+      //   type: 'map',
+      //   map: 'chinaPartJson',
+      //   zlevel: -3,
+      //   aspectScale: 0.85,
+      //   layoutCenter: ['50%', '45%'],
+      //   layoutSize: '90%',
+      //   roam: false,
+      //   silent: true,
+      //   regions: [
+      //     {
+      //       name: '南海诸岛',
+      //       value: 0,
+      //       itemStyle: { normal: { opacity: 0, label: { show: false } } },
+      //     },
+      //   ],
+      //   itemStyle: {
+      //     normal: {
+      //       borderColor: 'rgba(255,255,255,.2)',
+      //       shadowColor: 'rgba(0, 169, 253, 0.4)',
+      //       shadowBlur: 20,
+      //       shadowOffsetX: 0,
+      //       shadowOffsetY: 2,
+      //       areaColor: 'rgba(11, 47, 83, 0.3)',
+      //     },
+      //   },
+      // },
     ],
     series: [
       {

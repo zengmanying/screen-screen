@@ -368,6 +368,10 @@ const getCarNumOptions = (
       axisLine: {
         show: false,
       },
+      axisLabel: {
+        align: 'left',
+      },
+      offset: 70,
     },
     xAxis: {
       type: 'value',
@@ -540,6 +544,13 @@ let overTemplate45NumCoordsData = ref([
 ])
 let overTemplate45NumLineArrData = ref([])
 const getOverTemplate45Data = async (project) => {
+  overTemplate45NumSeries.value = []
+  overTemplate45NumCoordsData.value = [
+    {
+      coords: [],
+    },
+  ]
+  overTemplate45NumLineArrData.value = []
   const resp = await getOverTemplate('RESULT_PERWARNING_OVERTEMP_50', project)
   if (resp.resultCode === '200') {
     overTemplate45NumLineArrData.value = resp.data.map((item, idx) => [
@@ -566,6 +577,13 @@ let overTemplate45RateCoordsData = ref([
 ])
 let overTemplate45RateLineArrData = ref([])
 const getOverTemplate45Rate = async (project) => {
+  overTemplate45RateSeries.value = []
+  overTemplate45RateCoordsData.value = [
+    {
+      coords: [],
+    },
+  ]
+  overTemplate45RateLineArrData.value = []
   const resp = await getOverTemplate(
     'RESULT_PERWARNING_OVERTEMP_50pro',
     project
@@ -628,9 +646,9 @@ const getLineAreaOptions = (
         symbol: 'circle',
         effect: {
           show: true,
-          trailLength: 0.8,
+          trailLength: 0.5,
           symbol: 'circle',
-          period: 2, //光点滑动速度
+          period: 4, //光点滑动速度
           symbolSize: 4,
         },
         lineStyle: {

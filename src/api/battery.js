@@ -9,7 +9,7 @@ const isProd = loadEnv().MODE === 'production'
 // 预警算法应用总数
 export const getAlgorithmTotal = async () => {
   const url = isProd
-    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=PREWARNING&SQL_REF=RESULT_PREWARNING_ALGORITHM_TOTAL'
+    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=BS02&SQL_REF=RESULT_BS02_001'
     : '/warning-algorithm-total'
   const resp = await http.get(url)
   resp.data.totalCount = resp.data[0].TOTALCOUNT
@@ -19,7 +19,7 @@ export const getAlgorithmTotal = async () => {
 // 市场车辆识别率
 export const getRecognitionRate = async () => {
   const url = isProd
-    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=PREWARNING&SQL_REF=RESULT_PREWARNING_ADDACCUM5_RATE'
+    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=BS02&SQL_REF=RESULT_BS02_002'
     : '/market-recognition-rate'
   const resp = await http.get(url)
   resp.data = resp.data.map((item) => {
@@ -37,7 +37,7 @@ export const getRecognitionRate = async () => {
 // 预警车辆检出率/准确率统计
 export const getAccuracyRate = async () => {
   const url = isProd
-    ? 'service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=PREWARNING&SQL_REF=RESULT_PREWARNING_DETECTION_ACCURATE5M'
+    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=BS02&SQL_REF=RESULT_BS02_003'
     : '/detection-accuracy-statistics'
   const resp = await http.get(url)
   resp.data = resp.data.map((item) => {
@@ -56,7 +56,7 @@ export const getAccuracyRate = async () => {
 // 预警车辆风险等级分布
 export const getRiskLevel = async () => {
   const url = isProd
-    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=PREWARNING&SQL_REF=RESULT_PREWARNING_RISK_RATIO'
+    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=BS02&SQL_REF=RESULT_BS02_004'
     : '/risk-level'
   const resp = await http.get(url)
   resp.data = resp.data.map((item) => {
@@ -71,7 +71,7 @@ export const getRiskLevel = async () => {
 // 各项目预警车辆数量分布
 export const getWarnCarNum = async () => {
   const url = isProd
-    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=PREWARNING&SQL_REF=RESULT_PREWARNING_CARCNT_DISTRIBUTION'
+    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=BS02&SQL_REF=RESULT_BS02_005'
     : '/project-warning-car-num'
   const resp = await http.get(url)
   resp.data = resp.data.map((item) => {
@@ -83,10 +83,10 @@ export const getWarnCarNum = async () => {
   return resp
 }
 
-// 各算法预警车辆数量分布
+// 各算法预警分布
 export const getAlgorithmCarNum = async () => {
   const url = isProd
-    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=PREWARNING&SQL_REF=RESULT_PREWARNING_HIT_SITUATION'
+    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=BS02&SQL_REF=RESULT_BS02_006'
     : '/algorithm-warning-car-num'
   const resp = await http.get(url)
   resp.data = resp.data.map((item) => {
@@ -101,7 +101,7 @@ export const getAlgorithmCarNum = async () => {
 // 预警车辆里程分布
 export const getCarMileage = async () => {
   const url = isProd
-    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=PREWARNING&SQL_REF=RESULT_PREWARNING_ODOSCOPE_DISTRIBUTION'
+    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=BS02&SQL_REF=RESULT_BS02_007'
     : '/waring-car-mileage'
   const resp = await http.get(url)
   resp.data = resp.data.map((item) => {
@@ -116,7 +116,7 @@ export const getCarMileage = async () => {
 // 过温时长及占比
 export const getOverTemplate = async (sqlRef, project) => {
   const url = isProd
-    ? `/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=PREWARNING&SQL_REF=${sqlRef}&project=${project}`
+    ? `/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=BS02&SQL_REF=${sqlRef}&project=${project}`
     : '/over-temperature'
   const resp = await http.get(url)
   resp.data = resp.data.map((item) => {
@@ -132,7 +132,7 @@ export const getOverTemplate = async (sqlRef, project) => {
 // 过温时长及占比项目号
 export const getOverTemplateProject = async () => {
   const url = isProd
-    ? `/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=PREWARNING&SQL_REF=RESULT_PERWARNING_OVERTEMP_PROJECT`
+    ? `/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=BS02&SQL_REF=RESULT_BS02_008_03`
     : '/over-temperature-project'
   const resp = await http.get(url)
   return resp
