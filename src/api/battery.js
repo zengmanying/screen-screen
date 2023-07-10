@@ -137,3 +137,22 @@ export const getOverTemplateProject = async () => {
   const resp = await http.get(url)
   return resp
 }
+
+// soh项目号
+export const getSohProject = async () => {
+  const url = isProd
+    ? `/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=BS02&SQL_REF=RESULT_BS02_010_02`
+    : '/soh-project'
+  const resp = await http.get(url)
+  return resp
+}
+
+// soh
+export const getSoh = async (carModel) => {
+  const url = isProd
+    ? `/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=BS02&SQL_REF=RESULT_BS02_010_01&car_model=${carModel}`
+    : '/soh'
+  const resp = await http.get(url)
+  resp.data = JSON.parse(resp.data[0].CONCAT_VALUE)
+  return resp
+}

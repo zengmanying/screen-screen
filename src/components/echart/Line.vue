@@ -42,10 +42,10 @@ const lineOptions = {
   backgroundColor: 'transparent',
   grid: {
     containLabel: true,
-    x: 0,
-    y: 28,
-    x2: 20,
-    y2: 0,
+    left: 20,
+    top: 28,
+    right: 20,
+    bottom: 0,
   },
   yAxis: {
     name: '数量(辆)',
@@ -55,6 +55,7 @@ const lineOptions = {
       formatter: '{value}',
       fontSize: 12,
       color: '#7E89A4',
+      padding: [0, 12, 0, 0],
     },
     axisTick: {
       show: false,

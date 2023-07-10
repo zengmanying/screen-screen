@@ -7,7 +7,7 @@ import VChart from 'vue-echarts'
 import { Carousel } from 'ant-design-vue'
 import '../assets/ant-carousel.css'
 import { smoothLine, changeTo2dArray } from '@/utils'
-import { getWorkingWarning, getSoh } from '@/mock/battery'
+import { getWorkingWarning } from '@/mock/battery'
 import {
   getAlgorithmTotal,
   getRecognitionRate,
@@ -18,6 +18,8 @@ import {
   getCarMileage,
   getOverTemplate,
   getOverTemplateProject,
+  getSoh,
+  getSohProject,
 } from '@/api/battery'
 import { updateDataInBeforeDawn } from '@/utils'
 import { CAROUSELSPEED } from '@/constant'
@@ -34,7 +36,7 @@ const getServiceData = () => {
   getCarMileageData()
   getOverTemplateProjectData()
   getWorkingWarningData()
-  getSohData()
+  getSohProjectListData()
 }
 onMounted(() => {
   // 初始调用所有接口数据
@@ -466,6 +468,7 @@ const getAlgorithmCarNumData = async () => {
     // }
     // const data = resp.data.concat(fillArr)
     carAlgorithmData.value = changeTo2dArray(resp.data, 10)
+    console.log('carAlgorithmData.value--------------', carAlgorithmData.value)
   }
 }
 
@@ -551,7 +554,7 @@ const getOverTemplate45Data = async (project) => {
     },
   ]
   overTemplate45NumLineArrData.value = []
-  const resp = await getOverTemplate('RESULT_PERWARNING_OVERTEMP_50', project)
+  const resp = await getOverTemplate('RESULT_BS02_008_01', project)
   if (resp.resultCode === '200') {
     overTemplate45NumLineArrData.value = resp.data.map((item, idx) => [
       idx + 1,
@@ -584,10 +587,7 @@ const getOverTemplate45Rate = async (project) => {
     },
   ]
   overTemplate45RateLineArrData.value = []
-  const resp = await getOverTemplate(
-    'RESULT_PERWARNING_OVERTEMP_50pro',
-    project
-  )
+  const resp = await getOverTemplate('RESULT_BS02_008_02', project)
   if (resp.resultCode === '200') {
     overTemplate45RateLineArrData.value = resp.data.map((item, idx) => [
       idx + 1,
@@ -939,6 +939,21 @@ const scatter3dOptions = computed(() => {
   }
 })
 
+const sohProjectList = ref([])
+const getSohProjectListData = async () => {
+  const resp = await getSohProject()
+  if (resp.resultCode === '200') {
+    sohProjectList.value = resp.data
+    getSohData(sohProjectList.value[0].CAR_MODEL)
+  }
+}
+
+const currentSohIdx = ref(0)
+const handleSohCarouselChange = (from, to) => {
+  currentSohIdx.value = to
+  getSohData(sohProjectList.value[to].CAR_MODEL)
+}
+
 // SOH分布
 const sohDataset = ref({
   encode: {
@@ -947,21 +962,21 @@ const sohDataset = ref({
   },
   source: [],
 })
-const getSohData = async () => {
-  const resp = await getSoh()
+const getSohData = async (carModel) => {
+  const resp = await getSoh(carModel)
   if (resp.resultCode === '200') {
     sohDataset.value.source = resp.data
   }
 }
 const scatterOptions = {
   grid: {
-    right: 60,
+    right: 65,
     top: 50,
     bottom: 66,
   },
   legend: {
     top: 'auto',
-    bottom: 0,
+    bottom: 20,
     left: 'center',
   },
   xAxis: {
@@ -1068,7 +1083,7 @@ const scatterOptions = {
                       item.length
                     )
                   "
-                  :dataset="{ source: item }"
+                  :dataset="{ source: item.reverse() }"
                 ></HChart>
               </Carousel>
             </div>
@@ -1211,13 +1226,27 @@ const scatterOptions = {
           <div class="right-bottom-right-content">
             <div class="card car-soh">
               <div class="card-header">
-                <span class="card-title">SOH分布</span>
+                <span class="card-title"
+                  >SOH分布({{
+                    sohProjectList[currentSohIdx] &&
+                    sohProjectList[currentSohIdx].CAR_MODEL
+                  }})</span
+                >
               </div>
               <div class="card-body">
-                <HChart
-                  :options="scatterOptions"
-                  :dataset="sohDataset"
-                ></HChart>
+                <Carousel
+                  style="width: 100%"
+                  autoplay
+                  :autoplay-speed="CAROUSELSPEED"
+                  :before-change="handleSohCarouselChange"
+                >
+                  <HChart
+                    v-for="item in sohProjectList"
+                    :key="item.CAR_MODEL"
+                    :options="scatterOptions"
+                    :dataset="sohDataset"
+                  ></HChart>
+                </Carousel>
               </div>
             </div>
           </div>
@@ -1428,19 +1457,19 @@ const scatterOptions = {
         padding: 4px 0 16px;
       }
     }
-    & ::v-deep .ant-carousel {
-      width: 100%;
-      height: 100%;
-      .slick-slider,
-      .slick-list,
-      .slick-track,
-      .slick-slide {
-        height: 100%;
-      }
-      .slick-dots-bottom {
-        bottom: -5px;
-      }
-    }
+  }
+}
+::v-deep .ant-carousel {
+  width: 100%;
+  height: 100%;
+  .slick-slider,
+  .slick-list,
+  .slick-track,
+  .slick-slide {
+    height: 100%;
+  }
+  .slick-dots-bottom {
+    bottom: -5px;
   }
 }
 .car-working-show {
