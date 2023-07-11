@@ -18,6 +18,11 @@ export function changeTo2dArray(arr, per) {
   return twoDArray
 }
 
+export function formatRounNum(num) {
+  let length = num.toString().length
+  return Math.ceil(num / Math.pow(10, length - 1)) * Math.pow(10, length - 1)
+}
+
 /**
  *深度合并多个对象的方法
  */

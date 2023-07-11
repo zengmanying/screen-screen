@@ -129,7 +129,6 @@ const chartOptions = computed(() => {
       dataset: props.dataset,
     }
   )
-  console.log('chartOptions=================', options)
   return options
 })
 

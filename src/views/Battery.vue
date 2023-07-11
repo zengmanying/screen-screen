@@ -6,7 +6,7 @@ import CreateChartThemeColor from '../components/echart/config/color'
 import VChart from 'vue-echarts'
 import { Carousel } from 'ant-design-vue'
 import '../assets/ant-carousel.css'
-import { smoothLine, changeTo2dArray } from '@/utils'
+import { smoothLine, changeTo2dArray, formatRounNum } from '@/utils'
 import { getWorkingWarning } from '@/mock/battery'
 import {
   getAlgorithmTotal,
@@ -349,7 +349,8 @@ const getCarNumOptions = (
   barColor1 = 'rgba(24, 130, 255, 1)',
   barColor2 = 'rgba(24, 144, 255, 0.35)',
   scatterColor = '#187FE9',
-  len = 10
+  len = 10,
+  max
 ) => {
   return {
     grid: {
@@ -390,6 +391,7 @@ const getCarNumOptions = (
           type: 'dashed',
         },
       },
+      max: max,
     },
     series: [
       {
@@ -443,16 +445,19 @@ const getCarNumOptions = (
 }
 
 const carNumData = ref([])
-
+let carNumMax = 600
 const getWarnCarNumData = async () => {
   const resp = await getWarnCarNum()
   if (resp.resultCode === '200') {
-    carNumData.value = changeTo2dArray(resp.data, 10)
+    carNumMax = formatRounNum(resp.data[0].value)
+    const array2d = changeTo2dArray(resp.data, 10)
+    carNumData.value = array2d.map((item) => item.reverse())
   }
 }
 
 // 各算法预警车辆数量分布
 const carAlgorithmData = ref([])
+let carAlgorithmMax = 600
 
 const getAlgorithmCarNumData = async () => {
   const resp = await getAlgorithmCarNum()
@@ -467,8 +472,9 @@ const getAlgorithmCarNumData = async () => {
     //   })
     // }
     // const data = resp.data.concat(fillArr)
-    carAlgorithmData.value = changeTo2dArray(resp.data, 10)
-    console.log('carAlgorithmData.value--------------', carAlgorithmData.value)
+    carAlgorithmMax = formatRounNum(resp.data[0].value)
+    const array2d = changeTo2dArray(resp.data, 10)
+    carAlgorithmData.value = array2d.map((item) => item.reverse())
   }
 }
 
@@ -1060,7 +1066,15 @@ const scatterOptions = {
                 <HChart
                   v-for="(item, idx) in carNumData"
                   :key="`carNum${idx}`"
-                  :options="getCarNumOptions()"
+                  :options="
+                    getCarNumOptions(
+                      'rgba(24, 130, 255, 1)',
+                      'rgba(24, 144, 255, 0.35)',
+                      '#187FE9',
+                      10,
+                      carNumMax
+                    )
+                  "
                   :dataset="{ source: item }"
                 ></HChart>
               </Carousel>
@@ -1080,10 +1094,13 @@ const scatterOptions = {
                       'rgba(30, 231, 231, 1)',
                       'rgba(30, 231, 231, 0.35)',
                       '#1EE7E7',
-                      item.length
+                      item.length,
+                      carAlgorithmMax
                     )
                   "
-                  :dataset="{ source: item.reverse() }"
+                  :dataset="{
+                    source: item,
+                  }"
                 ></HChart>
               </Carousel>
             </div>
