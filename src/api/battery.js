@@ -138,6 +138,24 @@ export const getOverTemplateProject = async () => {
   return resp
 }
 
+// 工况预警展示
+export const getWorkingWarning = async (project) => {
+  const url = isProd
+    ? `/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=BS02&SQL_REF=RESULT_BS02_009_01&project=${project}`
+    : '/working-warning-show'
+  const resp = await http.get(url)
+  return resp
+}
+
+// 工况预警展示项目号
+export const getWorkingWarningProject = async () => {
+  const url = isProd
+    ? `/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=BS02&SQL_REF=RESULT_BS02_009_02`
+    : '/working-warning-project'
+  const resp = await http.get(url)
+  return resp
+}
+
 // soh项目号
 export const getSohProject = async () => {
   const url = isProd

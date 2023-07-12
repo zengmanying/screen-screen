@@ -7,7 +7,6 @@ import VChart from 'vue-echarts'
 import { Carousel } from 'ant-design-vue'
 import '../assets/ant-carousel.css'
 import { smoothLine, changeTo2dArray, formatRounNum } from '@/utils'
-import { getWorkingWarning } from '@/mock/battery'
 import {
   getAlgorithmTotal,
   getRecognitionRate,
@@ -18,6 +17,8 @@ import {
   getCarMileage,
   getOverTemplate,
   getOverTemplateProject,
+  getWorkingWarningProject,
+  getWorkingWarning,
   getSoh,
   getSohProject,
 } from '@/api/battery'
@@ -35,7 +36,7 @@ const getServiceData = () => {
   getAlgorithmCarNumData()
   getCarMileageData()
   getOverTemplateProjectData()
-  getWorkingWarningData()
+  getWorkingWarningProjectData()
   getSohProjectListData()
 }
 onMounted(() => {
@@ -626,7 +627,7 @@ const getLineAreaOptions = (
       type: 'value',
       name: xUnit,
       min: 1,
-      interval: 1,
+      interval: xUnit.includes('时长') ? 2 : 1,
       axisTick: {
         show: false,
       },
@@ -831,10 +832,23 @@ const handleCarouselChange = (from, to) => {
   getOverTemplate45Rate(overTemplateProject.value[to].PROJECT)
 }
 // 工况预警展示
-const workingWarningData = ref([])
+const workingWarningProject = ref([])
+const getWorkingWarningProjectData = async () => {
+  const resp = await getWorkingWarningProject()
+  if (resp.resultCode === '200') {
+    workingWarningProject.value = resp.data
+    getWorkingWarningData(workingWarningProject.value[0].PROJECT)
+  }
+}
+const currentWorkingWarningIdx = ref(0)
+const handleWorkingWarningCarouselChange = (from, to) => {
+  currentWorkingWarningIdx.value = to
+  getWorkingWarningData(workingWarningProject.value[to].PROJECT)
+}
 
-const getWorkingWarningData = async () => {
-  const resp = await getWorkingWarning()
+const workingWarningData = ref([])
+const getWorkingWarningData = async (project) => {
+  const resp = await getWorkingWarning(project)
   if (resp.resultCode === '200') {
     workingWarningData.value = resp.data
   }
@@ -844,7 +858,7 @@ const scatter3dOptions = computed(() => {
     legend: {
       ...legend,
       ...{
-        bottom: 0,
+        bottom: 20,
         top: 'auto',
         left: 'center',
         selectedMode: false,
@@ -873,8 +887,8 @@ const scatter3dOptions = computed(() => {
       },
       left: 10,
       right: 0,
-      top: 'auto',
-      bottom: 40,
+      top: -50,
+      bottom: 66,
       viewControl: {
         alpha: 3,
         beta: 35,
@@ -1215,23 +1229,41 @@ const scatterOptions = {
             </div>
             <div class="card car-working-show">
               <div class="card-header">
-                <span class="card-title">工况预警展示</span>
+                <span class="card-title"
+                  >工况预警展示({{
+                    workingWarningProject[currentSohIdx] &&
+                    workingWarningProject[currentSohIdx].PROJECT
+                  }})</span
+                >
               </div>
-              <div class="card-body">
+              <div v-if="workingWarningData.length > 0" class="card-body">
                 <!-- <div id="scatter3d" style="width: 100%; height: 100%"></div> -->
                 <!-- <HChart
                   :options="scatter3dOptions"
                   :dataset="workingShowDataset"
                 ></HChart> -->
-                <VChart
-                  ref="chart"
-                  element-loading-text="Loading..."
-                  class="chart"
-                  :autoresize="true"
-                  :option="scatter3dOptions"
-                  theme="dark"
-                  :style="{ width: '100%', height: '100%' }"
-                />
+                <Carousel
+                  style="width: 100%"
+                  autoplay
+                  :autoplay-speed="CAROUSELSPEED"
+                  :before-change="handleWorkingWarningCarouselChange"
+                >
+                  <div
+                    v-for="(item, idx) in workingWarningProject"
+                    :key="`work${idx}`"
+                  >
+                    <VChart
+                      v-if="currentWorkingWarningIdx === idx"
+                      ref="chart"
+                      element-loading-text="Loading..."
+                      class="chart"
+                      :autoresize="true"
+                      :option="scatter3dOptions"
+                      theme="dark"
+                      :style="{ width: '100%', height: '100%' }"
+                    />
+                  </div>
+                </Carousel>
               </div>
             </div>
           </div>
@@ -1391,7 +1423,7 @@ const scatterOptions = {
 .ant-carousel :deep(.slick-slide) {
   height: 314px;
   overflow: hidden;
-  > div {
+  div {
     width: 100%;
     height: 100%;
   }
