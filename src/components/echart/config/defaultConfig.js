@@ -6,7 +6,6 @@ const xAxis = {
   name: '',
   type: 'category',
   show: true,
-  boundaryGap: true,
   splitLine: {
     show: false,
     lineStyle: {

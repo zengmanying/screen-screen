@@ -6,7 +6,7 @@ import Gauge from '../components/echart/Gauge.vue'
 import Map from '../components/echart/Map.vue'
 import Bar from '../components/echart/Bar.vue'
 // import scrollTagsClond from '@/assets/js/fesucai.js'
-import { nextTick, onMounted, onUnmounted, reactive, ref } from 'vue'
+import { onMounted, onUnmounted, reactive, ref } from 'vue'
 import {} from '@/mock/home'
 import {
   getCarModelTotal,
@@ -20,8 +20,7 @@ import {
   getWarningDailyProcess,
   getWarningDailyCharge,
   getWarnAlgoTotal,
-  getTagscloudWeek,
-  getTagscloudMonth,
+  getTagscloud,
   getAddaccumRate,
   getAccuRate,
 } from '@/api/home'
@@ -140,11 +139,18 @@ const getWarningDailyProcessData = async () => {
 const getWarningDailyChargeData = async () => {
   const resp = await getWarningDailyCharge()
   if (resp.resultCode === '200') {
-    updateDailyVehicle(resp.data.dailyVehicle, RANDOMUPDATETIME)
+    updateDailyVehicle(0, resp.data.dailyVehicle, RANDOMUPDATETIME)
   }
 }
-const updateDailyVehicle = (data, intervalTime) => {
-  const updateObj = new UpdateDataByFiveMinu(data, intervalTime, 0)
+const updateDailyVehicle = (starData, endData, intervalTime) => {
+  const updateObj = new UpdateDataByFiveMinu(
+    starData,
+    endData,
+    0,
+    24,
+    intervalTime,
+    0
+  )
   dailyVehicle.value = updateObj.initFn()
   // 每隔五分钟更新数据
   let intervalVehicle = null
@@ -166,35 +172,52 @@ const getWarnAlgoTotalData = async () => {
   }
 }
 
-const tagscloudWeekData = ref([])
-const tagscloudMonthData = ref([])
-let tagsCloudWeekTimer = null
-let tagsCloudWeekMonth = null
-const getTagscloudWeekData = async () => {
-  const resp = await getTagscloudWeek()
+const tagscloudData = reactive({
+  MECHANISM: [],
+  MONITOR: [],
+  OPERATE: [],
+  HEALTH: [],
+})
+
+const getTagscloudData = async () => {
+  const resp = await getTagscloud()
   if (resp.resultCode === '200') {
-    tagscloudWeekData.value = resp.data
-    nextTick(() => {
-      // const tagsCloudWeekObj = new scrollTagsClond('tagsCloudWeek')
-      // tagsCloudWeekTimer = setInterval(() => {
-      //   tagsCloudWeekObj.update()
-      // }, 120)
-    })
+    tagscloudData.MECHANISM = resp.data.MECHANISM
+    tagscloudData.MONITOR = resp.data.MONITOR
+    tagscloudData.OPERATE = resp.data.OPERATE
+    tagscloudData.HEALTH = resp.data.HEALTH
   }
 }
 
-const getTagscloudMonthData = async () => {
-  const resp = await getTagscloudMonth()
-  if (resp.resultCode === '200') {
-    tagscloudMonthData.value = resp.data
-    nextTick(() => {
-      // const tagsCloudMonthObj = new scrollTagsClond('tagsCloudMonth')
-      // tagsCloudWeekMonth = setInterval(() => {
-      //   tagsCloudMonthObj.update()
-      // }, 160)
-    })
-  }
-}
+// const tagscloudWeekData = ref([])
+// const tagscloudMonthData = ref([])
+// let tagsCloudWeekTimer = null
+// let tagsCloudWeekMonth = null
+// const getTagscloudWeekData = async () => {
+//   const resp = await getTagscloudWeek()
+//   if (resp.resultCode === '200') {
+//     tagscloudWeekData.value = resp.data
+//     nextTick(() => {
+//       const tagsCloudWeekObj = new scrollTagsClond('tagsCloudWeek')
+//       tagsCloudWeekTimer = setInterval(() => {
+//         tagsCloudWeekObj.update()
+//       }, 120)
+//     })
+//   }
+// }
+
+// const getTagscloudMonthData = async () => {
+//   const resp = await getTagscloudMonth()
+//   if (resp.resultCode === '200') {
+//     tagscloudMonthData.value = resp.data
+//     nextTick(() => {
+//       const tagsCloudMonthObj = new scrollTagsClond('tagsCloudMonth')
+//       tagsCloudWeekMonth = setInterval(() => {
+//         tagsCloudMonthObj.update()
+//       }, 160)
+//     })
+//   }
+// }
 
 // 预警指标
 const recognitionNewRate = ref([])
@@ -224,8 +247,7 @@ const getServiceData = () => {
   getSalesTop5Data()
   getCarMileageDistributeData()
   getWarnAlgoTotalData()
-  getTagscloudWeekData()
-  getTagscloudMonthData()
+  getTagscloudData()
   getWarningMarketTotalData()
   getWarningDailyProcessData()
   getWarningDailyChargeData()
@@ -240,34 +262,32 @@ const getServiceData = () => {
 const activeCarNumStartVal = ref(0)
 const activeCarNumEndVal = ref(0)
 const updateActiveCarNum = (data, intervalTime) => {
-  const { A, B, C } = data
-  const updateObjA = new UpdateDataByFiveMinu(A, intervalTime)
-  activeTypes.A = updateObjA.initFn()
+  const { MAXACTIVE, MINACTIVE } = data
+  const updateObj = new UpdateDataByFiveMinu(
+    MINACTIVE,
+    MAXACTIVE,
+    8,
+    18,
+    intervalTime
+  )
+  activeCarNumEndVal.value = updateObj.initFn()
 
-  const updateObjB = new UpdateDataByFiveMinu(B, intervalTime)
-  activeTypes.B = updateObjB.initFn()
+  activeTypes.A = Math.ceil(activeCarNumEndVal.value * 0.1)
+  activeTypes.B = Math.ceil(activeCarNumEndVal.value * 0.6)
+  activeTypes.C = Math.ceil(activeCarNumEndVal.value * 0.3)
 
-  const updateObjC = new UpdateDataByFiveMinu(C, intervalTime)
-  activeTypes.C = updateObjC.initFn()
-
-  activeCarNumEndVal.value = activeTypes.A + activeTypes.B + activeTypes.C
   let interval = null
   if (interval) {
     clearInterval(interval)
   }
   // 每隔五分钟更新数据
   interval = setInterval(() => {
-    const currentDataA = updateObjA.updateFn()
-    activeTypes.A = currentDataA.currentEndVal
-    const currentDataB = updateObjB.updateFn()
-    activeTypes.B = currentDataB.currentEndVal
-    const currentDataC = updateObjC.updateFn()
-    activeTypes.C = currentDataC.currentEndVal
-    activeCarNumStartVal.value =
-      currentDataA.currentStartVal +
-      currentDataB.currentStartVal +
-      currentDataC.currentStartVal
-    activeCarNumEndVal.value = activeTypes.A + activeTypes.B + activeTypes.C
+    const currentData = updateObj.updateFn()
+    activeCarNumStartVal.value = currentData.currentStartVal
+    activeCarNumEndVal.value = currentData.currentEndVal
+    activeTypes.A = Math.ceil(activeCarNumEndVal.value * 0.1)
+    activeTypes.B = Math.ceil(activeCarNumEndVal.value * 0.6)
+    activeTypes.C = Math.ceil(activeCarNumEndVal.value * 0.3)
   }, intervalTime)
 }
 
@@ -283,8 +303,7 @@ onMounted(() => {
     getSalesTop5Data()
     getCarMileageDistributeData()
     getWarnAlgoTotalData()
-    getTagscloudWeekData()
-    getTagscloudMonthData()
+    getTagscloudData()
     getWarningMarketTotalData()
     getWarningDailyProcessData()
     getWarningDailyChargeData()
@@ -297,26 +316,7 @@ onMounted(() => {
   })
 })
 
-onUnmounted(() => {
-  clearInterval(tagsCloudWeekTimer)
-  tagsCloudWeekMonth = null
-  clearInterval(tagsCloudWeekMonth)
-  tagsCloudWeekMonth = null
-})
-
-const algoModelData = [
-  '压差预警-双周',
-  '压差一致性-双周',
-  '内阻一致性-双周',
-  '内短路算法-双周',
-  '漏液预警-周',
-  '容量衰减-月',
-  '动态自放电-月',
-  '静态自放电-月',
-  '电压不一致-月',
-  '多时间尺度算法-双周',
-]
-const workingModelData = ['工况预警-季度', '过温占比、时长-半月']
+onUnmounted(() => {})
 </script>
 
 <template>
@@ -532,7 +532,7 @@ const workingModelData = ['工况预警-季度', '过温占比、时长-半月']
               <dl>
                 <dt>机理模型</dt>
                 <dd>
-                  <span v-for="item in algoModelData" :key="item">{{
+                  <span v-for="item in tagscloudData.MECHANISM" :key="item">{{
                     item
                   }}</span>
                 </dd>
@@ -540,7 +540,7 @@ const workingModelData = ['工况预警-季度', '过温占比、时长-半月']
               <dl style="margin-top: 16px">
                 <dt>使用工况模型</dt>
                 <dd>
-                  <span v-for="item in workingModelData" :key="item">{{
+                  <span v-for="item in tagscloudData.OPERATE" :key="item">{{
                     item
                   }}</span>
                 </dd>
@@ -548,17 +548,17 @@ const workingModelData = ['工况预警-季度', '过温占比、时长-半月']
             </div>
             <div>
               <dl>
-                <dt>机理模型</dt>
+                <dt>监测模型</dt>
                 <dd>
-                  <span v-for="item in algoModelData" :key="item">{{
+                  <span v-for="item in tagscloudData.MONITOR" :key="item">{{
                     item
                   }}</span>
                 </dd>
               </dl>
               <dl style="margin-top: 16px">
-                <dt>使用工况模型</dt>
+                <dt>健康监测模型</dt>
                 <dd>
-                  <span v-for="item in workingModelData" :key="item">{{
+                  <span v-for="item in tagscloudData.HEALTH" :key="item">{{
                     item
                   }}</span>
                 </dd>
@@ -854,6 +854,7 @@ const workingModelData = ['工况预警-季度', '过温占比、时长-半月']
         margin-top: 8px;
         color: #fff;
         flex: 30%;
+        white-space: nowrap;
         &:nth-child(3n),
         &:last-child {
           margin-right: 0;

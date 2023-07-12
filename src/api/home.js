@@ -84,7 +84,7 @@ export const getCarActiveNumTotal = async () => {
     : '/carActiveNum'
   const resp = await http.get(url)
   resp.data.activeTypes = resp.data[0]
-  resp.data.activeTypes.total = resp.data.activeTypes.TOTAL
+  // resp.data.activeTypes.total = resp.data.activeTypes.TOTAL
   return resp
 }
 
@@ -141,6 +141,18 @@ export const getTagscloudMonth = async () => {
     : '/tagscloudMonth'
   const resp = await http.get(url)
   resp.data = eval('(' + resp.data[0].MONTHLY + ')')
+  return resp
+}
+
+export const getTagscloud = async () => {
+  const url = isProd
+    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=BS01&SQL_REF=RESULT_BS01_012'
+    : '/tagscloud1'
+  const resp = await http.get(url)
+  resp.data.MECHANISM = eval('(' + resp.data[0].MECHANISM + ')')
+  resp.data.MONITOR = eval('(' + resp.data[0].MONITOR + ')')
+  resp.data.OPERATE = eval('(' + resp.data[0].OPERATE + ')')
+  resp.data.HEALTH = eval('(' + resp.data[0].HEALTH + ')')
   return resp
 }
 

@@ -66,7 +66,6 @@ const lineOptions = {
   xAxis: {
     name: '里程(万公里)',
     type: 'category',
-    boundaryGap: true,
     z: 2,
     splitNumber: 5,
     axisLabel: {
