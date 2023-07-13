@@ -931,7 +931,7 @@ const scatter3dOptions = computed(() => {
         symbolSize: 8,
         itemStyle: {
           opacity: 1,
-          color: 'rgba(241, 98, 88, 1)',
+          color: '#F16258',
         },
       },
       {
@@ -940,7 +940,7 @@ const scatter3dOptions = computed(() => {
         symbolSize: 8,
         itemStyle: {
           opacity: 1,
-          color: 'rgba(24, 127, 233, 1)',
+          color: '#187FE9',
         },
       },
       {
@@ -949,7 +949,7 @@ const scatter3dOptions = computed(() => {
         name: '低风险',
         itemStyle: {
           opacity: 1,
-          color: 'rgba(30, 231, 231, 1)',
+          color: '#1EE7E7',
         },
       },
     ],

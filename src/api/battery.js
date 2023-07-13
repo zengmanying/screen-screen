@@ -144,6 +144,7 @@ export const getWorkingWarning = async (project) => {
     ? `/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=BS02&SQL_REF=RESULT_BS02_009_01&project=${project}`
     : '/working-warning-show'
   const resp = await http.get(url)
+  resp.data = JSON.parse(resp.data[0].CONCAT_VALUE)
   return resp
 }
 
