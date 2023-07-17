@@ -130,6 +130,11 @@ const barSeries = {
   barWidth: 9,
 }
 
+const pictorialBarSeries = {
+  type: 'pictorialBar',
+  barWidth: 9,
+}
+
 const lineSeries = {
   name: '',
   type: 'line',
@@ -268,6 +273,7 @@ const seriesOpt = {
   gauge: gaugeSeries,
   lineNoArea: lineNoAreaSeries,
   scatter: scatterSeries,
+  pictorialBar: pictorialBarSeries,
 }
 export {
   xAxis,

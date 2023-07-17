@@ -8,7 +8,10 @@ const route = useRoute()
   <div
     :class="[
       'app-container',
-      { 'app-container--battery': route.name === 'Battery' },
+      {
+        'app-container--battery':
+          route.name === 'Battery' || route.name === 'AF',
+      },
     ]"
   >
     <Header></Header>

@@ -8,6 +8,7 @@ import {
   PieChart,
   ScatterChart,
   LinesChart,
+  PictorialBarChart,
 } from 'echarts/charts'
 import { Scatter3DChart } from 'echarts-gl/charts'
 import { Grid3DComponent } from 'echarts-gl/components'
@@ -27,6 +28,7 @@ import { deepAssign } from '@/utils'
 use([
   CanvasRenderer,
   BarChart,
+  PictorialBarChart,
   PieChart,
   LineChart,
   ScatterChart,
@@ -77,7 +79,11 @@ const chartOptions = computed(() => {
     {},
     {
       backgroundColor: 'transparent',
-      color: isPureColor.value
+    },
+    {
+      color: props.options.color
+        ? props.options.color
+        : isPureColor.value
         ? ChartThemeColor.pureColors
         : ChartThemeColor.colors,
     },
@@ -129,6 +135,7 @@ const chartOptions = computed(() => {
       dataset: props.dataset,
     }
   )
+  console.log('chartOptions----------------', options)
   return options
 })
 

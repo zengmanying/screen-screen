@@ -23,7 +23,9 @@ const handleFullScreen = () => {
       <li :class="{ active: route.name === 'Home' }">
         <span><router-link to="./">车辆总览</router-link></span>
       </li>
-      <li><span>用户使用行为</span></li>
+      <li :class="{ active: route.name === 'AF' }">
+        <span><router-link to="/AF">用户使用行为</router-link></span>
+      </li>
       <li :class="{ active: route.name === 'Battery' }">
         <span><router-link to="/battery">电池安全预警</router-link></span>
       </li>

@@ -11,6 +11,11 @@ const routes = [
     name: 'Battery',
     component: () => import('@/views/Battery.vue'),
   },
+  {
+    path: '/AF',
+    name: 'AF',
+    component: () => import('@/views/AF.vue'),
+  },
 ]
 
 const router = createRouter({
