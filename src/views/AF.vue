@@ -627,6 +627,12 @@ const chargeTempOpt = computed(() => {
         symbol: 'image://zh-dot.png',
         symbolSize: 16,
         showSymbol: false,
+        label: {
+          show: true,
+          fontSize: 12,
+          color: '#fff',
+          position: 'top',
+        },
         lineStyle: {
           width: 2,
           color: {

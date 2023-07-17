@@ -1143,12 +1143,11 @@ const scatterOptions = {
           <div class="right-bottom-left-content">
             <div class="card car-temp-rate">
               <div class="card-header">
-                <span class="card-title"
-                  >过温时长及占比({{
-                    overTemplateProject[currentTemplateOverIdx] &&
-                    overTemplateProject[currentTemplateOverIdx].PROJECT
-                  }})</span
-                >
+                <span class="card-title">过温时长及占比 </span>
+                <span class="card-tag">{{
+                  overTemplateProject[currentTemplateOverIdx] &&
+                  overTemplateProject[currentTemplateOverIdx].PROJECT
+                }}</span>
               </div>
               <div class="card-body">
                 <Carousel
@@ -1229,12 +1228,11 @@ const scatterOptions = {
             </div>
             <div class="card car-working-show">
               <div class="card-header">
-                <span class="card-title"
-                  >工况预警展示({{
-                    workingWarningProject[currentSohIdx] &&
-                    workingWarningProject[currentSohIdx].PROJECT
-                  }})</span
-                >
+                <span class="card-title">工况预警展示</span>
+                <span class="card-tag">{{
+                  workingWarningProject[currentSohIdx] &&
+                  workingWarningProject[currentSohIdx].PROJECT
+                }}</span>
               </div>
               <div v-if="workingWarningData.length > 0" class="card-body">
                 <!-- <div id="scatter3d" style="width: 100%; height: 100%"></div> -->
@@ -1275,12 +1273,11 @@ const scatterOptions = {
           <div class="right-bottom-right-content">
             <div class="card car-soh">
               <div class="card-header">
-                <span class="card-title"
-                  >SOH分布({{
-                    sohProjectList[currentSohIdx] &&
-                    sohProjectList[currentSohIdx].CAR_MODEL
-                  }})</span
-                >
+                <span class="card-title">SOH分布</span>
+                <span class="card-tag">{{
+                  sohProjectList[currentSohIdx] &&
+                  sohProjectList[currentSohIdx].CAR_MODEL
+                }}</span>
               </div>
               <div class="card-body">
                 <Carousel
@@ -1464,6 +1461,15 @@ const scatterOptions = {
     margin-top: 0;
   }
 }
+
+.card-tag {
+  height: 100%;
+  width: 124px;
+  text-align: center;
+  background: url('../assets/af/tag124-active.png') no-repeat;
+  background-size: contain;
+  white-space: nowrap;
+}
 .car-temp-rate {
   width: 659px;
   flex: auto;
@@ -1473,6 +1479,8 @@ const scatterOptions = {
     width: 100%;
   }
   .card-header {
+    display: flex;
+    justify-content: space-between;
     background-image: url('@/assets/card-title-long-bg.png');
   }
   .card-body {
@@ -1525,6 +1533,10 @@ const scatterOptions = {
   width: 365px;
   flex: auto;
   height: 100%;
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+  }
 }
 .right-bottom-right-container {
   width: 365px;
@@ -1538,5 +1550,13 @@ const scatterOptions = {
 }
 .car-soh {
   height: 100%;
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+  }
+  .card-tag {
+    width: 210px;
+    background-image: url('../assets/af/tag190-active.png');
+  }
 }
 </style>

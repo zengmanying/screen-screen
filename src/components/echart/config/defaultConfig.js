@@ -31,7 +31,7 @@ const xAxis = {
     },
   },
   axisPointer: {
-    show: true,
+    show: false,
   },
   axisLabel: {
     show: true,

@@ -409,6 +409,17 @@ onUnmounted(() => {})
         </div>
         <div class="card-body">
           <Line v-if="lineData.length > 0" :data="lineData"></Line>
+          <p
+            style="
+              font-size: 12px;
+              transform: scale(0.9);
+              transform-origin: 0 50%;
+              margin-top: -10px;
+              color: rgba(255, 255, 255, 0.45);
+            "
+          >
+            来自于北汽蓝谷新能源科技股份有限公司子公司产销快报
+          </p>
         </div>
       </div>
       <!-- 销售Top5车型 -->

@@ -45,7 +45,7 @@ const lineOptions = {
     left: 20,
     top: 28,
     right: 20,
-    bottom: 0,
+    bottom: 12,
   },
   yAxis: {
     name: '数量(辆)',
