@@ -95,12 +95,12 @@ export const getKcMcCount = async () => {
 }
 
 // 充电过程温度分布
-export const getChargeTemp = async () => {
+export const getChargeTemp = async (No = 'RESULT_BS03_007_01') => {
   const url = isProd
-    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=BS03&SQL_REF=RESULT_BS03_005'
+    ? `/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=BS03&SQL_REF=${No}`
     : '/ChargeTemp'
   const resp = await http.get(url)
-  const nameArr = resp.data.map((item) => item['NAME'])
+  const nameArr = resp.data.map((item) => item['BSNAME'])
   const coordsKcData = [
     {
       coords: [],
@@ -130,20 +130,20 @@ export const getChargeTemp = async () => {
 }
 
 //充电过程SOC分布
-export const getChargeSoc = async () => {
+export const getChargeSoc = async (No = 'RESULT_BS03_009_01') => {
   const url = isProd
-    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=BS03&SQL_REF=RESULT_BS03_006'
+    ? `/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=BS03&SQL_REF=${No}`
     : '/ChargeSoc'
   const resp = await http.get(url)
-  const valArr = resp.data.map((item) => item.KVALUE)
+  const valArr = resp.data.map((item) => item.KSVALUE)
   const topVal = valArr.reduce((prev, next) => Math.max(prev, next))
   resp.data = resp.data.map((item) => {
     return {
-      name: item.NAME,
+      name: item.BSNAME,
       KBg: Math.ceil(topVal / 100) * 100 + 100,
-      KBar: item.KVALUE,
-      KPBar: item.MVALUE,
-      MLine: item.MVALUE,
+      KBar: item.KSVALUE,
+      KPBar: item.MSVALUE,
+      MLine: item.MSVALUE,
     }
   })
   return resp

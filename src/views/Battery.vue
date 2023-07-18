@@ -1230,8 +1230,8 @@ const scatterOptions = {
               <div class="card-header">
                 <span class="card-title">工况预警展示</span>
                 <span class="card-tag">{{
-                  workingWarningProject[currentSohIdx] &&
-                  workingWarningProject[currentSohIdx].PROJECT
+                  workingWarningProject[currentWorkingWarningIdx] &&
+                  workingWarningProject[currentWorkingWarningIdx].PROJECT
                 }}</span>
               </div>
               <div v-if="workingWarningData.length > 0" class="card-body">

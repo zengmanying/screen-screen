@@ -13,6 +13,9 @@ import {
   getChargeSoc,
 } from '@/api/af.js'
 import HChart from '../components/echart/HChart.vue'
+import { Carousel } from 'ant-design-vue'
+import '../assets/ant-carousel.css'
+import { CAROUSELSPEED } from '@/constant'
 
 const getServiceData = () => {
   getCarAttributeData()
@@ -501,19 +504,19 @@ const getKcMcCountData = async () => {
 const chargeTempTabs = [
   {
     name: '最高温度分布',
-    value: 1,
+    value: 'RESULT_BS03_007_01',
   },
   {
     name: '最低温度分布',
-    value: 2,
+    value: 'RESULT_BS03_007_02',
   },
   {
     name: '最大温差分布',
-    value: 3,
+    value: 'RESULT_BS03_007_03',
   },
   {
     name: '温升分布',
-    value: 4,
+    value: 'RESULT_BS03_008',
   },
 ]
 const chargeTempData = reactive({
@@ -549,7 +552,7 @@ const chargeTempOpt = computed(() => {
       },
     },
     xAxis: {
-      type: 'value',
+      type: '',
       name: '温度(摄氏度)',
       min: 1,
       interval: 1,
@@ -776,9 +779,9 @@ const chargeTempOpt = computed(() => {
   }
 })
 
-const currentChargeTempTab = ref(1)
-const getChargeTempData = async () => {
-  const resp = await getChargeTemp()
+const currentChargeTempTab = ref(chargeTempTabs[0].value)
+const getChargeTempData = async (No = chargeTempTabs[0].value) => {
+  const resp = await getChargeTemp(No)
   if (resp.resultCode === '200') {
     const { xAxis, kvalue, mvalue, kLinesValue, mLinesValue } = resp.data
     chargeTempData.xAxis = xAxis
@@ -789,22 +792,27 @@ const getChargeTempData = async () => {
   }
 }
 
+const handleChargeTempCarouselChange = (from, to) => {
+  currentChargeTempTab.value = chargeTempTabs[to].value
+  getChargeTempData(currentChargeTempTab.value)
+}
+
 // 充电过程SOC分布
 const chargeSocTabs = [
   {
     name: '充电开始SOC分布',
-    value: 1,
+    value: 'RESULT_BS03_009_01',
   },
   {
     name: '充电结束SOC分布',
-    value: 2,
+    value: 'RESULT_BS03_009_02',
   },
   {
     name: '充电SOC差值分布',
-    value: 3,
+    value: 'RESULT_BS03_009_03',
   },
 ]
-const currentChargeSocTab = ref(1)
+const currentChargeSocTab = ref(chargeSocTabs[0].value)
 const chargeSocOpt = {
   grid: {
     left: 50,
@@ -977,11 +985,15 @@ const chargeSocOpt = {
   ],
 }
 const chargeSocData = ref([])
-const getChargeSocData = async () => {
-  const resp = await getChargeSoc()
+const getChargeSocData = async (No = chargeSocTabs[0].value) => {
+  const resp = await getChargeSoc(No)
   if (resp.resultCode === '200') {
     chargeSocData.value = resp.data
   }
+}
+const handleChargeSocCarouselChange = (from, to) => {
+  currentChargeSocTab.value = chargeSocTabs[to].value
+  getChargeSocData(currentChargeSocTab.value)
 }
 </script>
 <template>
@@ -1168,7 +1180,17 @@ const getChargeSocData = async () => {
           </ul>
         </div>
         <div class="card-body">
-          <HChart :options="chargeTempOpt"></HChart>
+          <Carousel
+            autoplay
+            :autoplay-speed="CAROUSELSPEED"
+            :before-change="handleChargeTempCarouselChange"
+          >
+            <HChart
+              v-for="item in chargeTempTabs"
+              :key="item.value"
+              :options="chargeTempOpt"
+            ></HChart>
+          </Carousel>
         </div>
       </div>
       <div class="card card-charge-soc">
@@ -1188,10 +1210,18 @@ const getChargeSocData = async () => {
           </ul>
         </div>
         <div class="card-body">
-          <HChart
-            :options="chargeSocOpt"
-            :dataset="{ source: chargeSocData }"
-          ></HChart>
+          <Carousel
+            autoplay
+            :autoplay-speed="CAROUSELSPEED"
+            :before-change="handleChargeSocCarouselChange"
+          >
+            <HChart
+              v-for="item in chargeSocTabs"
+              :key="item.value"
+              :options="chargeSocOpt"
+              :dataset="{ source: chargeSocData }"
+            ></HChart>
+          </Carousel>
         </div>
       </div>
     </div>
@@ -1422,6 +1452,17 @@ const getChargeSocData = async () => {
     &.active {
       background-image: url('../assets/af/tag190-active.png');
     }
+  }
+}
+
+::v-deep .ant-carousel {
+  width: 100%;
+  height: 100%;
+  div {
+    height: 100%;
+  }
+  .slick-dots-bottom {
+    display: none !important;
   }
 }
 </style>
