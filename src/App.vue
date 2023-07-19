@@ -10,7 +10,9 @@ const route = useRoute()
       'app-container',
       {
         'app-container--battery':
-          route.name === 'Battery' || route.name === 'AF',
+          route.name === 'Battery' ||
+          route.name === 'AF' ||
+          route.name === 'BF',
       },
     ]"
   >

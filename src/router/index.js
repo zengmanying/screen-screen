@@ -16,6 +16,11 @@ const routes = [
     name: 'AF',
     component: () => import('@/views/AF.vue'),
   },
+  {
+    path: '/BF',
+    name: 'BF',
+    component: () => import('@/views/AF.vue'),
+  },
 ]
 
 const router = createRouter({

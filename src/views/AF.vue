@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { CountTo } from 'vue3-count-to'
 import { updateDataInBeforeDawn } from '@/utils'
 import {
@@ -16,6 +16,8 @@ import HChart from '../components/echart/HChart.vue'
 import { Carousel } from 'ant-design-vue'
 import '../assets/ant-carousel.css'
 import { CAROUSELSPEED } from '@/constant'
+import { useRoute } from 'vue-router'
+const route = useRoute()
 
 const getServiceData = () => {
   getCarAttributeData()
@@ -35,6 +37,18 @@ onMounted(() => {
     getServiceData()
   })
 })
+
+watch(
+  () => route.name,
+  () => {
+    // 初始调用所有接口数据
+    getServiceData()
+    // 每天凌晨更新数据
+    updateDataInBeforeDawn(() => {
+      getServiceData()
+    })
+  }
+)
 
 // 车辆属性
 const carAttributeData = ref([])
@@ -504,19 +518,19 @@ const getKcMcCountData = async () => {
 const chargeTempTabs = [
   {
     name: '最高温度分布',
-    value: 'RESULT_BS03_007_01',
+    value: route.name === 'AF' ? 'RESULT_BS03_007_01' : 'RESULT_BS04_007_01',
   },
   {
     name: '最低温度分布',
-    value: 'RESULT_BS03_007_02',
+    value: route.name === 'AF' ? 'RESULT_BS03_007_02' : 'RESULT_BS04_007_02',
   },
   {
     name: '最大温差分布',
-    value: 'RESULT_BS03_007_03',
+    value: route.name === 'AF' ? 'RESULT_BS03_007_03' : 'RESULT_BS04_007_03',
   },
   {
     name: '温升分布',
-    value: 'RESULT_BS03_008',
+    value: route.name === 'AF' ? 'RESULT_BS03_008' : 'RESULT_BS04_008',
   },
 ]
 const chargeTempData = reactive({
@@ -801,15 +815,15 @@ const handleChargeTempCarouselChange = (from, to) => {
 const chargeSocTabs = [
   {
     name: '充电开始SOC分布',
-    value: 'RESULT_BS03_009_01',
+    value: route.name === 'AF' ? 'RESULT_BS03_009_01' : 'RESULT_BS04_009_01',
   },
   {
     name: '充电结束SOC分布',
-    value: 'RESULT_BS03_009_02',
+    value: route.name === 'AF' ? 'RESULT_BS03_009_02' : 'RESULT_BS04_009_02',
   },
   {
     name: '充电SOC差值分布',
-    value: 'RESULT_BS03_009_03',
+    value: route.name === 'AF' ? 'RESULT_BS03_009_03' : 'RESULT_BS04_009_03',
   },
 ]
 const currentChargeSocTab = ref(chargeSocTabs[0].value)

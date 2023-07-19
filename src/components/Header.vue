@@ -23,8 +23,24 @@ const handleFullScreen = () => {
       <li :class="{ active: route.name === 'Home' }">
         <span><router-link to="./">车辆总览</router-link></span>
       </li>
-      <li :class="{ active: route.name === 'AF' }">
-        <span><router-link to="/AF">用户使用行为</router-link></span>
+      <li :class="{ active: route.name === 'AF' || route.name === 'BF' }">
+        <div class="menu-dropdown-content">
+          <span><router-link to="/AF">用户使用行为</router-link></span>
+          <div class="menu-dropdown">
+            <span
+              >{{ route.name === 'BF' ? 'BF' : 'AF' }}车型
+              <img src="../assets/af/dropdown-trigger.png"
+            /></span>
+            <ul>
+              <li :class="{ active: route.name === 'AF' }">
+                <router-link to="/AF">AF车型</router-link>
+              </li>
+              <li :class="{ active: route.name === 'BF' }">
+                <router-link to="/BF">BF车型</router-link>
+              </li>
+            </ul>
+          </div>
+        </div>
       </li>
       <li :class="{ active: route.name === 'Battery' }">
         <span><router-link to="/battery">电池安全预警</router-link></span>
@@ -70,7 +86,7 @@ const handleFullScreen = () => {
   margin-right: auto;
   margin-left: auto;
   padding: 0 0 0 150px;
-  li {
+  > li {
     position: relative;
     margin-right: 35px;
     padding: 10px 0 10px 40px;
@@ -129,5 +145,60 @@ const handleFullScreen = () => {
 .full-screen-btn {
   cursor: pointer;
   margin-left: 18px;
+}
+.menu-dropdown-content {
+  display: flex;
+  align-self: center;
+}
+.menu-dropdown {
+  position: relative;
+  z-index: 99;
+  margin-left: 8px;
+  span {
+    display: inline-flex;
+    align-items: center;
+    width: 120px;
+    height: 31px;
+    padding: 0 10px;
+    background: url('../assets/af/dropdown-bg.png') no-repeat;
+    background-size: contain;
+    background-position: center;
+    color: #fff;
+    img {
+      width: 9px;
+      margin-left: 8px;
+    }
+  }
+  ul {
+    position: absolute;
+    width: 100%;
+    list-style: none;
+    visibility: hidden;
+    padding: 0;
+    margin: 0;
+    border: 1px solid rgba(30, 231, 231, 0.3);
+    border-top: 0;
+    margin-top: -3px;
+    li {
+      width: 100%;
+      height: 29px;
+      line-height: 29px;
+      text-align: center;
+      font-size: 18px;
+      a {
+        color: rgba(126, 137, 164, 1);
+      }
+      &.active {
+        a {
+          color: #fff;
+        }
+      }
+    }
+  }
+  &:hover {
+    ul {
+      visibility: visible;
+    }
+  }
 }
 </style>
