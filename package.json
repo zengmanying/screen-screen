@@ -10,7 +10,8 @@
   },
   "dependencies": {
     "ant-design-vue": "^3.2.20",
-    "axios": "^1.4.0",
+    "axios": "^0.21.1",
+    "axios-cache-adapter": "^2.7.3",
     "echarts": "^5.4.2",
     "echarts-gl": "^2.0.9",
     "echarts-wordcloud": "^2.1.0",

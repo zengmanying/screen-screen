@@ -118,7 +118,16 @@ export const getOverTemplate = async (sqlRef, project) => {
   const url = isProd
     ? `/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=BS02&SQL_REF=${sqlRef}&project=${project}`
     : '/over-temperature'
-  const resp = await http.get(url)
+  const resp = await http.get(url, {
+    cache: {
+      key: `api-cache-getOverTemplate-${sqlRef}-${project}`, // 缓存的键名，用于唯一标识缓存数据
+      forceUpdate: false, // 是否强制刷新缓存，默认为 false
+      shouldCache: (cacheData) => {
+        // 自定义缓存策略的回调函数，返回 true 表示使用缓存，返回 false 表示忽略缓存
+        return cacheData && cacheData.data.length > 0
+      },
+    },
+  })
   resp.data = resp.data.map((item) => {
     return {
       name: item.NAME,
@@ -143,7 +152,20 @@ export const getWorkingWarning = async (project) => {
   const url = isProd
     ? `/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=BS02&SQL_REF=RESULT_BS02_009_01&project=${project}`
     : '/working-warning-show'
-  const resp = await http.get(url)
+  const resp = await http.get(url, {
+    cache: {
+      key: `api-cache-getWorkingWarning-${project}`, // 缓存的键名，用于唯一标识缓存数据
+      forceUpdate: false, // 是否强制刷新缓存，默认为 false
+      exclude: {
+        // {Array} List of regular expressions to match against request URLs.
+        methods: ['post', 'patch', 'put', 'delete'],
+      },
+      shouldCache: (cacheData) => {
+        // 自定义缓存策略的回调函数，返回 true 表示使用缓存，返回 false 表示忽略缓存
+        return cacheData && cacheData.data.length > 0
+      },
+    },
+  })
   resp.data = JSON.parse(resp.data[0].CONCAT_VALUE)
   return resp
 }
@@ -171,7 +193,20 @@ export const getSoh = async (carModel) => {
   const url = isProd
     ? `/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=BS02&SQL_REF=RESULT_BS02_010_01&car_model=${carModel}`
     : '/soh'
-  const resp = await http.get(url)
+  const resp = await http.get(url, {
+    cache: {
+      key: `api-cache-getSoh-${carModel}`, // 缓存的键名，用于唯一标识缓存数据
+      forceUpdate: false, // 是否强制刷新缓存，默认为 false
+      exclude: {
+        // {Array} List of regular expressions to match against request URLs.
+        methods: ['post', 'patch', 'put', 'delete'],
+      },
+      shouldCache: (cacheData) => {
+        // 自定义缓存策略的回调函数，返回 true 表示使用缓存，返回 false 表示忽略缓存
+        return cacheData && cacheData.data.length > 0
+      },
+    },
+  })
   resp.data = JSON.parse(resp.data[0].CONCAT_VALUE)
   return resp
 }

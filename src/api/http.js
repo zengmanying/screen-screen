@@ -1,13 +1,17 @@
 import axios from 'axios'
+import cache from './cacheAdapter'
+
 const loadEnv = () => {
   return import.meta.env
 }
 
 const { VITE_PROXY_DOMAIN_REAL } = loadEnv()
+
 // 创建一个 axios 实例
 const http = axios.create({
   baseURL: VITE_PROXY_DOMAIN_REAL, // 正式环境
   timeout: 10000, // 请求超时时间
+  adapter: cache.adapter,
 })
 
 // 添加请求拦截器
