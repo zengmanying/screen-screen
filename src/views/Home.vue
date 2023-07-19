@@ -139,17 +139,21 @@ const getWarningDailyProcessData = async () => {
 const getWarningDailyChargeData = async () => {
   const resp = await getWarningDailyCharge()
   if (resp.resultCode === '200') {
-    updateDailyVehicle(0, resp.data.dailyVehicle, RANDOMUPDATETIME)
+    updateDailyVehicle(
+      Math.ceil(resp.data.dailyVehicle * 0.5),
+      resp.data.dailyVehicle,
+      RANDOMUPDATETIME
+    )
   }
 }
 const updateDailyVehicle = (starData, endData, intervalTime) => {
   const updateObj = new UpdateDataByFiveMinu(
     starData,
     endData,
-    0,
-    24,
+    8,
+    18,
     intervalTime,
-    0
+    5
   )
   dailyVehicle.value = updateObj.initFn()
   // 每隔五分钟更新数据
@@ -272,10 +276,9 @@ const updateActiveCarNum = (data, intervalTime) => {
   )
   activeCarNumEndVal.value = updateObj.initFn()
 
-  activeTypes.A = Math.ceil(activeCarNumEndVal.value * 0.1)
   activeTypes.B = Math.ceil(activeCarNumEndVal.value * 0.6)
   activeTypes.C = Math.ceil(activeCarNumEndVal.value * 0.3)
-
+  activeTypes.A = activeCarNumEndVal.value - activeTypes.B - activeTypes.C
   let interval = null
   if (interval) {
     clearInterval(interval)
@@ -285,9 +288,9 @@ const updateActiveCarNum = (data, intervalTime) => {
     const currentData = updateObj.updateFn()
     activeCarNumStartVal.value = currentData.currentStartVal
     activeCarNumEndVal.value = currentData.currentEndVal
-    activeTypes.A = Math.ceil(activeCarNumEndVal.value * 0.1)
     activeTypes.B = Math.ceil(activeCarNumEndVal.value * 0.6)
     activeTypes.C = Math.ceil(activeCarNumEndVal.value * 0.3)
+    activeTypes.A = activeCarNumEndVal.value - activeTypes.B - activeTypes.C
   }, intervalTime)
 }
 

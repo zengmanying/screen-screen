@@ -55,7 +55,7 @@ const bfInterFaceUrl = {
 const isProd = loadEnv().MODE === 'production'
 
 const interFaceUrl = isProd
-  ? route.name === 'AF'
+  ? route?.name === 'AF'
     ? afInterFaceUrl
     : bfInterFaceUrl
   : testInterFaceUrl
