@@ -1321,7 +1321,7 @@ const handleChargeSocCarouselChange = (from, to) => {
 }
 
 .car-mileage-total {
-  height: 243px;
+  height: 238px;
 }
 
 .right-layer {
@@ -1448,7 +1448,7 @@ const handleChargeSocCarouselChange = (from, to) => {
 .card-charge-temp,
 .card-charge-soc {
   width: 100%;
-  height: 304px;
+  height: 298px;
   .card-header {
     display: flex;
     align-items: center;

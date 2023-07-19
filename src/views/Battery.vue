@@ -278,7 +278,7 @@ const accuracyRateOpt = computed(() => {
         bottom: 6,
         left: 'center',
         textStyle: {
-          width: 80,
+          width: 60,
           backgroundColor: 'transparent',
         },
       },
@@ -359,7 +359,7 @@ const getCarNumOptions = (
       top: 20,
       left: 20,
       right: 40,
-      bottom: 18 * (10 - len) + 35,
+      bottom: 18 * (10 - len) + 25,
     },
     legend: {
       show: false,
@@ -375,7 +375,7 @@ const getCarNumOptions = (
       axisLabel: {
         align: 'left',
       },
-      offset: 70,
+      offset: 60,
     },
     xAxis: {
       type: 'value',
@@ -620,7 +620,7 @@ const getLineAreaOptions = (
     grid: {
       top: 27,
       bottom: 40,
-      left: 32,
+      left: 35,
       right: 58,
     },
     xAxis: {
@@ -1005,6 +1005,7 @@ const scatterOptions = {
   yAxis: {
     name: 'SOH(%)',
     type: 'value',
+    min: 'dataMin',
   },
   series: [
     {

@@ -412,10 +412,11 @@ onUnmounted(() => {})
           <p
             style="
               font-size: 12px;
-              transform: scale(0.9);
+              transform: scale(0.8);
               transform-origin: 0 50%;
-              margin-top: -10px;
+              margin-top: -8px;
               color: rgba(255, 255, 255, 0.45);
+              white-space: nowrap;
             "
           >
             来自于北汽蓝谷新能源科技股份有限公司子公司产销快报
@@ -831,7 +832,7 @@ onUnmounted(() => {})
 
   & ::v-deep .ant-carousel {
     .slick-dots-bottom {
-      bottom: -30px;
+      bottom: -24px;
     }
   }
 
@@ -909,8 +910,8 @@ onUnmounted(() => {})
 }
 .gauge-chart {
   width: 140px;
-  height: 140px;
-  margin-top: 16px;
+  height: 155px;
+  margin-top: 4px;
 }
 
 .map-container {

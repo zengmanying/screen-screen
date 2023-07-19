@@ -63,13 +63,13 @@ const options = {
             return 0 + '%'
           }
         },
-        offsetCenter: [0, 50], // x, y，单位px
+        offsetCenter: [0, 45], // x, y，单位px
         textStyle: {
           color: 'rgba(255, 255, 255, 1)',
           fontSize: 14, //表盘上的标题文字大小
           fontWeight: 600,
           width: 72,
-          height: 26,
+          height: 24,
           borderRadius: 20,
           padding: 0,
           backgroundColor: props.color,
