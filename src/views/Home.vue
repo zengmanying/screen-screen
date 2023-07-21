@@ -464,7 +464,7 @@ onUnmounted(() => {})
       </div>
       <div class="card card-mileage">
         <div class="card-header">
-          <span class="card-title">所有车辆里程分布情况</span>
+          <span class="card-title">近90天活跃车辆里程分布</span>
         </div>
         <div class="card-body">
           <Bar v-if="mileageData.length > 0" :data="mileageData"></Bar>

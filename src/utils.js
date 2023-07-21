@@ -154,7 +154,7 @@ export const updateDataInBeforeDawn = (cb) => {
     now.getFullYear(),
     now.getMonth(),
     now.getDate() + 1,
-    0,
+    8,
     0,
     0
   )
@@ -217,7 +217,9 @@ export class UpdateDataByFiveMinu {
         this.maxIncrement +
         this.start_value
     )
-    return this.currentEndVal
+    return this.currentEndVal > this.end_value
+      ? this.end_value
+      : this.currentEndVal
   }
 
   updateFn = () => {
