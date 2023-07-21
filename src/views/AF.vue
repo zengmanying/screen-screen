@@ -54,7 +54,7 @@ watch(
 const carAttributeData = ref([])
 const carAttributeTotal = ref(0)
 const getCarAttributeData = async () => {
-  const resp = await getCarAttribute()
+  const resp = await getCarAttribute(route.name)
   if (resp.resultCode === '200') {
     carAttributeData.value = resp.data
     carAttributeTotal.value = carAttributeData.value.reduce(
@@ -515,7 +515,7 @@ const getKcMcCountData = async () => {
 }
 
 // 充电过程温度分布情况
-const chargeTempTabs = [
+const chargeTempTabs = computed(() => [
   {
     name: '最高温度分布',
     value: route.name === 'AF' ? 'RESULT_BS03_007_01' : 'RESULT_BS04_007_01',
@@ -532,7 +532,7 @@ const chargeTempTabs = [
     name: '温升分布',
     value: route.name === 'AF' ? 'RESULT_BS03_008' : 'RESULT_BS04_008',
   },
-]
+])
 const chargeTempData = reactive({
   xAxis: [],
   kvalue: [],
@@ -793,8 +793,8 @@ const chargeTempOpt = computed(() => {
   }
 })
 
-const currentChargeTempTab = ref(chargeTempTabs[0].value)
-const getChargeTempData = async (No = chargeTempTabs[0].value) => {
+const currentChargeTempTab = ref(chargeTempTabs.value[0].value)
+const getChargeTempData = async (No = chargeTempTabs.value[0].value) => {
   const resp = await getChargeTemp(No)
   if (resp.resultCode === '200') {
     const { xAxis, kvalue, mvalue, kLinesValue, mLinesValue } = resp.data
@@ -807,12 +807,12 @@ const getChargeTempData = async (No = chargeTempTabs[0].value) => {
 }
 
 const handleChargeTempCarouselChange = (from, to) => {
-  currentChargeTempTab.value = chargeTempTabs[to].value
+  currentChargeTempTab.value = chargeTempTabs.value[to].value
   getChargeTempData(currentChargeTempTab.value)
 }
 
 // 充电过程SOC分布
-const chargeSocTabs = [
+const chargeSocTabs = computed(() => [
   {
     name: '充电开始SOC分布',
     value: route.name === 'AF' ? 'RESULT_BS03_009_01' : 'RESULT_BS04_009_01',
@@ -825,8 +825,8 @@ const chargeSocTabs = [
     name: '充电SOC差值分布',
     value: route.name === 'AF' ? 'RESULT_BS03_009_03' : 'RESULT_BS04_009_03',
   },
-]
-const currentChargeSocTab = ref(chargeSocTabs[0].value)
+])
+const currentChargeSocTab = ref(chargeSocTabs.value[0].value)
 const chargeSocOpt = {
   grid: {
     left: 50,
@@ -999,14 +999,14 @@ const chargeSocOpt = {
   ],
 }
 const chargeSocData = ref([])
-const getChargeSocData = async (No = chargeSocTabs[0].value) => {
+const getChargeSocData = async (No = chargeSocTabs.value[0].value) => {
   const resp = await getChargeSoc(No)
   if (resp.resultCode === '200') {
     chargeSocData.value = resp.data
   }
 }
 const handleChargeSocCarouselChange = (from, to) => {
-  currentChargeSocTab.value = chargeSocTabs[to].value
+  currentChargeSocTab.value = chargeSocTabs.value[to].value
   getChargeSocData(currentChargeSocTab.value)
 }
 </script>

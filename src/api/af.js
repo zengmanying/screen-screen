@@ -1,7 +1,6 @@
 import http from '@/api/http'
 import { smoothLine } from '@/utils'
-import { useRoute } from 'vue-router'
-const route = useRoute()
+import { computed, ref } from 'vue'
 
 const loadEnv = () => {
   return import.meta.env
@@ -53,23 +52,26 @@ const bfInterFaceUrl = {
 }
 
 const isProd = loadEnv().MODE === 'production'
-
-const interFaceUrl = isProd
-  ? route?.name === 'AF'
-    ? afInterFaceUrl
-    : bfInterFaceUrl
-  : testInterFaceUrl
+let currentRouteName = ref('AF')
+const interFaceUrl = computed(() => {
+  return isProd
+    ? currentRouteName.value === 'AF'
+      ? afInterFaceUrl
+      : bfInterFaceUrl
+    : testInterFaceUrl
+})
 
 // 车辆属性
-export const getCarAttribute = async () => {
-  const url = interFaceUrl.CarAttribute
+export const getCarAttribute = async (routeName) => {
+  currentRouteName.value = routeName
+  const url = interFaceUrl.value.CarAttribute
   const resp = await http.get(url)
   return resp
 }
 
 // 总里程分布
 export const getMileageTotal = async () => {
-  const url = interFaceUrl.MileageTotal
+  const url = interFaceUrl.value.MileageTotal
   const resp = await http.get(url)
   resp.data = resp.data.map((item) => {
     return {
@@ -83,7 +85,7 @@ export const getMileageTotal = async () => {
 
 // 日均行驶里程分布
 export const getMileageDaily = async () => {
-  const url = interFaceUrl.MileageDaily
+  const url = interFaceUrl.value.MileageDaily
   const resp = await http.get(url)
   resp.data = resp.data.map((item) => {
     return {
@@ -97,7 +99,7 @@ export const getMileageDaily = async () => {
 
 // 日均行驶时长分布
 export const getTimeDaily = async () => {
-  const url = interFaceUrl.TimeDaily
+  const url = interFaceUrl.value.TimeDaily
   const resp = await http.get(url)
   resp.data = resp.data.map((item) => {
     return {
@@ -111,14 +113,14 @@ export const getTimeDaily = async () => {
 
 // 快充慢充占比分布
 export const getKcMcRate = async () => {
-  const url = interFaceUrl.KcMcRate
+  const url = interFaceUrl.value.KcMcRate
   const resp = await http.get(url)
   return resp
 }
 
 // 充电频次分布
 export const getKcMcCount = async () => {
-  const url = interFaceUrl.KcMcCount
+  const url = interFaceUrl.value.KcMcCount
   const resp = await http.get(url)
   resp.data = resp.data.map((item) => {
     return {
@@ -137,7 +139,7 @@ export const getKcMcCount = async () => {
 
 // 充电过程温度分布
 export const getChargeTemp = async (No = 'RESULT_BS03_007_01') => {
-  const url = isProd ? `${interFaceUrl.ChargeTemp}${No}` : '/ChargeTemp'
+  const url = isProd ? `${interFaceUrl.value.ChargeTemp}${No}` : '/ChargeTemp'
   const resp = await http.get(url, {
     cache: {
       key: `api-cache-getChargeTemp$-${No}`, // 缓存的键名，用于唯一标识缓存数据
@@ -183,7 +185,7 @@ export const getChargeTemp = async (No = 'RESULT_BS03_007_01') => {
 
 //充电过程SOC分布
 export const getChargeSoc = async (No = 'RESULT_BS03_009_01') => {
-  const url = isProd ? `${interFaceUrl.ChargeSoc}${No}` : '/ChargeSoc'
+  const url = isProd ? `${interFaceUrl.value.ChargeSoc}${No}` : '/ChargeSoc'
   const resp = await http.get(url, {
     cache: {
       key: `api-cache-getChargeSoc-${No}`, // 缓存的键名，用于唯一标识缓存数据
