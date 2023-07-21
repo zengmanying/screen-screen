@@ -28,15 +28,15 @@ const handleFullScreen = () => {
           <span><router-link to="/AF">用户使用行为</router-link></span>
           <div class="menu-dropdown">
             <span
-              >{{ route.name === 'BF' ? 'BF' : 'AF' }}车型
+              >{{ route.name === 'BF' ? 'B品牌' : 'A品牌' }}
               <img src="../assets/af/dropdown-trigger.png"
             /></span>
             <ul>
               <li :class="{ active: route.name === 'AF' }">
-                <router-link to="/AF">AF车型</router-link>
+                <router-link to="/AF">A品牌</router-link>
               </li>
               <li :class="{ active: route.name === 'BF' }">
-                <router-link to="/BF">BF车型</router-link>
+                <router-link to="/BF">B品牌</router-link>
               </li>
             </ul>
           </div>
@@ -185,10 +185,19 @@ const handleFullScreen = () => {
       line-height: 29px;
       text-align: center;
       font-size: 18px;
+      background-color: rgba(1, 19, 84, 0.8);
       a {
         color: rgba(126, 137, 164, 1);
       }
       &.active {
+        a {
+          color: #fff;
+        }
+      }
+      &:not(:last-child) {
+        border-bottom: 1px solid rgba(30, 231, 231, 0.2);
+      }
+      &:hover {
         a {
           color: #fff;
         }
