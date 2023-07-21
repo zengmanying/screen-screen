@@ -87,7 +87,7 @@ const options = computed(() => {
           color: '#fff',
         },
         itemStyle: {
-          borderColor: 'rgba(189, 219, 255, 0.5)',
+          borderColor: '#2B80FF',
         },
         emphasis: {
           disabled: true,
@@ -111,11 +111,64 @@ const options = computed(() => {
         ],
         itemStyle: {
           normal: {
-            borderColor: '#2a81fe',
-            borderWidth: 3,
-            shadowColor: '#3fa4dd',
+            // borderColor: '#2a81fe',
+            // borderWidth: 3,
+            shadowColor: '#032868',
             shadowOffsetX: 0,
             shadowOffsetY: 15,
+          },
+        },
+      },
+      {
+        type: 'map',
+        map: 'chinaPartJson',
+        zlevel: -2,
+        aspectScale: 0.85,
+        layoutCenter: ['50%', '42%'],
+        layoutSize: '90%',
+        roam: false,
+        silent: true,
+        regions: [
+          {
+            name: '南海诸岛',
+            value: 0,
+            itemStyle: { normal: { opacity: 0, label: { show: false } } },
+          },
+        ],
+        itemStyle: {
+          normal: {
+            borderColor: '#76ffff',
+            borderWidth: 0,
+            shadowColor: '#76ffff',
+            shadowOffsetX: 0,
+            shadowOffsetY: 20,
+          },
+        },
+      },
+      {
+        type: 'map',
+        map: 'chinaPartJson',
+        zlevel: -3,
+        aspectScale: 0.85,
+        layoutCenter: ['50%', '42%'],
+        layoutSize: '90%',
+        roam: false,
+        silent: true,
+        regions: [
+          {
+            name: '南海诸岛',
+            value: 0,
+            itemStyle: { normal: { opacity: 0, label: { show: false } } },
+          },
+        ],
+        itemStyle: {
+          normal: {
+            borderColor: '#76ffff',
+            borderWidth: 0,
+            shadowColor: 'rgba(118, 255,255, .5)',
+            shadowBlur: 30,
+            shadowOffsetX: 0,
+            shadowOffsetY: 21,
           },
         },
       },
@@ -185,7 +238,7 @@ const options = computed(() => {
         geoIndex: 0,
       },
       {
-        name: '北京',
+        name: '飞线',
         type: 'lines',
         geoIndex: 0,
         zlevel: 2,
@@ -227,7 +280,7 @@ const options = computed(() => {
         data: getLinesData(linesData.value),
       },
       {
-        name: '北京',
+        name: '图标',
         type: 'effectScatter',
         coordinateSystem: 'geo',
         zlevel: 1,
@@ -248,6 +301,23 @@ const options = computed(() => {
             value: geoCoordMap[dataItem.name].concat([dataItem.value.value]),
           }
         }),
+      },
+      {
+        name: '红星',
+        type: 'scatter',
+        coordinateSystem: 'geo',
+        zlevel: 1,
+        symbol: 'image://star.svg',
+        label: {
+          show: false,
+        },
+        symbolSize: 24,
+        data: [
+          {
+            name: '北京',
+            value: [116.405285, 39.904989],
+          },
+        ],
       },
     ],
   }
