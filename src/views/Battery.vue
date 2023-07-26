@@ -627,7 +627,7 @@ const getLineAreaOptions = (
       type: 'value',
       name: xUnit,
       min: 1,
-      interval: xUnit.includes('时长') ? 2 : 1,
+      interval: 2,
       axisTick: {
         show: false,
       },
@@ -991,7 +991,7 @@ const getSohData = async (carModel) => {
 const scatterOptions = {
   grid: {
     right: 65,
-    top: 50,
+    top: 30,
     bottom: 66,
   },
   legend: {
@@ -1451,7 +1451,7 @@ const scatterOptions = {
 }
 .right-bottom-left-container {
   margin-right: 24px;
-  width: 1048px;
+  width: 899px;
 }
 .right-bottom-left-content {
   display: flex;
@@ -1472,7 +1472,7 @@ const scatterOptions = {
   white-space: nowrap;
 }
 .car-temp-rate {
-  width: 659px;
+  width: 510px;
   flex: auto;
   margin-right: 24px;
   height: 100%;
@@ -1540,7 +1540,7 @@ const scatterOptions = {
   }
 }
 .right-bottom-right-container {
-  width: 365px;
+  width: 514px;
 }
 .right-bottom-right-content {
   height: 455px;
