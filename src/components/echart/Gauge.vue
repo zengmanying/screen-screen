@@ -34,6 +34,7 @@ const options = {
       splitNumber: 5,
       startAngle: 180,
       endAngle: 0,
+      max: 10,
       axisLine: {
         lineStyle: {
           color: [
@@ -102,7 +103,7 @@ const options = {
       type: 'gauge',
       radius: '100%',
       min: 0, //最小刻度
-      max: 100, //最大刻度
+      max: 10, //最大刻度
       splitNumber: 5, //刻度数量
       startAngle: 180,
       endAngle: 0,

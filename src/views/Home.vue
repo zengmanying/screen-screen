@@ -276,7 +276,7 @@ const updateActiveCarNum = (data, intervalTime) => {
   )
   activeCarNumEndVal.value = updateObj.initFn()
 
-  activeTypes.B = Math.ceil(activeCarNumEndVal.value * 0.6)
+  activeTypes.B = Math.ceil(activeCarNumEndVal.value * 0.62)
   activeTypes.C = Math.ceil(activeCarNumEndVal.value * 0.3)
   activeTypes.A = activeCarNumEndVal.value - activeTypes.B - activeTypes.C
   let interval = null

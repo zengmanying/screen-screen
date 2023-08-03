@@ -129,7 +129,7 @@ const getPictorialBarOpt = (xUnit, yUnit, symbol) => {
   return {
     grid: {
       left: 50,
-      right: 110,
+      right: 50,
       top: 30,
       bottom: 20,
     },
@@ -544,7 +544,7 @@ const chargeTempOpt = computed(() => {
   return {
     grid: {
       left: 50,
-      right: 100,
+      right: 60,
       top: 50,
       bottom: 55,
     },
@@ -567,7 +567,7 @@ const chargeTempOpt = computed(() => {
     },
     xAxis: {
       type: '',
-      name: '温度(摄氏度)',
+      name: '温度(°C)',
       min: 1,
       interval: 1,
       show: true,
@@ -830,7 +830,7 @@ const currentChargeSocTab = ref(chargeSocTabs.value[0].value)
 const chargeSocOpt = {
   grid: {
     left: 50,
-    right: 100,
+    right: 60,
     top: 50,
     bottom: 55,
   },
@@ -898,7 +898,7 @@ const chargeSocOpt = {
     show: true,
   },
   xAxis: {
-    name: '占比(百分比)',
+    name: '占比(%)',
     show: true,
   },
   series: [
@@ -1073,7 +1073,7 @@ const handleChargeSocCarouselChange = (from, to) => {
           <HChart
             :options="
               getPictorialBarOpt(
-                '里程(万公里)',
+                '里程\n(km)',
                 '数量(辆)',
                 'image://react-bar-blue.png'
               )
@@ -1090,7 +1090,7 @@ const handleChargeSocCarouselChange = (from, to) => {
           <HChart
             :options="
               getPictorialBarOpt(
-                '里程(公里)',
+                '里程\n(km)',
                 '数量(辆)',
                 'image://cirle-purple-bar.png'
               )
@@ -1107,7 +1107,7 @@ const handleChargeSocCarouselChange = (from, to) => {
           <HChart
             :options="
               getPictorialBarOpt(
-                '时间(小时)',
+                '时间\n(h)',
                 '数量(辆)',
                 'image://trengle-bar.png'
               )

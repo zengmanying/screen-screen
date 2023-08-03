@@ -1012,6 +1012,7 @@ const scatterOptions = {
       name: 'SOH电池容量百分比',
       serieType: 'scatter',
       symbol: 'image://scatter-symbol.svg',
+      symbolSize: 8,
     },
   ],
 }
