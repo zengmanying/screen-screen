@@ -129,7 +129,7 @@ const getPictorialBarOpt = (xUnit, yUnit, symbol) => {
   return {
     grid: {
       left: 50,
-      right: 50,
+      right: 60,
       top: 30,
       bottom: 20,
     },
@@ -242,12 +242,13 @@ const getKcMcRateData = async () => {
 const kcMcCountOpt = {
   grid: {
     left: 50,
-    right: 60,
+    right: 50,
     top: 40,
     bottom: 50,
   },
   legend: {
     show: true,
+    selectedMode: false,
     top: 'auto',
     bottom: 6,
     left: 'center',
@@ -335,7 +336,7 @@ const kcMcCountOpt = {
     },
   },
   xAxis: {
-    name: '次数(次)',
+    name: '次数\n(次)',
     show: true,
     axisLabel: {
       interval: 0,
@@ -544,12 +545,13 @@ const chargeTempOpt = computed(() => {
   return {
     grid: {
       left: 50,
-      right: 60,
+      right: 50,
       top: 50,
       bottom: 55,
     },
     legend: {
       show: true,
+      selectedMode: false,
       top: 'auto',
       bottom: 10,
       left: 'center',
@@ -567,7 +569,7 @@ const chargeTempOpt = computed(() => {
     },
     xAxis: {
       type: '',
-      name: '温度(°C)',
+      name: '温度\n(°C)',
       min: 1,
       interval: 1,
       show: true,
@@ -830,12 +832,13 @@ const currentChargeSocTab = ref(chargeSocTabs.value[0].value)
 const chargeSocOpt = {
   grid: {
     left: 50,
-    right: 60,
+    right: 50,
     top: 50,
     bottom: 55,
   },
   legend: {
     show: true,
+    selectedMode: false,
     top: 'auto',
     bottom: 10,
     left: 'center',
@@ -898,7 +901,7 @@ const chargeSocOpt = {
     show: true,
   },
   xAxis: {
-    name: '占比(%)',
+    name: '占比\n(%)',
     show: true,
   },
   series: [
@@ -1067,13 +1070,13 @@ const handleChargeSocCarouselChange = (from, to) => {
       </div>
       <div class="card car-mileage-total">
         <div class="card-header">
-          <span class="card-title">总里程分布</span>
+          <span class="card-title">近一周车辆总里程分布</span>
         </div>
         <div class="card-body">
           <HChart
             :options="
               getPictorialBarOpt(
-                '里程\n(km)',
+                '里程\n(万公里)',
                 '数量(辆)',
                 'image://react-bar-blue.png'
               )
@@ -1084,7 +1087,7 @@ const handleChargeSocCarouselChange = (from, to) => {
       </div>
       <div class="card car-mileage-total">
         <div class="card-header">
-          <span class="card-title">日均行驶里程分布</span>
+          <span class="card-title">近一周车辆日均行驶里程分布</span>
         </div>
         <div class="card-body">
           <HChart
@@ -1101,7 +1104,7 @@ const handleChargeSocCarouselChange = (from, to) => {
       </div>
       <div class="card car-mileage-total">
         <div class="card-header">
-          <span class="card-title">日均行驶时长分布</span>
+          <span class="card-title">近一周车辆日均行驶时长分布</span>
         </div>
         <div class="card-body">
           <HChart
@@ -1121,7 +1124,7 @@ const handleChargeSocCarouselChange = (from, to) => {
       <div class="right-layer-top">
         <div class="card card-kc-mc-rate">
           <div class="card-header">
-            <span class="card-title">快充慢充占比分布</span>
+            <span class="card-title">近一周车辆快充慢充占比分布</span>
           </div>
           <div class="card-body">
             <ul class="kc-mc-list">
@@ -1166,7 +1169,7 @@ const handleChargeSocCarouselChange = (from, to) => {
           </div>
         </div>
         <div class="card card-kc-mc-count">
-          <div class="card-header">充电频次分布</div>
+          <div class="card-header">近一周车辆充电频次分布</div>
           <div class="card-body">
             <HChart
               :options="kcMcCountOpt"
@@ -1179,7 +1182,7 @@ const handleChargeSocCarouselChange = (from, to) => {
       </div>
       <div class="card card-charge-temp">
         <div class="card-header">
-          充电过程温度分布情况
+          近一周车辆充电过程温度分布情况
           <ul class="chart-tab">
             <li
               v-for="item in chargeTempTabs"
@@ -1209,7 +1212,7 @@ const handleChargeSocCarouselChange = (from, to) => {
       </div>
       <div class="card card-charge-soc">
         <div class="card-header">
-          充电过程SOC分布
+          近一周车辆充电过程SOC分布
           <ul class="chart-tab">
             <li
               v-for="item in chargeSocTabs"

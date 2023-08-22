@@ -38,7 +38,7 @@ const options = {
       axisLine: {
         lineStyle: {
           color: [
-            [props.data[0].value / 100, props.color],
+            [props.data[0].value / 10, props.color],
             [1, '#111F42'],
           ],
           width: 10,

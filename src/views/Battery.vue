@@ -621,7 +621,7 @@ const getLineAreaOptions = (
       top: 27,
       bottom: 40,
       left: 35,
-      right: 58,
+      right: 40,
     },
     xAxis: {
       type: 'value',
@@ -641,6 +641,7 @@ const getLineAreaOptions = (
     },
     yAxis: {
       name: '数量(辆)',
+      minInterval: 1,
     },
     series: [
       ...effectDTOSeries,
@@ -1132,6 +1133,18 @@ const scatterOptions = {
                   :dataset="carMileageDataset"
                   class="roseChart"
                 ></HChart>
+                <span
+                  style="
+                    position: absolute;
+                    right: 8px;
+                    bottom: 8px;
+                    font-size: 12px;
+                    transform-origin: 100% 100%;
+                    color: rgba(255, 255, 255, 0.45);
+                    white-space: nowrap;
+                  "
+                  >区间单位：千公里</span
+                >
               </div>
             </div>
           </div>
@@ -1202,7 +1215,7 @@ const scatterOptions = {
                               overTemplate45NumLineArrData,
                               overTemplate45NumCoordsData,
                               overTemplate45NumSeries,
-                              '时长(h)'
+                              '时长\n(h)'
                             )
                           "
                         ></HChart>
@@ -1218,7 +1231,7 @@ const scatterOptions = {
                               overTemplate45RateLineArrData,
                               overTemplate45RateCoordsData,
                               overTemplate45RateSeries,
-                              '占比(%)'
+                              '占比\n(%)'
                             )
                           "
                         ></HChart>
@@ -1555,6 +1568,7 @@ const scatterOptions = {
   .card-header {
     display: flex;
     justify-content: space-between;
+    background-size: contain;
   }
   .card-tag {
     width: 210px;

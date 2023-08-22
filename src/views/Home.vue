@@ -14,6 +14,7 @@ import {
   getCarActiveNumTotal,
   getActualSales,
   getSalesTop5,
+  getSalesNewTop5,
   getCarVehicleArea,
   getCarMileageDistribute,
   getWarningMarketTotal,
@@ -102,6 +103,26 @@ const getSalesTop5Data = async () => {
   }
 }
 
+let currentTopRank = ref(0)
+const handleTopRankCarouselChange = (from, to) => {
+  currentTopRank.value = to
+  to === 0 ? getSalesTop5Data : getSalesNewTop5Data()
+}
+
+// 新车型销售Top5
+const saleTopNewData = ref([])
+const saleTopNew1 = ref(0)
+const getSalesNewTop5Data = async () => {
+  const resp = await getSalesNewTop5()
+  if (resp.resultCode === '200') {
+    saleTopNewData.value = resp.data
+    const saleTopNewValueArr = saleTopNewData.value.map((item) => item.value)
+    saleTopNew1.value = saleTopNewValueArr.reduce((prev, next) => {
+      return Math.max(prev, next)
+    })
+  }
+}
+
 // 车辆区域分布
 const hotData = ref([])
 const getCarVehicleAreaData = async (segmentation = 1) => {
@@ -162,8 +183,8 @@ const updateDailyVehicle = (starData, endData, intervalTime) => {
     clearInterval(intervalVehicle)
   }
   intervalVehicle = setInterval(() => {
-    const currentDataA = updateObj.updateFn()
-    dailyVehicle.value = currentDataA.currentEndVal
+    const currentData = updateObj.updateFn()
+    dailyVehicle.value = currentData.currentEndVal
   }, intervalTime)
 }
 
@@ -429,31 +450,68 @@ onUnmounted(() => {})
       <!-- 销售Top5车型 -->
       <div class="card card-sale-top">
         <div class="card-header">
-          <span class="card-title">销售Top5车型</span>
+          <span class="card-title" :class="{ active: currentTopRank === 0 }"
+            >累计销售Top5车型</span
+          >
+          <span
+            class="card-title"
+            :class="{ active: currentTopRank === 1 }"
+            style="margin-left: auto"
+            >新车型销售Top5</span
+          >
         </div>
         <div class="card-body">
-          <ul class="sale-top-rank">
-            <li>
-              <div
-                v-for="item in saleTopData"
-                :key="item.name"
-                class="progress-item"
-              >
-                <div class="progress-title">
-                  {{ item.name }}
-                  <span class="progress__name">{{ item.value }}辆</span>
-                </div>
-                <div class="progress-outer">
-                  <div class="progress progress--blue">
-                    <div
-                      class="progress__bar"
-                      :style="{ width: `${(item.value / saleTop1) * 100}%` }"
-                    ></div>
+          <Carousel
+            style="width: 100%"
+            autoplay
+            :autoplay-speed="CAROUSELSPEED"
+            :before-change="handleTopRankCarouselChange"
+          >
+            <ul class="sale-top-rank">
+              <li>
+                <div
+                  v-for="item in saleTopData"
+                  :key="item.name"
+                  class="progress-item"
+                >
+                  <div class="progress-title">
+                    {{ item.name }}
+                    <span class="progress__name">{{ item.value }}辆</span>
+                  </div>
+                  <div class="progress-outer">
+                    <div class="progress progress--blue">
+                      <div
+                        class="progress__bar"
+                        :style="{ width: `${(item.value / saleTop1) * 100}%` }"
+                      ></div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </li>
-          </ul>
+              </li>
+            </ul>
+            <ul class="sale-top-rank">
+              <li>
+                <div
+                  v-for="item in saleTopNewData"
+                  :key="item.name"
+                  class="progress-item"
+                >
+                  <div class="progress-title">
+                    {{ item.name }}
+                    <span class="progress__name">{{ item.value }}辆</span>
+                  </div>
+                  <div class="progress-outer">
+                    <div class="progress progress--blue">
+                      <div
+                        class="progress__bar"
+                        :style="{ width: `${(item.value / saleTop1) * 100}%` }"
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </Carousel>
         </div>
       </div>
     </aside>
@@ -544,7 +602,7 @@ onUnmounted(() => {})
           </section> -->
           <Carousel autoplay :autoplay-speed="CAROUSELSPEED">
             <div>
-              <dl>
+              <dl class="jlmx">
                 <dt>机理模型</dt>
                 <dd>
                   <span v-for="item in tagscloudData.MECHANISM" :key="item">{{
@@ -688,9 +746,9 @@ onUnmounted(() => {})
       background-clip: text;
       text-fill-color: transparent;
       font-weight: bold;
-      letter-spacing: 19px;
-      margin-left: 12px;
-      width: 200px;
+      letter-spacing: 15px;
+      margin-left: 4px;
+      width: 215px;
       text-align: right;
     }
   }
@@ -757,9 +815,25 @@ onUnmounted(() => {})
 
 .card-sale-top {
   min-height: 250px;
+  .card-header {
+    display: flex;
+    align-items: center;
+    padding-right: 24px;
+    .card-title {
+      color: rgba(255, 255, 255, 0.45);
+      &.active {
+        color: #fff;
+      }
+    }
+  }
   .card-body {
     display: flex;
     padding: 0 20px 8px;
+  }
+  ::v-deep {
+    .slick-dots-bottom {
+      display: none !important;
+    }
   }
   .sale-top-rank {
     width: 100%;
@@ -860,33 +934,45 @@ onUnmounted(() => {})
         font-size: 12px;
         font-weight: 500;
         display: block;
-        height: 34px;
-        border: 1px solid rgba(26, 98, 179, 0.8);
+        height: 36px;
+        // border: 1px solid rgba(26, 98, 179, 0.8);
+        background: url('@/assets/alogBg.svg') no-repeat;
+        background-size: 100% 100%;
         text-align: center;
-        line-height: 32px;
+        line-height: 36px;
         min-width: 110px;
         margin-right: 8px;
         margin-top: 8px;
         color: #fff;
-        flex: 30%;
+        flex: 31%;
         white-space: nowrap;
         &:nth-child(3n),
         &:last-child {
           margin-right: 0;
         }
-        &::after {
-          position: absolute;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          height: 2px;
-          display: block;
-          content: '';
-          background-image: url('@/assets/alogBg.svg');
-          background-size: 140% auto;
-          background-position: center bottom;
-          background-repeat: no-repeat;
-        }
+        // &::after {
+        //   position: absolute;
+        //   left: 0;
+        //   right: 0;
+        //   bottom: 0;
+        //   height: 2px;
+        //   display: block;
+        //   content: '';
+        //   background-image: url('@/assets/alogBg.svg');
+        //   background-size: 140% auto;
+        //   background-position: center bottom;
+        //   background-repeat: no-repeat;
+        // }
+      }
+    }
+    &.jlmx {
+      span:last-child {
+        background-image: url('@/assets/alogBgLong.svg');
+      }
+    }
+    &:nth-child(2) {
+      span {
+        background-image: url('@/assets/alogBgMiddle.svg');
       }
     }
   }

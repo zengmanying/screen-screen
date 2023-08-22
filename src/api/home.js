@@ -195,7 +195,19 @@ export const getActualSales = async () => {
 // top5
 export const getSalesTop5 = async () => {
   const url = isProd
-    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=BS01&SQL_REF=RESULT_BS01_005'
+    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=BS01&SQL_REF=RESULT_BS01_005_01'
+    : '/top-5'
+  const resp = await http.get(url)
+  resp.data = resp.data.map((item) => {
+    return { name: item.NAME, value: item.VALUE }
+  })
+  return resp
+}
+
+// top5-new
+export const getSalesNewTop5 = async () => {
+  const url = isProd
+    ? '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=BS01&SQL_REF=RESULT_BS01_005_02'
     : '/top-5'
   const resp = await http.get(url)
   resp.data = resp.data.map((item) => {
