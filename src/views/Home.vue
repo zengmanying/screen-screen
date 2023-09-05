@@ -154,9 +154,36 @@ const getWarningMarketTotalData = async () => {
 const getWarningDailyProcessData = async () => {
   const resp = await getWarningDailyProcess()
   if (resp.resultCode === '200') {
-    dailyProcess.value = (resp.data.dailyProcess / 100000000).toFixed(2)
+    // dailyProcess.value = (resp.data.dailyProcess / 100000000).toFixed(2)
+    updateDailyProcess(
+      Math.ceil(resp.data.dailyProcess * 0.5),
+      resp.data.dailyProcess,
+      RANDOMUPDATETIME
+    )
   }
 }
+
+const updateDailyProcess = (starData, endData, intervalTime) => {
+  const updateObj = new UpdateDataByFiveMinu(
+    starData,
+    endData,
+    8,
+    18,
+    intervalTime,
+    100
+  )
+  dailyProcess.value = (updateObj.initFn() / 100000000).toFixed(2)
+  // 每隔五分钟更新数据
+  let intervalVehicle = null
+  if (intervalVehicle) {
+    clearInterval(intervalVehicle)
+  }
+  intervalVehicle = setInterval(() => {
+    const currentData = updateObj.updateFn()
+    dailyProcess.value = (currentData.currentEndVal / 100000000).toFixed(2)
+  }, intervalTime)
+}
+
 const getWarningDailyChargeData = async () => {
   const resp = await getWarningDailyCharge()
   if (resp.resultCode === '200') {
@@ -504,7 +531,9 @@ onUnmounted(() => {})
                     <div class="progress progress--blue">
                       <div
                         class="progress__bar"
-                        :style="{ width: `${(item.value / saleTop1) * 100}%` }"
+                        :style="{
+                          width: `${(item.value / saleTopNew1) * 100}%`,
+                        }"
                       ></div>
                     </div>
                   </div>
@@ -963,11 +992,6 @@ onUnmounted(() => {})
         //   background-position: center bottom;
         //   background-repeat: no-repeat;
         // }
-      }
-    }
-    &.jlmx {
-      span:last-child {
-        background-image: url('@/assets/alogBgLong.svg');
       }
     }
     &:nth-child(2) {

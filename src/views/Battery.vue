@@ -358,7 +358,7 @@ const getCarNumOptions = (
       containLabel: true,
       top: 20,
       left: 20,
-      right: 40,
+      right: 80,
       bottom: 18 * (10 - len) + 25,
     },
     legend: {
@@ -375,11 +375,12 @@ const getCarNumOptions = (
       axisLabel: {
         align: 'left',
       },
-      offset: 60,
+      offset: 65,
     },
     xAxis: {
       type: 'value',
       position: 'top',
+      name: '数量(辆)',
       axisLine: {
         show: true,
         lineStyle: {
