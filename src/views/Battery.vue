@@ -643,6 +643,7 @@ const getLineAreaOptions = (
     yAxis: {
       name: '数量(辆)',
       minInterval: 1,
+      splitNumber: 3,
     },
     series: [
       ...effectDTOSeries,
@@ -849,10 +850,12 @@ const handleWorkingWarningCarouselChange = (from, to) => {
 }
 
 const workingWarningData = ref([])
+const workingWarningPercent = ref([])
 const getWorkingWarningData = async (project) => {
   const resp = await getWorkingWarning(project)
   if (resp.resultCode === '200') {
-    workingWarningData.value = resp.data
+    workingWarningData.value = resp.scatterData
+    workingWarningPercent.value = resp.percent
   }
 }
 const scatter3dOptions = computed(() => {
@@ -929,7 +932,7 @@ const scatter3dOptions = computed(() => {
     series: [
       {
         type: 'scatter3D',
-        name: '高风险',
+        name: `高风险(${workingWarningPercent.value[0][1]}%)`,
         symbolSize: 8,
         itemStyle: {
           opacity: 1,
@@ -938,7 +941,7 @@ const scatter3dOptions = computed(() => {
       },
       {
         type: 'scatter3D',
-        name: '中风险',
+        name: `中风险(${workingWarningPercent.value[1][1]}%)`,
         symbolSize: 8,
         itemStyle: {
           opacity: 1,
@@ -948,7 +951,7 @@ const scatter3dOptions = computed(() => {
       {
         type: 'scatter3D',
         symbolSize: 8,
-        name: '低风险',
+        name: `低风险(${workingWarningPercent.value[2][1]}%)`,
         itemStyle: {
           opacity: 1,
           color: '#1EE7E7',

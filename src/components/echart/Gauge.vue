@@ -34,11 +34,11 @@ const options = {
       splitNumber: 5,
       startAngle: 180,
       endAngle: 0,
-      max: 10,
+      max: props.data[0].max,
       axisLine: {
         lineStyle: {
           color: [
-            [props.data[0].value / 10, props.color],
+            [props.data[0].value / props.data[0].max, props.color],
             [1, '#111F42'],
           ],
           width: 10,
@@ -103,7 +103,7 @@ const options = {
       type: 'gauge',
       radius: '100%',
       min: 0, //最小刻度
-      max: 10, //最大刻度
+      max: props.data[0].max, //最大刻度
       splitNumber: 5, //刻度数量
       startAngle: 180,
       endAngle: 0,

@@ -163,7 +163,7 @@ export const getAddaccumRate = async () => {
     : '/warning-gauge'
   const resp = await http.get(url)
   resp.data = resp.data.map((item) => {
-    return { name: item.NAME, value: item.VALUE / 100 }
+    return { name: item.NAME, value: item.VALUE / 100, max: item.MAX }
   })
   return resp
 }
@@ -175,7 +175,7 @@ export const getAccuRate = async () => {
     : '/warning-gauge2'
   const resp = await http.get(url)
   resp.data = resp.data.map((item) => {
-    return { name: item.NAME, value: item.VALUE / 100 }
+    return { name: item.NAME, value: item.VALUE / 100, max: item.MAX }
   })
   return resp
 }
@@ -187,7 +187,10 @@ export const getActualSales = async () => {
     : '/six-month-sale-statistics'
   const resp = await http.get(url)
   resp.data = resp.data.map((item) => {
-    return { name: `${item.NAME.split('-')[1]}月`, value: item.VALUE }
+    return {
+      name: `${item.NAME.split('-')[1]}月`,
+      value: item.VALUE,
+    }
   })
   return resp
 }

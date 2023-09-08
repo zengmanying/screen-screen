@@ -166,7 +166,8 @@ export const getWorkingWarning = async (project) => {
       },
     },
   })
-  resp.data = JSON.parse(resp.data[0].CONCAT_VALUE)
+  resp.percent = JSON.parse(resp.data[0].CONCAT_VALUE2)
+  resp.scatterData = JSON.parse(resp.data[0].CONCAT_VALUE)
   return resp
 }
 
