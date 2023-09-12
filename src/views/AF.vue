@@ -570,7 +570,8 @@ const chargeTempOpt = computed(() => {
     xAxis: {
       type: '',
       name: '温度\n(°C)',
-      min: 1,
+      min: 'dataMin',
+      max: 'dataMax',
       interval: 1,
       show: true,
       boundaryGap: false,

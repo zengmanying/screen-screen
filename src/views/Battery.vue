@@ -627,7 +627,8 @@ const getLineAreaOptions = (
     xAxis: {
       type: 'value',
       name: xUnit,
-      min: 1,
+      min: 'dataMin',
+      max: 'dataMax',
       interval: 2,
       axisTick: {
         show: false,
