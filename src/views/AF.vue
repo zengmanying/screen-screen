@@ -561,6 +561,7 @@ const chargeTempOpt = computed(() => {
     yAxis: {
       name: '数量(辆)',
       show: true,
+      min: 0,
       splitLine: {
         lineStyle: {
           color: 'rgba(126, 137, 164, 0.1)',
