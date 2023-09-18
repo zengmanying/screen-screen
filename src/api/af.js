@@ -205,7 +205,7 @@ export const getChargeSoc = async (No = 'RESULT_BS03_009_01') => {
   resp.data = resp.data.map((item) => {
     return {
       name: item.BSNAME,
-      KBg: Math.ceil(topVal / 100) * 100 + 100,
+      KBg: Math.ceil(topVal),
       KBar: item.KSVALUE,
       KPBar: item.MSVALUE,
       MLine: item.MSVALUE,

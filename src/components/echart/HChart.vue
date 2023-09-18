@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, provide } from 'vue'
+import { ref, computed, provide, onMounted, nextTick } from 'vue'
 import { use } from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
 import {
@@ -46,6 +46,10 @@ use([
 provide(THEME_KEY, 'dark')
 
 const props = defineProps({
+  refName: {
+    type: String,
+    default: 'chart',
+  },
   options: {
     type: Object,
     default: () => {},
@@ -86,6 +90,9 @@ const chartOptions = computed(() => {
         : isPureColor.value
         ? ChartThemeColor.pureColors
         : ChartThemeColor.colors,
+    },
+    {
+      tooltip: deepAssign({ show: false }, props.options.tooltip),
     },
     { title: deepAssign({}, props.options.title) },
     {
@@ -149,10 +156,44 @@ const initOptions = ref({
 function handleChartClick() {
   console.log('chartClick================')
 }
+const kcMcCountChart = ref()
+onMounted(() => {
+  nextTick(() => {
+    if (!kcMcCountChart.value || props.refName !== 'kcMcCountChart') return
+    lunboEcharts(kcMcCountChart.value)
+  })
+})
+
+//轮播tootip
+let timer = null
+const lunboEcharts = (echartsId) => {
+  clearInterval(timer) //清除定时器，防止轮播出现混乱
+  var currentIndex = -1
+  timer = setInterval(() => {
+    var dataLen = props.dataset.source.length
+    // echartsId.dispatchAction({
+    //   type: 'downplay',
+    //   seriesIndex: 3,
+    //   dataIndex: currentIndex,
+    // })
+    currentIndex = (currentIndex + 1) % dataLen
+    // echartsId.dispatchAction({
+    //   type: 'highlight',
+    //   seriesIndex: 3,
+    //   dataIndex: currentIndex,
+    // })
+    echartsId.dispatchAction({
+      type: 'showTip',
+      seriesIndex: 3,
+      dataIndex: currentIndex,
+      position: 'top',
+    })
+  }, 3000)
+}
 </script>
 <template>
   <VChart
-    ref="chart"
+    :ref="refName"
     element-loading-text="Loading..."
     class="chart"
     :autoresize="true"

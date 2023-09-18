@@ -246,6 +246,25 @@ const kcMcCountOpt = {
     top: 40,
     bottom: 50,
   },
+  tooltip: {
+    show: true,
+    axisPointer: {
+      type: 'shadow',
+    },
+    backgroundColor: 'rgba(2, 16, 60, 1)',
+    extraCssText: 'border: 2px solid rgba(24, 127, 233, 0.4)',
+    textStyle: {
+      fontSize: 14,
+      color: '#fff',
+    },
+    formatter: (params) => {
+      const { data } = params
+      const html = `<div style="display: flex; align-items:center; font-size: 12px;"><img src="kc-dot.png" style="width: 16px; height: 16px;"/><span>快充</span><span style="margin-left: auto">${data.K}</span></div>
+                    <div style="display: flex; align-items:center; font-size: 12px;"><img src="mc-dot.png" style="width: 16px; height: 16px;"/><span>慢充</span><span style="margin-left: auto">${data.M}</span></div>
+                    <div style="display: flex; align-items:center; font-size: 12px;"><img src="zh-dot.png" style="width: 16px; height: 16px;"/><span>快慢充总和</span><span style="margin-left: 16px">${data.Z}</span></div>`
+      return html
+    },
+  },
   legend: {
     show: true,
     selectedMode: false,
@@ -376,7 +395,7 @@ const kcMcCountOpt = {
       barGap: '200%',
       barWidth: 4,
       label: {
-        show: true,
+        show: false,
         fontSize: 12,
         color: '#fff',
         position: 'top',
@@ -421,7 +440,7 @@ const kcMcCountOpt = {
       smooth: true,
       barWidth: 4,
       label: {
-        show: true,
+        show: false,
         fontSize: 12,
         color: '#fff',
         position: 'top',
@@ -466,7 +485,7 @@ const kcMcCountOpt = {
       smooth: true,
       barWidth: 4,
       label: {
-        show: true,
+        show: false,
         fontSize: 12,
         color: '#fff',
         position: 'top',
@@ -836,7 +855,7 @@ const chargeSocOpt = {
     left: 50,
     right: 50,
     top: 50,
-    bottom: 55,
+    bottom: 60,
   },
   legend: {
     show: true,
@@ -899,12 +918,21 @@ const chargeSocOpt = {
     ],
   },
   yAxis: {
-    name: '数量(辆)',
+    name: '不同SOC范围占比(%)',
+    min: 0,
+    max: 'dataMax',
+    nameTextStyle: {
+      padding: [0, 0, 0, 80],
+    },
     show: true,
   },
   xAxis: {
     name: '占比\n(%)',
     show: true,
+    axisLabel: {
+      interval: 0,
+      margin: 16,
+    },
   },
   series: [
     {
@@ -924,6 +952,15 @@ const chargeSocOpt = {
         fontSize: 12,
         color: '#fff',
         position: 'top',
+        formatter: (params) => {
+          const { KBar, MLine } = params.data
+          return KBar <= MLine ? `{bottom|${KBar}}` : KBar
+        },
+        rich: {
+          bottom: {
+            padding: [0, 0, -32, 0],
+          },
+        },
       },
       symbol: 'image://rect-green-bar.png',
     },
@@ -937,6 +974,15 @@ const chargeSocOpt = {
         fontSize: 12,
         color: '#fff',
         position: 'top',
+        formatter: (params) => {
+          const { KBar, MLine } = params.data
+          return MLine < KBar ? `{bottom|${MLine}}` : MLine
+        },
+        rich: {
+          bottom: {
+            padding: [0, 0, -32, 0],
+          },
+        },
       },
       itemStyle: {
         color: {
@@ -1174,6 +1220,7 @@ const handleChargeSocCarouselChange = (from, to) => {
           <div class="card-header">近一周车辆充电频次分布</div>
           <div class="card-body">
             <HChart
+              ref-name="kcMcCountChart"
               :options="kcMcCountOpt"
               :dataset="{
                 source: kcMcCountData,

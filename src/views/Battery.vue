@@ -897,12 +897,13 @@ const scatter3dOptions = computed(() => {
       bottom: 66,
       viewControl: {
         alpha: 3,
-        beta: 35,
+        beta: 45,
       },
     },
     xAxis3D: {
       ...xAxis,
       ...{
+        splitNumber: 3,
         type: 'value',
         splitLine: {
           show: true,
@@ -919,14 +920,21 @@ const scatter3dOptions = computed(() => {
         },
       },
     },
-    yAxis3D: yAxis,
+    yAxis3D: {
+      ...yAxis,
+      ...{
+        splitNumber: 3,
+        margin: 0,
+      },
+    },
     zAxis3D: {
       ...yAxis,
       ...{
+        splitNumber: 3,
         axisLabel: {
           color: 'rgba(126, 137, 164, 1)',
           fontSize: 12,
-          margin: 16,
+          margin: 22,
         },
       },
     },
