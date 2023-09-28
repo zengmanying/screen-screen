@@ -218,3 +218,28 @@ export const getSalesNewTop5 = async () => {
   })
   return resp
 }
+
+// 口径说明
+export const getTips = async (pageName) => {
+  let apiUrl = ''
+  switch (pageName) {
+    case 'Home':
+      apiUrl =
+        '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=BS01&SQL_REF=RESULT_BS01_015'
+      break
+    case 'AF':
+      apiUrl =
+        '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=BS03&SQL_REF=RESULT_BS03_010'
+      break
+    case 'BF':
+      apiUrl =
+        '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=BS04&SQL_REF=RESULT_BS04_010'
+      break
+    case 'Battery':
+      apiUrl =
+        '/service?X_SERVICE_CODE=AI.SVC.query&TAB_NAME=BS02&SQL_REF=RESULT_BS02_011'
+  }
+  const url = isProd ? apiUrl : '/tips'
+  const resp = await http.get(url)
+  return resp
+}

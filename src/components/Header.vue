@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import Weather from '@/components/Weather.vue'
 import CurrentTime from '@/components/CurrentTime.vue'
+import TipsDialog from './TipsDialog.vue'
 import { RouterLink, useRoute } from 'vue-router'
 const route = useRoute()
 const fullScreenState = ref(false)
@@ -12,6 +13,10 @@ const handleFullScreen = () => {
     document.exitFullscreen()
   }
   fullScreenState.value = !fullScreenState.value
+}
+const tipsVisible = ref(false)
+const handleTipsShow = () => {
+  tipsVisible.value = true
 }
 </script>
 <template>
@@ -48,6 +53,9 @@ const handleFullScreen = () => {
     </ul>
     <Weather />
     <CurrentTime />
+    <span class="tips-btn" @click="handleTipsShow">
+      <img src="@/assets/tips-modal-trigger.svg" alt="" />
+    </span>
     <span class="full-screen-btn" @click="handleFullScreen">
       <img
         v-show="!fullScreenState"
@@ -61,6 +69,7 @@ const handleFullScreen = () => {
       />
     </span>
   </div>
+  <TipsDialog v-if="tipsVisible" v-model:visible="tipsVisible" />
 </template>
 <style lang="scss">
 .header {
@@ -140,6 +149,10 @@ const handleFullScreen = () => {
       }
     }
   }
+}
+
+.tips-btn {
+  margin-left: 18px;
 }
 
 .full-screen-btn {

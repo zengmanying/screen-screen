@@ -877,7 +877,11 @@ const scatter3dOptions = computed(() => {
       type: 'piecewise',
       splitNumber: 3,
       inRange: {
-        color: ['#1EE7E7', '#187FE9', '#F16258'],
+        color: [
+          'rgba(254, 219, 150, 1)',
+          'rgba(120, 101, 241, 1)',
+          'rgba(30, 231, 231, 1)',
+        ],
       },
       dimension: 3,
       orient: 'horizontal',
@@ -945,7 +949,7 @@ const scatter3dOptions = computed(() => {
         symbolSize: 8,
         itemStyle: {
           opacity: 1,
-          color: '#F16258',
+          color: 'rgba(254, 219, 150, 1)',
         },
       },
       {
@@ -954,7 +958,7 @@ const scatter3dOptions = computed(() => {
         symbolSize: 8,
         itemStyle: {
           opacity: 1,
-          color: '#187FE9',
+          color: 'rgba(120, 101, 241, 1)',
         },
       },
       {
@@ -963,7 +967,7 @@ const scatter3dOptions = computed(() => {
         name: `低风险(${workingWarningPercent.value[2][1]}%)`,
         itemStyle: {
           opacity: 1,
-          color: '#1EE7E7',
+          color: 'rgba(30, 231, 231, 1)',
         },
       },
     ],
