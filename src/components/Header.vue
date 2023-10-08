@@ -111,6 +111,7 @@ const handleTipsShow = () => {
     span {
       position: relative;
       z-index: 2;
+      white-space: nowrap;
     }
     &.active {
       color: #eaf8ff;

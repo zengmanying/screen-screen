@@ -42,13 +42,16 @@ const lineOptions = {
   backgroundColor: 'transparent',
   grid: {
     containLabel: true,
-    left: 20,
+    left: 21,
     top: 28,
-    right: 20,
+    right: 15,
     bottom: 12,
   },
   yAxis: {
     name: '数量(辆)',
+    nameTextStyle: {
+      padding: [0, 0, 0, -80],
+    },
     splitNumber: 4,
     z: 0,
     axisLabel: {
@@ -111,7 +114,7 @@ const lineOptions = {
       showAllSymbol: false,
       label: {
         show: true,
-        fontSize: 14,
+        fontSize: 12,
         color: '#fff',
         formatter: (params) => {
           return [1, 2, 3, 4, 5, 6].includes(params.value[0])

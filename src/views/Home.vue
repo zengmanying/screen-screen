@@ -838,7 +838,7 @@ onUnmounted(() => {})
 .card-line-statistics {
   height: 195px;
   .card-body {
-    padding: 20px;
+    padding: 20px 8px;
   }
 }
 

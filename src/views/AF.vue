@@ -1394,7 +1394,7 @@ const handleChargeSocCarouselChange = (from, to) => {
   }
   .card-body {
     background: url('../assets/af/kc-mc-bg.png') no-repeat;
-    background-size: contain;
+    background-size: 140% 80%;
     background-position: center;
   }
   .kc-mc-list {
@@ -1454,7 +1454,7 @@ const handleChargeSocCarouselChange = (from, to) => {
       }
     }
     .progress-text {
-      width: 50px;
+      width: 85px;
       height: 22px;
       border-radius: 30px;
       flex-shrink: 0;
