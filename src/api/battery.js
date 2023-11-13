@@ -25,6 +25,7 @@ export const getRecognitionRate = async () => {
   resp.data = resp.data.map((item) => {
     return {
       name: `${item.NAME.split('-')[1]}月`,
+      DATA_YEAR: item.DATA_YEAR,
       NEWCAR: item.NEWCAR,
       HISTORYCAR: item.HISTORYCAR,
       TOTALRATE: (item.TOTALRATE / 100).toFixed(2),
@@ -43,6 +44,7 @@ export const getAccuracyRate = async () => {
   resp.data = resp.data.map((item) => {
     return {
       name: `${item.NAME.split('-')[1]}月`,
+      DATA_YEAR: item.DATA_YEAR,
       TOTALCAR: item.TOTALCAR,
       UNDERREPAIRCAR: item.UNDERREPAIRCAR,
       WARINGREPAIRCAR: item.WARINGREPAIRCAR,

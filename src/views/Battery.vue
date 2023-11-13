@@ -56,16 +56,6 @@ const getAlgorithmTotalData = async () => {
   }
 }
 const barAndLineOptions = {
-  title: {
-    show: true,
-    text: '2023年',
-    textStyle: {
-      color: '#fff',
-      fontSize: 12,
-    },
-    left: 0,
-    top: 0,
-  },
   legend: {
     top: 'auto',
     bottom: 6,
@@ -146,7 +136,22 @@ const recognitionRateSeries = [
   },
 ]
 const recognitionRateOpt = computed(() => {
-  return { ...barAndLineOptions, ...{ series: recognitionRateSeries } }
+  return {
+    ...barAndLineOptions,
+    ...{ series: recognitionRateSeries },
+    title: {
+      show: true,
+      text:
+        recognitionRateSeries.value?.source[0]?.DATA_YEAR ||
+        new Date().getFullYear() + '年',
+      textStyle: {
+        color: '#fff',
+        fontSize: 12,
+      },
+      left: 0,
+      top: 0,
+    },
+  }
 })
 const recognitionRateDataset = ref({
   source: [],
@@ -284,6 +289,18 @@ const accuracyRateOpt = computed(() => {
       },
     },
     ...{ series: accuracyRateSeries },
+    title: {
+      show: true,
+      text:
+        accuracyRateDataset.value?.source[0]?.DATA_YEAR ||
+        new Date().getFullYear() + '年',
+      textStyle: {
+        color: '#fff',
+        fontSize: 12,
+      },
+      left: 0,
+      top: 0,
+    },
   }
 })
 
@@ -945,7 +962,7 @@ const scatter3dOptions = computed(() => {
     series: [
       {
         type: 'scatter3D',
-        name: `高风险(${workingWarningPercent.value[0][1]}%)`,
+        name: `一类(${workingWarningPercent.value[0][1]}%)`,
         symbolSize: 8,
         itemStyle: {
           opacity: 1,
@@ -954,7 +971,7 @@ const scatter3dOptions = computed(() => {
       },
       {
         type: 'scatter3D',
-        name: `中风险(${workingWarningPercent.value[1][1]}%)`,
+        name: `二类(${workingWarningPercent.value[1][1]}%)`,
         symbolSize: 8,
         itemStyle: {
           opacity: 1,
@@ -964,7 +981,7 @@ const scatter3dOptions = computed(() => {
       {
         type: 'scatter3D',
         symbolSize: 8,
-        name: `低风险(${workingWarningPercent.value[2][1]}%)`,
+        name: `三类(${workingWarningPercent.value[2][1]}%)`,
         itemStyle: {
           opacity: 1,
           color: 'rgba(30, 231, 231, 1)',
