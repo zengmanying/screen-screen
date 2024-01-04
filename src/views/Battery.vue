@@ -142,7 +142,7 @@ const recognitionRateOpt = computed(() => {
     title: {
       show: true,
       text:
-        recognitionRateSeries.value?.source[0]?.DATA_YEAR ||
+        recognitionRateDataset.value?.source[0]?.DATA_YEAR ||
         new Date().getFullYear() + '年',
       textStyle: {
         color: '#fff',
@@ -374,9 +374,9 @@ const getCarNumOptions = (
     grid: {
       containLabel: true,
       top: 20,
-      left: 20,
+      left: 28,
       right: 80,
-      bottom: 18 * (10 - len) + 25,
+      bottom: 20 * Math.abs(10 - len) + 25,
     },
     legend: {
       show: false,
@@ -392,7 +392,7 @@ const getCarNumOptions = (
       axisLabel: {
         align: 'left',
       },
-      offset: 65,
+      offset: 75,
     },
     xAxis: {
       type: 'value',
@@ -1122,7 +1122,7 @@ const scatterOptions = {
                       'rgba(24, 130, 255, 1)',
                       'rgba(24, 144, 255, 0.35)',
                       '#187FE9',
-                      10,
+                      item.length,
                       carNumMax
                     )
                   "
